@@ -4,6 +4,8 @@
 )]
 
 mod database;
+mod sql;
+mod models;
 
 fn main() {
   tauri::Builder::default()
