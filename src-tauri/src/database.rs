@@ -19,7 +19,7 @@ pub enum DbError {
     NoConnection
 }
 
-type DbResult<T> = Result<T, DbError>;
+pub type DbResult<T> = Result<T, DbError>;
 
 pub struct Database(Mutex<Option<Connection>>);
 
