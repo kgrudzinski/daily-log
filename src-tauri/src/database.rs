@@ -1,6 +1,5 @@
 use rusqlite::{
-    Connection,
-    Transaction as SqlTransaction, 
+    Connection,     
     Result as SqlResult,
     Error as SqlError,
     Row,
@@ -9,7 +8,7 @@ use rusqlite::{
 
 use thiserror::Error;
 
-use std::sync::{Mutex, MutexGuard};
+use std::sync::{Mutex};
 pub use rusqlite::params;
 
 #[derive(Error, Debug)]
