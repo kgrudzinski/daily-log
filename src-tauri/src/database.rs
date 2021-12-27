@@ -62,9 +62,9 @@ impl Database {
         }
     }
 
-    pub fn execute_script(&mut self, sql: &str) -> DbResult<()> {
-        let mut inner = self.0.get_mut().unwrap();
-        if let Some(ref mut conn) = &mut inner {
+    pub fn execute_script(&self, sql: &str) -> DbResult<()> {
+        let mut inner = self.0.lock().unwrap();
+        if let Some(ref mut conn) = &mut *inner {
             let trans = conn.transaction().map_err(|e| DbError::Sql(e))?;
             trans.execute_batch(sql).map_err(|e| DbError::Sql(e))?;
             trans.commit().map_err(|e| DbError::Sql(e))
