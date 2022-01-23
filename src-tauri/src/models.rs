@@ -159,7 +159,7 @@ pub trait Model: Sized {
     fn add_relation_data(&mut self, relation: &str, data: Vec<u64>) {}
 }
 
-#[derive(Clone, Copy, Debug, serde::Serialize)]
+#[derive(Clone, Copy, Debug, serde::Serialize, serde::Deserialize)]
 pub enum Status {
     Idle,
     InProgress,
@@ -189,34 +189,34 @@ impl ToSql for Status {
 
 #[derive(Debug, serde::Serialize)]
 pub struct Project {
-    id: u64,
-    name: String,
-    description: String,
-    categories: Vec<u64>,
-    status: Status
+    pub id: u64,
+    pub name: String,
+    pub description: String,
+    pub categories: Vec<u64>,
+    pub status: Status
 }
 
 #[derive(Debug, serde::Serialize)]
 pub struct Task {
-    id: u64,
-    name: String,
-    description: String,
-    category_id: u64,
-    status: Status
+    pub id: u64,
+    pub name: String,
+    pub description: String,
+    pub category_id: u64,
+    pub status: Status
 }
 
 #[derive(Debug, serde::Serialize)] 
 pub struct Entry {
-    id: u64,
-    description: String,
-    task_id: u64,
-    duration: u64
+    pub id: u64,
+    pub description: String,
+    pub task_id: u64,
+    pub duration: u64
 }
 
 #[derive(Debug, serde::Serialize)]
 pub struct Category {
-    id: u64,
-    name: String
+    pub id: u64,
+    pub name: String
 }
 
 const PRIJECT_COLS: [&'static str; 3] = ["Name", "Description", "StatusId"];
