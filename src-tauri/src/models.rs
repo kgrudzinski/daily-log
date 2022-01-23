@@ -211,7 +211,8 @@ pub struct Entry {
     pub id: u64,
     pub description: String,
     pub task_id: u64,
-    pub duration: u64
+    pub duration: u64,
+    pub date: u64
 }
 
 #[derive(Debug, serde::Serialize)]
@@ -301,7 +302,7 @@ impl Model for Task {
     }
 }
 
-const ENTRY_COLS: [&'static str; 3] = ["Description", "TaskId", "Duration"];
+const ENTRY_COLS: [&'static str; 4] = ["Description", "TaskId", "Duration", "Date"];
 
 impl Model for Entry {
     const NAME: &'static str = "Entries";
@@ -314,7 +315,7 @@ impl Model for Entry {
     fn into_data(self) -> ModelData {
         ModelData {
             pk: self.id,
-            params: vec![Box::new(self.description), Box::new(self.task_id), Box::new(self.duration)], 
+            params: vec![Box::new(self.description), Box::new(self.task_id), Box::new(self.duration), Box::new(self.date)], 
             relations: vec![]
         }
     }
@@ -328,7 +329,8 @@ impl Model for Entry {
             id: r.get(0)?,            
             description: r.get(1)?,
             task_id: r.get(2)?,
-            duration: r.get(3)?
+            duration: r.get(3)?,
+            date: r.get(4)?
         })
     }
 }

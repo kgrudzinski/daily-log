@@ -66,7 +66,8 @@ CREATE TABLE Entries (
     EntryId INTEGER PRIMARY KEY,
     TaskId INTEGER NOT NULL,
     Description TEXT,
-    Duration INTEGER NOT NULL,    
+    Duration INTEGER NOT NULL,
+    Date INTEGER NOT NULL,
     FOREIGN KEY(TaskId) REFERENCES Tasks(TaskId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT
