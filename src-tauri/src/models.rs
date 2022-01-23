@@ -156,7 +156,7 @@ pub trait Model: Sized {
     }
     fn into_data(self) -> ModelData;
     fn from_sql(r: &Row<'_>) -> SqlResult<Self>;
-    fn add_relation_data(&mut self, relation: &str, data: Vec<u64>) {}
+    fn add_relation_data(&mut self, _relation: &str, _data: Vec<u64>) {}
 }
 
 #[derive(Clone, Copy, Debug, serde::Serialize, serde::Deserialize)]
