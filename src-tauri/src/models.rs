@@ -202,6 +202,7 @@ pub struct Task {
     pub name: String,
     pub description: String,
     pub category_id: u64,
+    pub project_id: u64,
     pub status: Status
 }
 
@@ -265,7 +266,7 @@ impl Model for Project {
     }
 }
 
-const TASK_COLS: [&'static str; 4] = ["Name", "Description", "CategoryId", "StatusId"];
+const TASK_COLS: [&'static str; 5] = ["Name", "Description", "CategoryId", "ProjectId", "StatusId"];
 
 impl Model for Task {
     const NAME: &'static str = "Tasks";
@@ -278,7 +279,7 @@ impl Model for Task {
     fn into_data(self) -> ModelData {
         ModelData {
             pk: self.id,
-            params:  vec![Box::new(self.name), Box::new(self.description), Box::new(self.category_id), Box::new(self.status)],
+            params:  vec![Box::new(self.name), Box::new(self.description), Box::new(self.category_id), Box::new(self.project_id), Box::new(self.status)],
             relations: vec![]
         }
     }
@@ -288,12 +289,13 @@ impl Model for Task {
     }
 
     fn from_sql(r: &Row<'_>) -> SqlResult<Self> {
-        let sts: u64 = r.get(4)?;
+        let sts: u64 = r.get(5)?;
         Ok(Task{
             id: r.get(0)?,
             name: r.get(1)?,
             description: r.get(2)?,
             category_id: r.get(3)?,
+            project_id: r.get(4)?,
             status: sts.into(),            
         })
     }
