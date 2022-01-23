@@ -22,7 +22,6 @@ CREATE TABLE Project IF NOT EXISTS (
     Name TEXT NOT NULL,
     StatusId INTEGER NOT NULL,
     Description TEXT,
-    CreatedAt INTEGER NOT NULL,
     FOREIGN KEY(StatusId) REFERENCES Status(StatusId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT
@@ -51,8 +50,7 @@ CREATE TABLE Tasks {
     Name TEXT NOT NULL,
     Description TEXT,
     CategoryId INTEGER,
-    StatusId INTEGER NOT NULL,
-    CreatedAt INTEGER NOT NULL
+    StatusId INTEGER NOT NULL,    
     FOREIGN KEY(StatusId) REFERENCES Status(StatusId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT,
@@ -68,24 +66,8 @@ CREATE TABLE Entries (
     EntryId INTEGER PRIMARY KEY,
     TaskId INTEGER NOT NULL,
     Description TEXT,
-    Duration INTEGER NOT NULL,
-    CreatedAt INTEGER NOT NULL,
+    Duration INTEGER NOT NULL,    
     FOREIGN KEY(TaskId) REFERENCES Tasks(TaskId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT
 );
-
-CREATE TRIGGER InsertProject AFTER INSERT ON Projects
-BEGIN
-    UPDATE Projects SET CreatedAt = strftotime("now", "unixepoch") WHERE ProjectId = NEW.ProjectId;
-END;
-
-CREATE TRIGGER InsertTask AFTER INSERT ON Tasks
-BEGIN
-    UPDATE Tasks SET CreatedAt = strftotime("now", "unixepoch") WHERE TaskId = NEW.TaskId;
-END;
-
-CREATE TRIGGER InsertEntry AFTER INSERT ON Entries
-BEGIN
-    UPDATE Entries SET CreatedAt = strftotime("now", "unixepoch") WHERE EntryId = NEW.EntryId;
-END;
