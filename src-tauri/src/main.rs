@@ -15,7 +15,7 @@ use tauri::{
   Event
 };
 use datastore::Datastore;
-use commands::*;
+use models::{Project, Task, Entry, Category};
 
 const DB_INITIALIZED_EVENT: &str = "db-initialized";
 const DB_INITIALZE_ERROR_EVENT: &str = "db-initialize-error";
@@ -26,6 +26,13 @@ struct Payload {
 }
 
 fn main() {
+
+  let mut ds = Datastore::new();
+  ds.add_model_schema::<Project>();
+  ds.add_model_schema::<Task>();
+  ds.add_model_schema::<Entry>();
+  ds.add_model_schema::<Category>();
+
   let app = tauri::Builder::default()
   .invoke_handler(tauri::generate_handler![
     commands::get_project_list,
@@ -44,10 +51,11 @@ fn main() {
     commands::update_category,
     commands::delete_category
   ])
-  .manage(Datastore::new())
+  .manage(ds)
   .on_page_load(|win, payload| {
     log::info!("Url {} loaded", payload.url());
     let ds = win.state::<Datastore>();
+    
     let res = ds.open("database.db");
     match res {
       Ok(info) => {
