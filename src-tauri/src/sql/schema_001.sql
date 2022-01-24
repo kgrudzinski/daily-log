@@ -72,3 +72,9 @@ CREATE TABLE Entries (
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT
 );
+
+CREATE TRIGGER InsertEntry AFTER INSERT ON Entries
+BEGIN
+    UPDATE Tasks SET StatusId = 1 WHERE TaskId = New.TaskId;
+    UPDATE Projects SET StatusId = 1 WHERE ProjectId = (Select ProjectId FROM Tasks WHERE TaskId = New.TaskId);
+END;
