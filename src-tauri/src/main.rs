@@ -9,7 +9,10 @@ mod models;
 mod commands;
 mod datastore;
 
+use std::fs::File;
+
 use log;
+use simplelog::{WriteLogger, LevelFilter, Config};
 use tauri::{
   Manager,
   Event
@@ -26,6 +29,10 @@ struct Payload {
 }
 
 fn main() {
+
+  WriteLogger::init(LevelFilter::Debug, Config::default(), File::create("daily-log.log").unwrap()).unwrap();
+
+  log::info!("Starting application");
 
   let mut ds = Datastore::new();
   ds.add_model_schema::<Project>();
@@ -86,6 +93,7 @@ fn main() {
         },
         Event::Ready => {
           log::info!("App ready!");
+          log::info!("Sqlite version: {}", rusqlite::version());
         },
         _ => {}
       }
