@@ -1,13 +1,13 @@
 -- Initial database schema
 
-CREATE TABLE Database IF NOT EXISTS (
+CREATE TABLE Database (
     Name TEXT,
     Version INTEGER    
 );
 
 INSERT INTO Database(Name, Version) VALUES('Database', 1);
 
-CREATE TABLE Status IF NOT EXISTS (
+CREATE TABLE Status (
     StatusId INTEGER PRIMARY KEY,
     Name TEXT
 );
@@ -17,7 +17,7 @@ INSERT INTO Status(Name) VALUES
     ("InProgress"),
     ("Completed");
 
-CREATE TABLE Project IF NOT EXISTS (
+CREATE TABLE Projects (
     ProjectId INTEGER PRIMARY KEY,
     Name TEXT NOT NULL,
     StatusId INTEGER NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE ProjectCategory (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE Tasks {
+CREATE TABLE Tasks (
     TaskId INTEGER PRIMARY KEY,
     ProjectId INTEGER NOT NULL,
     Name TEXT NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE Tasks {
     FOREIGN KEY(CategoryId) REFERENCES Categories(CategoryId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT
-};
+);
 
 CREATE TABLE Entries (
     EntryId INTEGER PRIMARY KEY,
