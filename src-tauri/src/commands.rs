@@ -155,3 +155,8 @@ pub fn update_entry(id: u64, description: String, task: u64, duration: u64, date
 pub fn delete_entry(id: u64, ds: State<Datastore>) -> Result<(), String> {
     ds.delete_item::<Entry>(id).map_err(stringify_err)
 }
+
+#[tauri::command]
+pub fn get_db_version(window: tauri::Window, ds: State<Datastore>) {
+    window.emit("db-initialized", ds.get_info().unwrap()).unwrap();
+}

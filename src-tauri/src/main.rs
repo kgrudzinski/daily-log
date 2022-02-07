@@ -56,7 +56,8 @@ fn main() {
     commands::get_category_list,
     commands::add_category,
     commands::update_category,
-    commands::delete_category
+    commands::delete_category,
+    commands::get_db_version
   ])
   .manage(ds)
   .on_page_load(|win, payload| {
