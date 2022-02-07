@@ -1,0 +1,68 @@
+@charset "utf-8";
+@import "bulma/bulma.sass";
+
+$menu-border: 1px black solid;
+$menu-border-radius: 10px;
+
+html, body {
+    overflow: hidden;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#root {
+    margin: 0;
+}
+
+.app-menu {    
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    @extend .has-background-light;
+}
+
+.app-menu-header {
+    width: 100%;
+    font-weight: 400;
+    font-size: larger;
+    border-right: $menu-border;
+    flex: 0 1 auto;
+    padding: 0.25em 0 0.25em 0.5em;
+}
+
+.app-menu-list {
+    list-style: none;
+    margin-left: 0.25em;    
+    padding-right:0;
+    flex: 1 1 auto;
+
+    li {
+        padding-left: 0.5em;
+        color: black;
+        border-right: $menu-border;
+        cursor: pointer;
+        
+        &.selected {
+            border-top: $menu-border;
+            border-bottom: $menu-border;
+            border-left: $menu-border;
+            border-right: none;
+            border-radius: $menu-border-radius 0 0 $menu-border-radius;
+            @extend .has-background-white;
+        }
+    }
+}
+
+.app-menu-footer {
+    height: 100%;
+    border-right: $menu-border;
+    flex: 0 1 auto;
+    position: relative;
+    padding-left: 0.5em;
+
+    span {
+        position: absolute;
+        bottom: 0;
+    }
+}
