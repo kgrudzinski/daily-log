@@ -180,9 +180,9 @@ impl From<u64> for Status {
 impl ToSql for Status {
     fn to_sql(&self) -> SqlResult<ToSqlOutput<'_>> {
         match *self {
-            Self::Idle => (0 as u64).to_sql(),
-            Self::InProgress => (1 as u64).to_sql(),
-            Self::Completed => (2 as u64).to_sql()
+            Self::Idle => (0_u64).to_sql(),
+            Self::InProgress => (1_u64).to_sql(),
+            Self::Completed => (2_u64).to_sql()
         }        
     }
 }
@@ -221,7 +221,7 @@ pub struct Category {
     pub name: String
 }
 
-const PRIJECT_COLS: [&'static str; 3] = ["Name", "Description", "StatusId"];
+const PRIJECT_COLS: [&str; 3] = ["Name", "Description", "StatusId"];
 
 impl Model for Project {
     const NAME: &'static str = "Projects";
@@ -267,7 +267,7 @@ impl Model for Project {
     }
 }
 
-const TASK_COLS: [&'static str; 5] = ["Name", "Description", "CategoryId", "ProjectId", "StatusId"];
+const TASK_COLS: [&str; 5] = ["Name", "Description", "CategoryId", "ProjectId", "StatusId"];
 
 impl Model for Task {
     const NAME: &'static str = "Tasks";
@@ -302,7 +302,7 @@ impl Model for Task {
     }
 }
 
-const ENTRY_COLS: [&'static str; 4] = ["Description", "TaskId", "Duration", "Date"];
+const ENTRY_COLS: [&str; 4] = ["Description", "TaskId", "Duration", "Date"];
 
 impl Model for Entry {
     const NAME: &'static str = "Entries";
@@ -335,7 +335,7 @@ impl Model for Entry {
     }
 }
 
-const CATEGORY_COLS: [&'static str; 1] = ["Name"];
+const CATEGORY_COLS: [&str; 1] = ["Name"];
 
 impl Model for Category {
     const NAME: &'static str = "Category";

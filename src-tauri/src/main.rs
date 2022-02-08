@@ -11,7 +11,6 @@ mod datastore;
 
 use std::fs::File;
 
-use log;
 use simplelog::{WriteLogger, LevelFilter, Config};
 use tauri::{
   Manager,

@@ -31,13 +31,10 @@ impl Database {
     pub fn open(&self, db_file: &str) -> DbResult<()> {
         let mut inner = self.0.lock().unwrap();
         let opt = inner.take();
-        let conn = if let Some(conn) = opt {
-            let _ = conn.close();
-            Connection::open(db_file)?            
-        } else {
-            Connection::open(db_file)?               
+        if let Some(conn) = opt {
+            let _ = conn.close();                      
         };
-
+        let conn = Connection::open(db_file)?;
         *inner = Some(conn);
         Ok(())
     }
@@ -56,7 +53,7 @@ impl Database {
     pub fn execute<P: Params>(&self, cmd: &str, params: P) -> DbResult<usize> {
         let inner = self.0.lock().unwrap();
         if let Some(conn) = &*inner {
-            conn.execute(cmd, params).map_err(|e| DbError::Sql(e) )
+            conn.execute(cmd, params).map_err(DbError::from)
         } else {
             Err(DbError::NoConnection)
         }
@@ -65,9 +62,9 @@ impl Database {
     pub fn execute_script(&self, sql: &str) -> DbResult<()> {
         let mut inner = self.0.lock().unwrap();
         if let Some(ref mut conn) = &mut *inner {
-            let trans = conn.transaction().map_err(|e| DbError::Sql(e))?;
-            trans.execute_batch(sql).map_err(|e| DbError::Sql(e))?;
-            trans.commit().map_err(|e| DbError::Sql(e))
+            let trans = conn.transaction().map_err(DbError::from)?;
+            trans.execute_batch(sql).map_err(DbError::from)?;
+            trans.commit().map_err(DbError::from)
         } else {
             Err(DbError::NoConnection)
         }
@@ -91,7 +88,7 @@ impl Database {
     pub fn query_one<P, F, T>(&self, query: &str, params: P, f: F) -> DbResult<T> where P: Params, F: FnMut(&Row<'_>) -> SqlResult<T>, T: Default {
         let inner = self.0.lock().unwrap();
         if let Some(conn) = &*inner {
-            conn.query_row(query, params, f).map_err(|e| DbError::Sql(e))
+            conn.query_row(query, params, f).map_err(DbError::from)
         } else {
             Err(DbError::NoConnection)
         } 
