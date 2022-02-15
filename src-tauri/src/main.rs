@@ -14,7 +14,7 @@ use std::fs::File;
 use simplelog::{WriteLogger, LevelFilter, Config};
 use tauri::{
   Manager,
-  Event
+  RunEvent
 };
 use datastore::Datastore;
 use models::{Project, Task, Entry, Category};
@@ -22,7 +22,7 @@ use models::{Project, Task, Entry, Category};
 const DB_INITIALIZED_EVENT: &str = "db-initialized";
 const DB_INITIALZE_ERROR_EVENT: &str = "db-initialize-error";
 
-#[derive(serde::Serialize)]
+#[derive(Clone, serde::Serialize)]
 struct Payload {
   message: String
 }
@@ -82,7 +82,7 @@ fn main() {
     .expect("error while running tauri application");
     app.run(|handle, evt| {
       match evt {
-        Event::Exit => {
+        RunEvent::Exit => {
           log::info!("Closing application");
           let ds = handle.state::<Datastore>();
           let res = ds.close();
@@ -91,7 +91,7 @@ fn main() {
             Err(e) => log::info!("Error closing database: {}", e)
           }
         },
-        Event::Ready => {
+        RunEvent::Ready => {
           log::info!("App ready!");
           log::info!("Sqlite version: {}", rusqlite::version());
         },
