@@ -225,7 +225,7 @@ const PRIJECT_COLS: [&str; 3] = ["Name", "Description", "StatusId"];
 
 impl Model for Project {
     const NAME: &'static str = "Projects";
-    const PRIMARY_KEY: &'static str = "ProjectPRIMARY_KEY";
+    const PRIMARY_KEY: &'static str = "ProjectId";
 
     fn pk(&self) -> u64 {
         self.id
