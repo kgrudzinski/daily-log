@@ -51,6 +51,7 @@ impl Database {
     }
 
     pub fn execute<P: Params>(&self, cmd: &str, params: P) -> DbResult<usize> {
+        log::debug!("executing command: {}", cmd);
         let inner = self.0.lock().unwrap();
         if let Some(conn) = &*inner {
             conn.execute(cmd, params).map_err(DbError::from)
@@ -71,6 +72,7 @@ impl Database {
     }
 
     pub fn query<P, F, T>(&self, query: &str, params: P, fun: F) -> DbResult<Vec<T>> where P: Params, F: FnMut(&Row<'_>) -> SqlResult<T> {
+        log::debug!("executing query: {}", query);
         let inner = self.0.lock().unwrap();
         if let Some(conn) = &*inner {
             let mut res: Vec<T> = Vec::new();
@@ -86,6 +88,7 @@ impl Database {
     }
 
     pub fn query_one<P, F, T>(&self, query: &str, params: P, f: F) -> DbResult<T> where P: Params, F: FnMut(&Row<'_>) -> SqlResult<T>, T: Default {
+        log::debug!("executing query: {}", query);
         let inner = self.0.lock().unwrap();
         if let Some(conn) = &*inner {
             conn.query_row(query, params, f).map_err(DbError::from)
