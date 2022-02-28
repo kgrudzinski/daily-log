@@ -364,3 +364,42 @@ impl Model for Category {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+
+    use super::{
+        ModelSchema,
+        Model,         
+        Category,
+        Project
+    };    
+
+    #[test]
+    fn category_model() {        
+        let schema: ModelSchema = ModelSchema::new::<Category>();        
+        assert_eq!(&schema.insert, "INSERT INTO Category(Name) VALUES(?);");
+        assert_eq!(&schema.select, "SELECT CategoryId, Name FROM Category ORDER BY CategoryId;");
+        assert_eq!(&schema.update, "UPDATE Category SET Name=? WHERE CategoryId = ?;");
+        assert_eq!(&schema.delete, "DELETE FROM Category WHERE CategoryId = ?;");
+    }
+
+    #[test]
+    fn project_model() {
+        let schema: ModelSchema = ModelSchema::new::<Project>();       
+        assert_eq!(&schema.insert, "INSERT INTO Projects(Name,Description,StatusId) VALUES(?,?,?);");
+        assert_eq!(&schema.select, "SELECT ProjectId, Name,Description,StatusId FROM Projects ORDER BY ProjectId;");
+        assert_eq!(&schema.update, "UPDATE Projects SET Name=?,Description=?,StatusId=? WHERE ProjectId = ?;");
+        assert_eq!(&schema.delete, "DELETE FROM Projects WHERE ProjectId = ?;");
+    }
+
+    #[test]
+    fn project_relation() {
+        let schema: ModelSchema = Project::get_schema();
+        assert_eq!(schema.relations.len(), 1);
+        let relation = &schema.relations[0];
+        assert_eq!(&relation.insert, "INSERT INTO Project_Categories(ProjectId, CategoryId) VALUES(?, ?);");
+        assert_eq!(&relation.select, "SELECT CategoryId FROM Project_Categories WHERE ProjectId=?;");
+        assert_eq!(&relation.delete, "DELETE FROM Project_Categories WHERE ProjectId=?;");        
+    }
+}
