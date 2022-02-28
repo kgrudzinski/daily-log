@@ -116,7 +116,7 @@ impl RelationSchema {
         })
     }
 
-    pub fn insert(&self, rel: &RelationData, db: &Database) -> DbResult<u64> {
+    pub fn insert(&self, rel: &RelationData, db: &Database) -> DbResult<u64> {        
         let id = rel.owner_id;
         let len = rel.data.len();
         for it in &rel.data {
@@ -126,10 +126,10 @@ impl RelationSchema {
     }
 
     //Deletes all old entries and inserts new
-    pub fn update(&self, rel: &RelationData, db: &Database) -> DbResult<()> {
-        let id = rel.owner_id;
+    pub fn update(&self, rel: &RelationData, db: &Database) -> DbResult<()> {        
+        let id = rel.owner_id;        
         db.execute(&self.delete, params![id])?;
-        for it in &rel.data {
+        for it in &rel.data {            
             db.execute(&self.insert, params![id, it])?;
         }
         Ok(())
@@ -169,9 +169,9 @@ pub enum Status {
 impl From<u64> for Status {
     fn from(item: u64) -> Self {
         match item {
-            0 => Self::Idle,
-            1 => Self::InProgress,
-            2 => Self::Completed,
+            1 => Self::Idle,
+            2 => Self::InProgress,
+            3 => Self::Completed,
             _ => Self::Idle
         }
     }
@@ -180,9 +180,9 @@ impl From<u64> for Status {
 impl ToSql for Status {
     fn to_sql(&self) -> SqlResult<ToSqlOutput<'_>> {
         match *self {
-            Self::Idle => (0_u64).to_sql(),
-            Self::InProgress => (1_u64).to_sql(),
-            Self::Completed => (2_u64).to_sql()
+            Self::Idle => (1_u64).to_sql(),
+            Self::InProgress => (2_u64).to_sql(),
+            Self::Completed => (3_u64).to_sql()
         }        
     }
 }
