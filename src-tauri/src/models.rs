@@ -105,7 +105,7 @@ impl RelationSchema {
         Self {
             name: table.into(),
             insert: format!("INSERT INTO {}({}, {}) VALUES(?, ?);", table, owner_col, item_col),
-            select: format!("SELECT {} FROM {} WHERE {}=?;", table, item_col, owner_col),
+            select: format!("SELECT {} FROM {} WHERE {}=?;", item_col, table, owner_col),
             delete: format!("DELETE FROM {} WHERE {}=?;", table, owner_col),            
         }
     }
