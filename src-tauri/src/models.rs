@@ -233,7 +233,7 @@ impl Model for Project {
 
     fn get_schema() -> ModelSchema {
         let mut schema = ModelSchema::new::<Self>();
-        schema.add_relation(RelationSchema::new("Project_Categories", "ProjectId", "CategoryId"));
+        schema.add_relation(RelationSchema::new("ProjectCategory", "ProjectId", "CategoryId"));
         schema
     }
 
@@ -250,7 +250,7 @@ impl Model for Project {
     }
 
     fn add_relation_data(&mut self, relation: &str, data: Vec<u64>) {
-        if relation == "Project_Categories" {
+        if relation == "ProjectCategory" {
             self.categories = data;
         }
     }
@@ -398,8 +398,8 @@ mod tests {
         let schema: ModelSchema = Project::get_schema();
         assert_eq!(schema.relations.len(), 1);
         let relation = &schema.relations[0];
-        assert_eq!(&relation.insert, "INSERT INTO Project_Categories(ProjectId, CategoryId) VALUES(?, ?);");
-        assert_eq!(&relation.select, "SELECT CategoryId FROM Project_Categories WHERE ProjectId=?;");
-        assert_eq!(&relation.delete, "DELETE FROM Project_Categories WHERE ProjectId=?;");        
+        assert_eq!(&relation.insert, "INSERT INTO ProjectCategory(ProjectId, CategoryId) VALUES(?, ?);");
+        assert_eq!(&relation.select, "SELECT CategoryId FROM ProjectCategory WHERE ProjectId=?;");
+        assert_eq!(&relation.delete, "DELETE FROM ProjectCategory WHERE ProjectId=?;");
     }
 }
