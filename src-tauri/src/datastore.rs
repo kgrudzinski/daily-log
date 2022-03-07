@@ -98,3 +98,129 @@ impl Datastore {
         m.get(&self.db)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Datastore;
+    use crate::models::{
+        Category,
+        Project,
+        Status
+    };
+
+    fn cleanup(filename: &str) {
+        use std::path::Path;
+        let exists = Path::new(filename).exists();
+        if exists {
+            let _ = std::fs::remove_file(filename);
+        }
+    }
+
+    #[test]
+    fn test_datastore_insert() {
+        const DB_NAME: &str = "test_1.db";
+        let mut ds = Datastore::new();
+        let _ = ds.open(DB_NAME).unwrap();
+        ds.add_model_schema::<Category>();
+        let res = ds.insert_item(Category {
+            id: 0,
+            name: "Kategoria".to_string()
+        }).unwrap();
+        let _ = ds.close().unwrap();
+        cleanup(DB_NAME);
+        assert_eq!(res, 1);
+    }
+
+    #[test]
+    fn test_datastore_select() {
+        const DB_NAME: &str = "test_2.db";
+        let mut ds = Datastore::new();
+        let _ = ds.open(DB_NAME).unwrap();
+        ds.add_model_schema::<Category>();
+        let res = ds.insert_item(Category {
+            id: 0,
+            name: "Kategoria".to_string()
+        }).unwrap();
+        assert_eq!(res, 1);
+        let items = ds.get_items::<Category>().unwrap();
+        let _ = ds.close().unwrap();
+        cleanup(DB_NAME);
+        assert_eq!(items.len(), 1);
+        assert_eq!(items[0].name, "Kategoria");
+        assert_eq!(items[0].id, 1);
+    }
+
+    #[test]
+    fn test_datastore_insert_with_relation() {
+        const DB_NAME: &str = "test_3.db";
+        let mut ds = Datastore::new();
+        let _ = ds.open(DB_NAME).unwrap();
+        ds.add_model_schema::<Category>();
+        ds.add_model_schema::<Project>();
+        let _ = ds.insert_item(Category {
+            id: 0,
+            name: "Kategoria 1".to_string()
+        }).unwrap();
+        let _ = ds.insert_item(Category {
+            id: 0,
+            name: "Kategoria 2".to_string()
+        }).unwrap();
+
+        let _ = ds.insert_item(Project {
+            id: 0,
+            name: "Projct".to_string(),
+            description: "Opis".to_string(),
+            status: Status::Idle,
+            categories: vec![1, 2]
+        }).unwrap();
+
+        let items = ds.get_items::<Project>().unwrap();
+        let _ = ds.close().unwrap();
+        cleanup(DB_NAME);
+        assert_eq!(items[0].categories, vec![1, 2]);
+    }
+
+    #[test]
+    fn test_datastore_delete() {
+        const DB_NAME: &str = "test_4.db";
+        let mut ds = Datastore::new();
+        let _ = ds.open(DB_NAME).unwrap();
+        ds.add_model_schema::<Category>();
+        let _ = ds.insert_item(Category {
+            id: 0,
+            name: "Kategoria".to_string()
+        }).unwrap();
+
+        let res = ds.delete_item::<Category>(1);
+        assert!(res.is_ok());
+        let _ = ds.close().unwrap();
+        cleanup(DB_NAME);
+    }
+
+    #[test]
+    fn test_datastore_update() {
+        const DB_NAME: &str = "test_5.db";
+        let mut ds = Datastore::new();
+        let _ = ds.open(DB_NAME).unwrap();
+        ds.add_model_schema::<Category>();
+        let res = ds.insert_item(Category {
+            id: 0,
+            name: "Kategoria".to_string()
+        });
+        assert!(res.is_ok());
+        let id = res.unwrap_or_default();
+        assert_eq!(1, id);
+
+        let res = ds.update_item::<Category>(Category {
+            id: id,
+            name: "Kategoria2".to_string()
+        });
+        assert!(res.is_ok());
+
+        let items = ds.get_items::<Category>().unwrap();
+        assert_eq!(items[0].name, "Kategoria2");
+        assert_eq!(items[0].id, 1);
+        let _ = ds.close().unwrap();
+        cleanup(DB_NAME);
+    }
+}
