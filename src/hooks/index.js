@@ -1,4 +1,4 @@
 export { useTasks, useTaskMutation } from "./tasks";
 export { useProjects, useProjectMutations } from "./projects";
-export { useCategories, useCategoriesMutations } from "./categories";
-export { useEntries, useEntriesMutations } from "./entries";
+export { useCategories, useCategoryMutations } from "./categories";
+export { useEntries, useEntryMutations } from "./entries";

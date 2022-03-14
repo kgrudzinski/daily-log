@@ -11,7 +11,7 @@ export function useProjects() {
   return projects;
 }
 
-export function useProjectsMutations(onSuccess, onError) {
+export function useProjectMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {

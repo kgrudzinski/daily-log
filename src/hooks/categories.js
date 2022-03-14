@@ -11,7 +11,7 @@ export function useCategories() {
   return categories;
 }
 
-export function useTaskMutations(onSuccess, onError) {
+export function useCategoryMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {

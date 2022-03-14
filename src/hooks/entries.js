@@ -11,7 +11,7 @@ export function useEntries() {
   return entries;
 }
 
-export function useTaskMutations(onSuccess, onError) {
+export function useEntryMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
