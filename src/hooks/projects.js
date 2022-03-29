@@ -15,7 +15,7 @@ export function useProjectMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
-    queryClient.invalidateQery(["projects"]);
+    queryClient.invalidateQueries(["projects"]);
     onSuccess();
   };
 
@@ -31,9 +31,9 @@ export function useProjectMutations(onSuccess, onError) {
     onSuccess: on_success,
     onError: on_error,
   });
-  const delete_mut = useMutation(ProjectsService.delete, {
+  const remove_mut = useMutation(ProjectsService.remove, {
     onSuccess: on_success,
     onError: on_error,
   });
-  return { add: add_mut, update: update_mut, delete: delete_mut };
+  return { add: add_mut, update: update_mut, remove: remove_mut };
 }

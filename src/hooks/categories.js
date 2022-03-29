@@ -15,7 +15,7 @@ export function useCategoryMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
-    queryClient.invalidateQery(["Categories"]);
+    queryClient.invalidateQueries(["categories"]);
     onSuccess();
   };
 
@@ -31,9 +31,19 @@ export function useCategoryMutations(onSuccess, onError) {
     onSuccess: on_success,
     onError: on_error,
   });
-  const delete_mut = useMutation(CategoriesService.delete, {
+  const remove_mut = useMutation(CategoriesService.remove, {
     onSuccess: on_success,
     onError: on_error,
   });
-  return { add: add_mut, update: update_mut, delete: delete_mut };
+  return {
+    add: (value) => {
+      add_mut.mutate({ name: value });
+    },
+    update: (id, value) => {
+      update_mut.mutate({ id: id, name: value });
+    },
+    remove: (id) => {
+      remove_mut.mutate(id);
+    },
+  };
 }

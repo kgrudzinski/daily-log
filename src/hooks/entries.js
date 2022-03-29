@@ -15,7 +15,7 @@ export function useEntryMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
-    queryClient.invalidateQery(["Entries"]);
+    queryClient.invalidateQueries(["Entries"]);
     onSuccess();
   };
 
@@ -31,9 +31,9 @@ export function useEntryMutations(onSuccess, onError) {
     onSuccess: on_success,
     onError: on_error,
   });
-  const delete_mut = useMutation(EntriesService.delete, {
+  const remove_mut = useMutation(EntriesService.remove, {
     onSuccess: on_success,
     onError: on_error,
   });
-  return { add: add_mut, update: update_mut, delete: delete_mut };
+  return { add: add_mut, update: update_mut, remove: remove_mut };
 }
