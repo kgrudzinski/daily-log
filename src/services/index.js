@@ -23,8 +23,8 @@ let createService = (name) => {
     update: function (item) {
       return query(`update_${name}`, item);
     },
-    delete: function (id) {
-      return query(`delete_${name}`, id);
+    remove: function (id) {
+      return query(`delete_${name}`, { id: id });
     },
   };
 };
