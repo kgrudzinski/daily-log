@@ -49,9 +49,13 @@ export function IconText({ component, color, children, ...rest }) {
 
   const classNames = classes.join(" ");
 
+  const ComponentName = component || "span";
+  /*
   if (component === "div") {
     return <div className={classNames}>{children}</div>;
   } else {
     return <span className={classNames}>{children}</span>;
   }
+  */
+  return <ComponentName className={classNames}>{children}</ComponentName>;
 }
