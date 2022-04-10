@@ -104,8 +104,8 @@ export function IconButton({
   const icon_size = size || "";
   const text = children ? <span>{children}</span> : null;
   const icon_cmp = (
-    <span className="icon">
-      <i className={`${icon} ${icon_size}`} />
+    <span className={`icon ${icon_size}`}>
+      <i className={icon} />
     </span>
   );
 
