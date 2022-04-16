@@ -1,9 +1,67 @@
 
+//use std::fmt;
+
 use rusqlite::{ToSql, Result as SqlResult, types::ToSqlOutput, Row, params};
+//use thiserror::Error;
+
 use crate::database::{
     Database,
-    DbResult
+    DbResult,
+    //DbError
 };
+
+use crate::query::select;
+use crate::mutations::{delete_from, insert, update};
+/*
+#[derive(Debug, Clone, Copy)]
+enum ModelOperation {
+    Select,
+    Update,
+    Insert,
+    Delete
+}
+
+impl fmt::Display for ModelOperation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Self::Select => write!(f, "Select"),
+            Self::Update => write!(f, "Update"),
+            Self::Insert => write!(f, "Insert"),
+            Self::Delete => write!(f, "Delete"),
+        }        
+    }
+}
+
+
+#[derive(Error, Debug)]
+pub enum SchemaError {
+    #[error("{0}")]
+    Database(#[from]DbError),
+    #[error("{0} operation is not supported")]
+    NotSupported(ModelOperation)
+}
+
+#[derive(Debug, Clone, Copy)]
+struct ModelOptions {
+    select: bool,
+    update: bool,
+    insert: bool,
+    delete: bool
+}
+
+impl Default for ModelOptions {
+    fn default() -> Self {
+        Self {
+            select: true,
+            update: true,
+            insert: true,
+            delete: true
+        }
+    }
+}
+
+pub type SchemaResult<T> = Result<T, SchemaError>;
+*/
 
 pub struct ModelSchema {
     select: String,
@@ -16,18 +74,16 @@ pub struct ModelSchema {
 impl ModelSchema {
     pub fn new<T: Model>() -> Self {
 
-        let fields = T::fields().join(",");
+        let mut fields = vec![T::PRIMARY_KEY];
+        fields.extend_from_slice(T::fields());
         let values: Vec<&'static str> = T::fields().iter().map(|_i| "?").collect();
-        let values = values.join(",");
-
-        let params: Vec<String> = T::fields().iter().map(|i| format!("{}=?", i)).collect();
-        let params = params.join(",");
+        let params: Vec<(&str, &str)> = T::fields().iter().map(|it| (*it, "?")).collect();
 
         Self {
-            select: format!("SELECT {}, {} FROM {} ORDER BY {};", T::PRIMARY_KEY, fields, T::NAME, T::PRIMARY_KEY),
-            insert: format!("INSERT INTO {}({}) VALUES({});", T::NAME, fields, values),
-            delete: format!("DELETE FROM {} WHERE {} = ?;", T::NAME, T::PRIMARY_KEY),
-            update: format!("UPDATE {} SET {} WHERE {} = ?;", T::NAME, params, T::PRIMARY_KEY),
+            select: select(&fields).from(T::NAME).order_by(T::PRIMARY_KEY).to_string(), //format!("SELECT {}, {} FROM {} ORDER BY {};", T::PRIMARY_KEY, fields, T::NAME, T::PRIMARY_KEY),
+            insert: insert(T::fields()).into(T::NAME).values(&values).to_string(),
+            delete: delete_from(T::NAME).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),//format!("DELETE FROM {} WHERE {} = ?;", T::NAME, T::PRIMARY_KEY),
+            update: update(T::NAME).set(&params).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),//format!("UPDATE {} SET {} WHERE {} = ?;", T::NAME, params, T::PRIMARY_KEY),
             relations: vec![]            
         }
     }
@@ -102,11 +158,12 @@ pub struct RelationSchema {
 
 impl RelationSchema {
     pub fn new(table: &str, owner_col: &str, item_col: &str) -> Self {
+        let where_clause = format!("{} = ?", owner_col);
         Self {
             name: table.into(),
-            insert: format!("INSERT INTO {}({}, {}) VALUES(?, ?);", table, owner_col, item_col),
-            select: format!("SELECT {} FROM {} WHERE {}=?;", item_col, table, owner_col),
-            delete: format!("DELETE FROM {} WHERE {}=?;", table, owner_col),            
+            insert: insert(&[owner_col, item_col]).into(table).values(&["?", "?"]).to_string(),
+            select: select(&[item_col]).from(table).where_(&where_clause).to_string(),
+            delete: delete_from(table).where_(&where_clause).to_string(),
         }
     }
 
@@ -154,6 +211,11 @@ pub trait Model: Sized {
     fn get_schema() -> ModelSchema {
         ModelSchema::new::<Self>()
     }
+    /*
+    fn options() -> ModelOptions {
+        ModelOptions::default()
+    }*/
+
     fn into_data(self) -> ModelData;
     fn from_sql(r: &Row<'_>) -> SqlResult<Self>;
     fn add_relation_data(&mut self, _relation: &str, _data: Vec<u64>) {}
@@ -378,19 +440,19 @@ mod tests {
     #[test]
     fn category_model() {        
         let schema: ModelSchema = ModelSchema::new::<Category>();        
-        assert_eq!(&schema.insert, "INSERT INTO Category(Name) VALUES(?);");
-        assert_eq!(&schema.select, "SELECT CategoryId, Name FROM Category ORDER BY CategoryId;");
-        assert_eq!(&schema.update, "UPDATE Category SET Name=? WHERE CategoryId = ?;");
-        assert_eq!(&schema.delete, "DELETE FROM Category WHERE CategoryId = ?;");
+        assert_eq!(&schema.insert, "INSERT INTO Category(Name) VALUES(?)");
+        assert_eq!(&schema.select, "SELECT CategoryId, Name FROM Category ORDER BY CategoryId ASC");
+        assert_eq!(&schema.update, "UPDATE Category SET Name = ? WHERE CategoryId = ?");
+        assert_eq!(&schema.delete, "DELETE FROM Category WHERE CategoryId = ?");
     }
 
     #[test]
     fn project_model() {
         let schema: ModelSchema = ModelSchema::new::<Project>();       
-        assert_eq!(&schema.insert, "INSERT INTO Projects(Name,Description,StatusId) VALUES(?,?,?);");
-        assert_eq!(&schema.select, "SELECT ProjectId, Name,Description,StatusId FROM Projects ORDER BY ProjectId;");
-        assert_eq!(&schema.update, "UPDATE Projects SET Name=?,Description=?,StatusId=? WHERE ProjectId = ?;");
-        assert_eq!(&schema.delete, "DELETE FROM Projects WHERE ProjectId = ?;");
+        assert_eq!(&schema.insert, "INSERT INTO Projects(Name, Description, StatusId) VALUES(?, ?, ?)");
+        assert_eq!(&schema.select, "SELECT ProjectId, Name, Description, StatusId FROM Projects ORDER BY ProjectId ASC");
+        assert_eq!(&schema.update, "UPDATE Projects SET Name = ?, Description = ?, StatusId = ? WHERE ProjectId = ?");
+        assert_eq!(&schema.delete, "DELETE FROM Projects WHERE ProjectId = ?");
     }
 
     #[test]
@@ -398,8 +460,8 @@ mod tests {
         let schema: ModelSchema = Project::get_schema();
         assert_eq!(schema.relations.len(), 1);
         let relation = &schema.relations[0];
-        assert_eq!(&relation.insert, "INSERT INTO ProjectCategory(ProjectId, CategoryId) VALUES(?, ?);");
-        assert_eq!(&relation.select, "SELECT CategoryId FROM ProjectCategory WHERE ProjectId=?;");
-        assert_eq!(&relation.delete, "DELETE FROM ProjectCategory WHERE ProjectId=?;");
+        assert_eq!(&relation.insert, "INSERT INTO ProjectCategory(ProjectId, CategoryId) VALUES(?, ?)");
+        assert_eq!(&relation.select, "SELECT CategoryId FROM ProjectCategory WHERE ProjectId = ?");
+        assert_eq!(&relation.delete, "DELETE FROM ProjectCategory WHERE ProjectId = ?");
     }
 }
