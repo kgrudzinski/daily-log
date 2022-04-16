@@ -8,6 +8,8 @@ mod sql;
 mod models;
 mod commands;
 mod datastore;
+mod query;
+mod mutations;
 
 use std::fs::File;
 
