@@ -11,7 +11,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "react-query";
-//import { ReactQueryDevtools } from "react-query/devtools";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import {
   Menu,
@@ -31,7 +31,7 @@ import {
   ButtonSize,
 } from "./components/shared";
 
-import { Start } from "./pages/Start";
+import { Start } from "./pages";
 
 import { Settings } from "./pages/Settings";
 import { Tasks } from "./pages/Tasks";
@@ -164,7 +164,7 @@ function App() {
               <Settings></Settings>
             </Page>
           </Pages>
-          {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
         <Modal opened={showModal} onClose={() => setShowModal(false)}>
           <div className="box mt-1 mx-1">

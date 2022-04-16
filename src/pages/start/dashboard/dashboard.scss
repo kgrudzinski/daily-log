@@ -1,0 +1,15 @@
+.item {
+  border-radius: 15px;
+  border: 1px solid black;
+  padding: 1em;
+  min-height: 50px;
+  min-width: 180px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+}
