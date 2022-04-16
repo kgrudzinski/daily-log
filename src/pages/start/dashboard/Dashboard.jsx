@@ -1,6 +1,6 @@
 //import { useQuery } from "react-query";
 
-import { Card } from "../../../components/shared";
+import { Card } from "components/shared";
 import "./dashboard.scss";
 
 export function Dashboard({ children }) {

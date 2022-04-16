@@ -13,13 +13,7 @@ import {
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import {
-  Menu,
-  MenuHeader,
-  MenuItems,
-  MenuItem,
-  MenuFooter,
-} from "./components";
+import { Menu, MenuHeader, MenuItems, MenuItem, MenuFooter } from "components";
 
 import {
   Pages,
@@ -29,7 +23,7 @@ import {
   IconButton,
   ButtonColor,
   ButtonSize,
-} from "./components/shared";
+} from "components/shared";
 
 import { Start } from "./pages";
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { ProjectsService } from "../services";
-import { Form } from "../components/shared";
-import { ButtonColor } from "../components/shared";
+import { ProjectsService } from "services";
+import { Form } from "components/shared";
+import { ButtonColor } from "components/shared";
 
 const NEW_TASK = {
   id: 0,

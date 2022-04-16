@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useCategories, useCategoryMutations } from "../hooks";
-import { List, Card, Tabs, Page, Pages } from "../components/shared";
+import { useCategories, useCategoryMutations } from "hooks";
+import { List, Card, Tabs, Page, Pages } from "components/shared";
 
 import { Projects } from "./Projects";
 
