@@ -57,8 +57,28 @@ function Footer({ children }) {
   return expanded && <div className="card-footer">{children}</div>;
 }
 
-function FooterItem({ children }) {
-  return <div className="card-footer-item">{children}</div>;
+function FooterItem({ align, children }) {
+  let flex_align;
+
+  switch (align) {
+    case "left":
+      flex_align = "flex-start";
+      break;
+    case "right":
+      flex_align = "flex-end";
+      break;
+    case "center":
+      flex_align = "center";
+      break;
+    default:
+      flex_align = "flex-start";
+  }
+
+  return (
+    <span className="card-footer-item" style={{ justifyContent: flex_align }}>
+      {children}
+    </span>
+  );
 }
 
 Card.Header = Header;
