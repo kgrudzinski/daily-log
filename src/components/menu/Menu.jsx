@@ -33,7 +33,7 @@ export function MenuHeader({ children }) {
 export function MenuFooter({ children }) {
   return (
     <div className="app-menu-footer">
-      <span className="app-menu-footer-content">{children}</span>
+      <span className="app-menu-footer-content mb-2">{children}</span>
     </div>
   );
 }
