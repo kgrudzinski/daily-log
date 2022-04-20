@@ -57,7 +57,7 @@ CREATE TABLE Tasks (
     FOREIGN KEY(ProjectId) REFERENCES Projects(ProjectId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT,
-    FOREIGN KEY(CategoryId) REFERENCES Categories(CategoryId) 
+    FOREIGN KEY(CategoryId) REFERENCES Category(CategoryId) 
         ON DELETE RESTRICT 
         ON UPDATE RESTRICT
 );
