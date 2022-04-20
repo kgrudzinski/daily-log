@@ -87,7 +87,7 @@ impl Database {
         }
     }
 
-    pub fn query_one<P, F, T>(&self, query: &str, params: P, f: F) -> DbResult<T> where P: Params, F: FnMut(&Row<'_>) -> SqlResult<T>, T: Default {
+    pub fn query_one<P, F, T>(&self, query: &str, params: P, f: F) -> DbResult<T> where P: Params, F: FnMut(&Row<'_>) -> SqlResult<T> {
         log::debug!("executing query: {}", query);
         let inner = self.0.lock().unwrap();
         if let Some(conn) = &*inner {
