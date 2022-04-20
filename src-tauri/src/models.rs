@@ -1,5 +1,5 @@
 
-//use std::fmt;
+use std::fmt;
 
 use rusqlite::{ToSql, Result as SqlResult, types::ToSqlOutput, Row, params};
 //use thiserror::Error;
@@ -10,7 +10,7 @@ use crate::database::{
     //DbError
 };
 
-use crate::query::select;
+use crate::query::{select, SelectQuery};
 use crate::mutations::{delete_from, insert, update};
 /*
 #[derive(Debug, Clone, Copy)]
@@ -63,8 +63,14 @@ impl Default for ModelOptions {
 pub type SchemaResult<T> = Result<T, SchemaError>;
 */
 
+pub trait QueryFilter: fmt::Display {
+    fn into_params(self) -> Vec<Box<dyn ToSql>>;
+}
+
 pub struct ModelSchema {
-    select: String,
+    select: SelectQuery,
+    select_all: String,
+    select_by_id: String,
     insert: String,
     delete: String,
     update: String,
@@ -80,10 +86,12 @@ impl ModelSchema {
         let params: Vec<(&str, &str)> = T::fields().iter().map(|it| (*it, "?")).collect();
 
         Self {
-            select: select(&fields).from(T::NAME).order_by(T::PRIMARY_KEY).to_string(), //format!("SELECT {}, {} FROM {} ORDER BY {};", T::PRIMARY_KEY, fields, T::NAME, T::PRIMARY_KEY),
+            select: select(&fields).from(T::NAME),
+            select_all: select(&fields).from(T::NAME).order_by(T::PRIMARY_KEY).to_string(),
+            select_by_id: select(&fields).from(T::NAME).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),            
             insert: insert(T::fields()).into(T::NAME).values(&values).to_string(),
-            delete: delete_from(T::NAME).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),//format!("DELETE FROM {} WHERE {} = ?;", T::NAME, T::PRIMARY_KEY),
-            update: update(T::NAME).set(&params).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),//format!("UPDATE {} SET {} WHERE {} = ?;", T::NAME, params, T::PRIMARY_KEY),
+            delete: delete_from(T::NAME).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),
+            update: update(T::NAME).set(&params).where_(&format!("{} = ?", T::PRIMARY_KEY)).to_string(),
             relations: vec![]            
         }
     }
@@ -92,9 +100,9 @@ impl ModelSchema {
         self.relations.push(rel);
     }
 
-    pub fn insert(&self, mut data: ModelData, db: &Database) -> DbResult<u64> {
+    pub fn insert(&self, mut data: ModelData, db: &Database) -> DbResult<u64> {        
         db.execute(&self.insert, rusqlite::params_from_iter(data.params))?;
-        let res = db.get_last_rowid().map(|r| r as u64)?;
+        let res = db.get_last_rowid().map(|r| r as u64)?;        
         for i in 0..self.relations.len() {
             let rel = &self.relations[i];
             let mut rel_data = data.relations.get_mut(i).unwrap();
@@ -127,8 +135,38 @@ impl ModelSchema {
         Ok(res)
     }
 
-    pub fn get<T: Model>(&self, db: &Database) -> DbResult<Vec<T>> {
-        let mut res = db.query(&self.select, [], |row| {
+    pub fn get_all<T: Model>(&self, db: &Database) -> DbResult<Vec<T>> {
+        let mut res = db.query(&self.select_all, [], |row| {
+            T::from_sql(row)
+        })?;
+
+        for rel in &self.relations {
+            for i in 0..res.len() {
+                let it = res.get_mut(i).unwrap();
+                let data = rel.select(it.pk(), db)?;
+                it.add_relation_data(&rel.name, data);
+            }            
+        }            
+        Ok(res)
+    }
+
+    pub fn get_by_id<T: Model>(&self, id: u64, db: &Database) -> DbResult<T> {
+        let mut res = db.query_one(&self.select_by_id, [id], |row| {
+            T::from_sql(row)
+        })?;
+
+        for rel in &self.relations {                
+                let data = rel.select(res.pk(), db)?;
+                res.add_relation_data(&rel.name, data);
+        }                    
+        Ok(res)
+    }
+
+    pub fn get<T: Model, F: QueryFilter>(&self, filter: F, db: &Database) -> DbResult<Vec<T>> {
+        let cond = filter.to_string();
+        let params = filter.into_params();
+        let select = self.select.clone().where_(&cond).to_string();
+        let mut res = db.query(&select, rusqlite::params_from_iter(params), |row| {
             T::from_sql(row)
         })?;
 
@@ -268,6 +306,14 @@ pub struct Task {
     pub status: Status
 }
 
+#[derive(Debug, Default, serde::Deserialize)]
+pub struct TaskParams {
+    pub name: Option<String>,
+    pub categories: Option<Vec<u64>>,
+    pub projects: Option<Vec<u64>>,
+    pub status: Option<Status>
+}
+
 #[derive(Debug, serde::Serialize)] 
 pub struct Entry {
     pub id: u64,
@@ -275,6 +321,13 @@ pub struct Entry {
     pub task_id: u64,
     pub duration: u64,
     pub date: u64
+}
+
+#[derive(Debug, Default, serde::Deserialize)]
+pub struct EntryParams {
+    pub date: Option<u64>,
+    pub from: Option<u64>,
+    pub to: Option<u64>
 }
 
 #[derive(Debug, serde::Serialize)]
@@ -427,6 +480,94 @@ impl Model for Category {
     }
 }
 
+macro_rules! gen_expr{
+    ($items: ident, $field: expr, $op: literal, $col: literal) => {
+        if $field.is_some() {
+            $items.push(format!("{} {} ?", $col, $op));
+        }
+    }
+}
+
+macro_rules! gen_in_expr{
+    ($items: ident, $arr_field: expr, $col: literal) => {
+        if let Some(arr) = &$arr_field {
+            let params = arr.iter().map(|_it| "?").collect::<Vec<&'static str>>().join(", ");
+            $items.push(format!("{} IN ({})", $col, params));
+        }
+    }
+}
+
+impl fmt::Display for TaskParams {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut items: Vec<String> = Vec::new();
+        gen_expr!(items, self.name, "LIKE", "Name");
+        gen_expr!(items, self.status, "=", "StatusId");       
+        gen_in_expr!(items, self.categories, "CategoryId");
+        gen_in_expr!(items, self.projects, "ProjectId");
+        
+        write!(f, "{}", items.join(" AND "))
+    }
+}
+
+impl QueryFilter for TaskParams {
+    fn into_params(self) -> Vec<Box<dyn ToSql>> {
+        let mut params: Vec<Box<dyn ToSql>> = Vec::new();
+
+        if let Some(name) = self.name {
+            params.push(Box::new(name));
+        }
+
+        if let Some(status) = self.status {
+            params.push(Box::new(status));
+        }
+
+        if let Some(categories) = self.categories {
+            for it in categories {
+                params.push(Box::new(it));
+            }
+        }
+
+        if let Some(projects) = self.projects {
+            for it in projects {
+                params.push(Box::new(it));
+            }
+        }
+
+        params
+    }
+}
+
+impl fmt::Display for EntryParams {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut items: Vec<String> = Vec::new();        
+        gen_expr!(items, self.date, "=", "Date");
+        gen_expr!(items, self.from, ">=", "Date");
+        gen_expr!(items, self.to, "<=", "Date");        
+        
+        write!(f, "{}", items.join(" AND "))
+    }
+}
+
+impl QueryFilter for EntryParams {
+    fn into_params(self) -> Vec<Box<dyn ToSql>> {
+        let mut params: Vec<Box<dyn ToSql>> = Vec::new();
+
+        if let Some(date) = self.date {
+            params.push(Box::new(date));
+        }
+
+        if let Some(from) = self.from {
+            params.push(Box::new(from));
+        }
+
+        if let Some(to) = self.to {
+            params.push(Box::new(to));
+        }
+
+        params
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -434,14 +575,19 @@ mod tests {
         ModelSchema,
         Model,         
         Category,
-        Project
+        Project,
+        Task,        
+        TaskParams,
+        EntryParams,
+        Status,
     };    
 
     #[test]
     fn category_model() {        
         let schema: ModelSchema = ModelSchema::new::<Category>();        
         assert_eq!(&schema.insert, "INSERT INTO Category(Name) VALUES(?)");
-        assert_eq!(&schema.select, "SELECT CategoryId, Name FROM Category ORDER BY CategoryId ASC");
+        assert_eq!(&schema.select_all, "SELECT CategoryId, Name FROM Category ORDER BY CategoryId ASC");
+        assert_eq!(&schema.select_by_id, "SELECT CategoryId, Name FROM Category WHERE CategoryId = ?");
         assert_eq!(&schema.update, "UPDATE Category SET Name = ? WHERE CategoryId = ?");
         assert_eq!(&schema.delete, "DELETE FROM Category WHERE CategoryId = ?");
     }
@@ -449,8 +595,9 @@ mod tests {
     #[test]
     fn project_model() {
         let schema: ModelSchema = ModelSchema::new::<Project>();       
-        assert_eq!(&schema.insert, "INSERT INTO Projects(Name, Description, StatusId) VALUES(?, ?, ?)");
-        assert_eq!(&schema.select, "SELECT ProjectId, Name, Description, StatusId FROM Projects ORDER BY ProjectId ASC");
+        assert_eq!(&schema.insert, "INSERT INTO Projects(Name, Description, StatusId) VALUES(?, ?, ?)");        
+        assert_eq!(&schema.select_all, "SELECT ProjectId, Name, Description, StatusId FROM Projects ORDER BY ProjectId ASC");
+        assert_eq!(&schema.select_by_id, "SELECT ProjectId, Name, Description, StatusId FROM Projects WHERE ProjectId = ?");        
         assert_eq!(&schema.update, "UPDATE Projects SET Name = ?, Description = ?, StatusId = ? WHERE ProjectId = ?");
         assert_eq!(&schema.delete, "DELETE FROM Projects WHERE ProjectId = ?");
     }
@@ -463,5 +610,56 @@ mod tests {
         assert_eq!(&relation.insert, "INSERT INTO ProjectCategory(ProjectId, CategoryId) VALUES(?, ?)");
         assert_eq!(&relation.select, "SELECT CategoryId FROM ProjectCategory WHERE ProjectId = ?");
         assert_eq!(&relation.delete, "DELETE FROM ProjectCategory WHERE ProjectId = ?");
+    }
+
+    #[test]
+    fn task_model() {
+        let schema: ModelSchema = ModelSchema::new::<Task>();        
+        assert_eq!(&schema.insert, "INSERT INTO Tasks(Name, Description, CategoryId, ProjectId, StatusId) VALUES(?, ?, ?, ?, ?)");
+        assert_eq!(&schema.select_all, "SELECT TaskId, Name, Description, CategoryId, ProjectId, StatusId FROM Tasks ORDER BY TaskId ASC");
+        assert_eq!(&schema.select_by_id, "SELECT TaskId, Name, Description, CategoryId, ProjectId, StatusId FROM Tasks WHERE TaskId = ?");
+        assert_eq!(&schema.update, "UPDATE Tasks SET Name = ?, Description = ?, CategoryId = ?, ProjectId = ?, StatusId = ? WHERE TaskId = ?");
+        assert_eq!(&schema.delete, "DELETE FROM Tasks WHERE TaskId = ?");
+    }
+
+    #[test]
+    fn task_filter() {
+        let params1 = TaskParams {
+            name: Some("test task".to_string()),
+            ..Default::default()
+        };
+
+        let params2 = TaskParams {
+            status: Some(Status::InProgress),
+            categories: Some(vec![1, 2]),
+            ..Default::default()
+        };
+
+        let params3 = TaskParams {
+            projects: Some(vec![1, 2]),
+            categories: Some(vec![1, 2]),
+            ..Default::default()
+        };
+
+        assert_eq!(params1.to_string(), "Name LIKE ?");
+        assert_eq!(params2.to_string(), "StatusId = ? AND CategoryId IN (?, ?)");
+        assert_eq!(params3.to_string(), "CategoryId IN (?, ?) AND ProjectId IN (?, ?)");
+    }
+
+    #[test]
+    fn entry_filter() {
+        let params1 = EntryParams {
+            date: Some(1),
+            ..Default::default()
+        };
+
+        let params2 = EntryParams {
+            from: Some(1),
+            to: Some(2),
+            ..Default::default()
+        };
+
+        assert_eq!(params1.to_string(), "Date = ?");
+        assert_eq!(params2.to_string(), "Date >= ? AND Date <= ?");
     }
 }
