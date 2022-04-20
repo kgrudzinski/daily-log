@@ -1,7 +1,7 @@
 
 use std::fmt;
 
-#[derive(Debug, Clone,Copy)]
+#[derive(Debug, Clone, Copy)]
 enum SortOrder {
     Asc,
     Desc
@@ -16,6 +16,7 @@ impl fmt::Display for SortOrder {
     }
 }
 
+#[derive(Debug, Clone)]
 struct SortBy(String, SortOrder);
 
 impl fmt::Display for SortBy {
@@ -24,6 +25,7 @@ impl fmt::Display for SortBy {
     }
 }
 
+#[derive(Debug,Clone)]
 struct RawQuery {
     select: String,
     from: String,
@@ -36,11 +38,22 @@ struct RawQuery {
     offset: Option<String>
 }
 
+#[derive(Debug,Clone)]
 pub struct SelectQuery(RawQuery);
+
+#[derive(Debug,Clone)]
 pub struct OrderByQuery(RawQuery);
+
+#[derive(Debug,Clone)]
 pub struct WhereQuery(RawQuery);
+
+#[derive(Debug,Clone)]
 pub struct GroupQuery(RawQuery);
+
+#[derive(Debug,Clone)]
 pub struct HavingQuery(RawQuery);
+
+#[derive(Debug,Clone)]
 pub struct FinalQuery(RawQuery);
 
 impl RawQuery {
