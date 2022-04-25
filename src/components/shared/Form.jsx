@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { Button } from "./Button";
+import { Button, IconButton } from "./Button";
 
 const FormContext = createContext();
 
@@ -162,6 +162,20 @@ function FormButton({ submit, children, ...rest }) {
   );
 }
 
+function FormIconButton({ submit, children, rest }) {
+  const onSubmit = useFormSubmit();
+
+  if (submit) {
+    rest.onClick = (evt) => onSubmit(evt);
+  }
+
+  return (
+    <div className="control">
+      <IconButton {...rest}>{children}</IconButton>
+    </div>
+  );
+}
+
 function useFormControl(control) {
   const { data, onChange } = useContext(FormContext);
 
@@ -185,3 +199,4 @@ Form.Option = Option;
 Form.Checkbox = Checkbox;
 Form.Radio = Radio;
 Form.Button = FormButton;
+Form.IconButton = FormIconButton;
