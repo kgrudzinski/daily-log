@@ -73,7 +73,7 @@ function Input(props) {
     <div className="control">
       <input
         className="input"
-        type="text"
+        type={props.text || "text"}
         value={value}
         onChange={onChange}
         {...props}
