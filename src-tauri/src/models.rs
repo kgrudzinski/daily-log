@@ -266,6 +266,12 @@ pub enum Status {
     Completed
 }
 
+impl Default for Status {
+    fn default() -> Self {
+        Self::Idle
+    }
+}
+
 impl From<u64> for Status {
     fn from(item: u64) -> Self {
         match item {
@@ -287,21 +293,25 @@ impl ToSql for Status {
     }
 }
 
-#[derive(Debug, serde::Serialize)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Project {
     pub id: u64,
     pub name: String,
     pub description: String,
+    #[serde(skip)]
     pub categories: Vec<u64>,
+    #[serde(skip)]
     pub status: Status
 }
 
-#[derive(Debug, serde::Serialize)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Task {
     pub id: u64,
     pub name: String,
     pub description: String,
+    #[serde(rename="categoryId")]
     pub category_id: u64,
+    #[serde(rename="projectId")]
     pub project_id: u64,
     pub status: Status
 }
@@ -314,10 +324,11 @@ pub struct TaskParams {
     pub status: Option<Status>
 }
 
-#[derive(Debug, serde::Serialize)] 
+#[derive(Debug, serde::Serialize, serde::Deserialize)] 
 pub struct Entry {
     pub id: u64,
     pub description: String,
+    #[serde(rename="taskId")]
     pub task_id: u64,
     pub duration: u64,
     pub date: u64
@@ -330,7 +341,7 @@ pub struct EntryParams {
     pub to: Option<u64>
 }
 
-#[derive(Debug, serde::Serialize)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Category {
     pub id: u64,
     pub name: String
