@@ -148,82 +148,84 @@ function TaskFormRaw({ dispatch, data, lists, onClose, onCancel }) {
     dispatch(ViewMode.PROJECT);
   };
 
-  <Form initialData={data} onSubmit={onClose}>
-    <Form.Field>
-      <Form.Label>Name</Form.Label>
-      <Form.Input placeholder="name" name="name"></Form.Input>
-    </Form.Field>
-    <Form.FieldGroup dense>
-      <Form.Label>Category</Form.Label>
-      <Form.Select name="categoryId">
-        {categories.map((it) => {
-          return (
-            <Form.Option
-              key={it.id}
-              value={it.id}
-              name={it.name}
-              selected={data.categoryId === it.id}
-            ></Form.Option>
-          );
-        })}
-      </Form.Select>
-      <Form.IconButton
-        icon="fas fa-plus"
-        color={ButtonColor.LINK}
-        onClick={add_category}
-      ></Form.IconButton>
-    </Form.FieldGroup>
-    <Form.FieldGroup>
-      <Form.Label>Project</Form.Label>
-      <Form.Select name="projectId">
-        {projects.map((it) => {
-          return (
-            <Form.Option
-              key={it.id}
-              value={it.id}
-              name={it.name}
-              selected={data.projectId === it.id}
-            ></Form.Option>
-          );
-        })}
-      </Form.Select>
-      <Form.IconButton
-        icon="fas fa-plus"
-        color={ButtonColor.LINK}
-        onClick={add_project}
-      ></Form.IconButton>
-    </Form.FieldGroup>
-    <Form.Field>
-      <Form.Label>Status</Form.Label>
-      <Form.Select name="status">
-        {Status.map((it) => {
-          return (
-            <Form.Option
-              key={it}
-              value={it}
-              name={it}
-              selected={data.status === it}
-            ></Form.Option>
-          );
-        })}
-      </Form.Select>
-    </Form.Field>
-    <Form.Field>
-      <Form.Label>Description</Form.Label>
-      <Form.Textarea
-        placeholder="description"
-        name="description"
-      ></Form.Textarea>
-    </Form.Field>
-    <Form.FieldGroup>
-      <Form.Button submit color={ButtonColor.LINK}>
-        Save
-      </Form.Button>
-      <Form.Button color={ButtonColor.LINK_LIGHT} onClick={onCancel}>
-        Cancel
-      </Form.Button>
-    </Form.FieldGroup>
-  </Form>;
+  return (
+    <Form initialData={data} onSubmit={onClose}>
+      <Form.Field>
+        <Form.Label>Name</Form.Label>
+        <Form.Input placeholder="name" name="name"></Form.Input>
+      </Form.Field>
+      <Form.FieldGroup dense>
+        <Form.Label>Category</Form.Label>
+        <Form.Select name="categoryId">
+          {categories.map((it) => {
+            return (
+              <Form.Option
+                key={it.id}
+                value={it.id}
+                name={it.name}
+                selected={data.categoryId === it.id}
+              ></Form.Option>
+            );
+          })}
+        </Form.Select>
+        <Form.IconButton
+          icon="fas fa-plus"
+          color={ButtonColor.LINK}
+          onClick={add_category}
+        ></Form.IconButton>
+      </Form.FieldGroup>
+      <Form.FieldGroup>
+        <Form.Label>Project</Form.Label>
+        <Form.Select name="projectId">
+          {projects.map((it) => {
+            return (
+              <Form.Option
+                key={it.id}
+                value={it.id}
+                name={it.name}
+                selected={data.projectId === it.id}
+              ></Form.Option>
+            );
+          })}
+        </Form.Select>
+        <Form.IconButton
+          icon="fas fa-plus"
+          color={ButtonColor.LINK}
+          onClick={add_project}
+        ></Form.IconButton>
+      </Form.FieldGroup>
+      <Form.Field>
+        <Form.Label>Status</Form.Label>
+        <Form.Select name="status">
+          {Status.map((it) => {
+            return (
+              <Form.Option
+                key={it}
+                value={it}
+                name={it}
+                selected={data.status === it}
+              ></Form.Option>
+            );
+          })}
+        </Form.Select>
+      </Form.Field>
+      <Form.Field>
+        <Form.Label>Description</Form.Label>
+        <Form.Textarea
+          placeholder="description"
+          name="description"
+        ></Form.Textarea>
+      </Form.Field>
+      <Form.FieldGroup>
+        <Form.Button submit color={ButtonColor.LINK}>
+          Save
+        </Form.Button>
+        <Form.Button color={ButtonColor.LINK_LIGHT} onClick={onCancel}>
+          Cancel
+        </Form.Button>
+      </Form.FieldGroup>
+    </Form>
+  );
 }
 
 function ErrorMessage({ errors, onClose }) {
