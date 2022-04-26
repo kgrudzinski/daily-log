@@ -18,7 +18,7 @@ export function Dashboard({ children }) {
 }
 
 function Item({ children }) {
-  return <div className="item">{children}</div>;
+  return <div className="item has-background-link-light">{children}</div>;
 }
 
 Dashboard.Item = Item;

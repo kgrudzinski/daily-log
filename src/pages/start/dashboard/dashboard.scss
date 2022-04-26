@@ -1,9 +1,14 @@
 .item {
   border-radius: 15px;
-  border: 1px solid black;
+  border: 1px solid hsl(0, 0%, 71%);
   padding: 1em;
   min-height: 50px;
   min-width: 180px;
+}
+
+.item:hover {
+  background-color: hsl(217, 71%, 53%) !important;
+  color: white;
 }
 
 .container {
