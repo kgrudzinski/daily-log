@@ -13,3 +13,5 @@ export {
 export { Icon, IconText } from "./Icon";
 export { Form } from "./Form";
 export { Tabs } from "./Tabs";
+export { Message } from "./Message";
+export { Modal, ModalCard } from "./Modal";
