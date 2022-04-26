@@ -75,16 +75,8 @@ export function TaskForm({ data, onClose, onCancel }) {
 }
 
 function dispatcher(action, state) {
-  switch (action) {
-    case ViewMode.CATEGORY:
-      return ViewMode.CATEGORY;
-    case ViewMode.PROJECT:
-      return ViewMode.PROJECT;
-    case ViewMode.TASK:
-      return ViewMode.TASK;
-    default:
-      return state;
-  }
+  console.log(action, state);
+  return action;
 }
 
 function useTaskForm() {
@@ -154,8 +146,10 @@ function TaskFormRaw({ dispatch, data, lists, onClose, onCancel }) {
         <Form.Label>Name</Form.Label>
         <Form.Input placeholder="name" name="name"></Form.Input>
       </Form.Field>
-      <Form.FieldGroup dense>
+      <Form.Field>
         <Form.Label>Category</Form.Label>
+      </Form.Field>
+      <Form.FieldGroup dense>
         <Form.Select name="categoryId">
           {categories.map((it) => {
             return (
@@ -174,8 +168,10 @@ function TaskFormRaw({ dispatch, data, lists, onClose, onCancel }) {
           onClick={add_category}
         ></Form.IconButton>
       </Form.FieldGroup>
-      <Form.FieldGroup>
+      <Form.Field>
         <Form.Label>Project</Form.Label>
+      </Form.Field>
+      <Form.FieldGroup dense>
         <Form.Select name="projectId">
           {projects.map((it) => {
             return (
