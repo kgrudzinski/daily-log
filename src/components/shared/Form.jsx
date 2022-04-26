@@ -160,7 +160,7 @@ function FormButton({ submit, children, ...rest }) {
   );
 }
 
-function FormIconButton({ submit, children, rest }) {
+function FormIconButton({ submit, children, ...rest }) {
   const onSubmit = useFormSubmit();
 
   if (submit) {
