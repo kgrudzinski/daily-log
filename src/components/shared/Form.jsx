@@ -98,22 +98,20 @@ function Textarea(props) {
 }
 
 function Select({ children, ...rest }) {
-  const { onChange } = useFormControl(rest.name);
+  const { value, onChange } = useFormControl(rest.name);
   return (
     <div className="control">
       <div className="select">
-        <select onChange={onChange}>{children}</select>
+        <select onChange={onChange} value={value}>
+          {children}
+        </select>
       </div>
     </div>
   );
 }
 
-function Option({ value, name, selected }) {
-  return (
-    <option value={value} selected={selected}>
-      {name}
-    </option>
-  );
+function Option({ value, name }) {
+  return <option value={value}>{name}</option>;
 }
 
 function Checkbox({ children, ...rest }) {
