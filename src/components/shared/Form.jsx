@@ -155,7 +155,9 @@ function FormButton({ submit, children, ...rest }) {
 
   return (
     <div className="control">
-      <Button {...rest}>{children}</Button>
+      <Button type="button" {...rest}>
+        {children}
+      </Button>
     </div>
   );
 }
@@ -169,7 +171,9 @@ function FormIconButton({ submit, children, ...rest }) {
 
   return (
     <div className="control">
-      <IconButton {...rest}>{children}</IconButton>
+      <IconButton type="button" {...rest}>
+        {children}
+      </IconButton>
     </div>
   );
 }
