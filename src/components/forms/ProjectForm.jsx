@@ -1,8 +1,8 @@
 import { Form, ButtonColor } from "components/shared";
 
-export function ProjectForm({ project, onClose, onCancel }) {
+export function ProjectForm({ data, onClose, onCancel }) {
   return (
-    <Form initialData={project} onSubmit={onClose}>
+    <Form initialData={data} onSubmit={onClose}>
       <Form.Field>
         <Form.Label>Name</Form.Label>
         <Form.Input placeholder="Project name" name="name"></Form.Input>

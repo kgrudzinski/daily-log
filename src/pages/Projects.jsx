@@ -107,7 +107,7 @@ export function Projects() {
       ) : (
         <div className="box">
           <ProjectForm
-            project={selected}
+            data={selected}
             onClose={(item) => {
               if (item.id === 0) {
                 add_project_mut.mutate(item);
