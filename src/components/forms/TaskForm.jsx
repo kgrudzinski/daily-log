@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useState } from "react";
 import { Form, ButtonColor, Button, Message } from "components/shared";
 import {
   useCategories,
@@ -26,7 +26,9 @@ const State = {
 const Status = ["Idle", "InProgress, Completed"];
 
 export function TaskForm({ data, onClose, onCancel }) {
-  const { lists, mode, state, errors, dispatch, operations } = useTaskForm();
+  const { lists, mode, state, errors, changeView, operations } = useTaskForm();
+
+  console.log(mode, state);
 
   if (state === State.LOADING) {
     return <p>Loading</p>;
@@ -37,19 +39,19 @@ export function TaskForm({ data, onClose, onCancel }) {
   }
 
   const onFormCancel = () => {
-    dispatch(ViewMode.TASK);
+    changeView(ViewMode.TASK);
   };
 
   const onFormClose = (data) => {
     operations[mode](data);
-    dispatch(ViewMode.TASK);
+    changeView(ViewMode.TASK);
   };
 
   return (
     <>
       <div style={{ display: mode === ViewMode.TASK ? "block" : "none" }}>
         <TaskFormRaw
-          dispatch={dispatch}
+          changeView={changeView}
           lists={lists}
           data={data}
           onClose={onClose}
@@ -72,11 +74,6 @@ export function TaskForm({ data, onClose, onCancel }) {
       )}
     </>
   );
-}
-
-function dispatcher(action, state) {
-  console.log(action, state);
-  return action;
 }
 
 function useTaskForm() {
@@ -104,7 +101,6 @@ function useTaskForm() {
     errors.push(projError.message);
   }
 
-  let mode = ViewMode.TASK;
   let state = State.VIEW;
 
   if (loading) {
@@ -113,7 +109,7 @@ function useTaskForm() {
     state = State.ERROR;
   }
 
-  const [, dispatch] = useReducer(dispatcher, mode);
+  const [mode, setMode] = useState(ViewMode.TASK);
 
   return {
     lists: {
@@ -127,17 +123,17 @@ function useTaskForm() {
     mode,
     state,
     errors,
-    dispatch,
+    changeView: setMode,
   };
 }
 
-function TaskFormRaw({ dispatch, data, lists, onClose, onCancel }) {
+function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
   const { projects, categories } = lists;
   const add_category = () => {
-    dispatch(ViewMode.CATEGORY);
+    changeView(ViewMode.CATEGORY);
   };
   const add_project = () => {
-    dispatch(ViewMode.PROJECT);
+    changeView(ViewMode.PROJECT);
   };
 
   return (
