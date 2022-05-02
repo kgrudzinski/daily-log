@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, IconButton, ButtonColor, Modal } from "components/shared";
+import {
+  Card,
+  IconButton,
+  ButtonColor,
+  Modal,
+  useToast,
+} from "components/shared";
 import { TaskForm } from "components/forms";
 import { useTaskMutations, useTasks } from "hooks";
 
@@ -91,6 +97,7 @@ function FormModal({ visible, hide, save }) {
 function useActiveTasks() {
   const { data: tasks } = useTasks();
   const [formVisible, setFormVisible] = useState(false);
+  const { error, success } = useToast();
 
   const hideForm = () => setFormVisible(false);
   const saveForm = (data) => {
@@ -99,7 +106,13 @@ function useActiveTasks() {
   };
   const showForm = () => setFormVisible(true);
 
-  const { add } = useTaskMutations(hideForm, (err) => console.log(err));
+  const { add } = useTaskMutations(
+    () => {
+      hideForm();
+      success("Task added");
+    },
+    (err) => error(err)
+  );
 
   return {
     visible: formVisible,
