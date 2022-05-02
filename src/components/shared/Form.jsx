@@ -102,7 +102,7 @@ function Select({ children, ...rest }) {
   return (
     <div className="control">
       <div className="select">
-        <select onChange={onChange} value={value}>
+        <select onChange={onChange} value={value} {...rest}>
           {children}
         </select>
       </div>
