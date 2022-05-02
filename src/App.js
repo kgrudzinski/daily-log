@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { getName, getVersion, getTauriVersion } from "@tauri-apps/api/app";
 import { getCurrent } from "@tauri-apps/api/window";
-import { invoke } from "@tauri-apps/api/tauri";
+//import { invoke } from "@tauri-apps/api/tauri";
 
 import {
   //useQuery,
@@ -13,17 +13,9 @@ import {
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { Menu, MenuHeader, MenuItems, MenuItem, MenuFooter } from "components";
+import { Pages, Page } from "components/shared";
 
-import {
-  Pages,
-  Page,
-  Icon,
-  IconText,
-  IconButton,
-  ButtonColor,
-  ButtonSize,
-} from "components/shared";
+import { AppMenu } from "components/layout/appmenu/AppMenu";
 
 import { Start } from "./pages";
 
@@ -35,14 +27,35 @@ import "@fortawesome/fontawesome-free/js/all";
 
 const AppPage = {
   HOME: "home",
-  PROJECTS: "projects",
+  TASKS: "tasks",
   SETTINGS: "settings",
   CONFIGURATION: "configuration",
 };
 
-const queryClient = new QueryClient();
+const AppMenuItems = [
+  {
+    id: AppPage.HOME,
+    label: "Home",
+    icon: "fas fa-home",
+  },
+  {
+    id: AppPage.TASKS,
+    label: "Tasks",
+    icon: "fas fa-tasks",
+  },
+  {
+    id: AppPage.CONFIGURATION,
+    label: "Manage",
+    icon: "fas fa-project-diagram",
+  },
+  {
+    id: AppPage.SETTINGS,
+    label: "Settings",
+    icon: "fas fa-cog",
+  },
+];
 
-function App() {
+const useApp = () => {
   const [appInfo, setAppInfo] = useState({
     name: "",
     version: "",
@@ -81,66 +94,38 @@ function App() {
     });
   }, []);
 
+  const dispatch = (action) => {
+    if (action.type === "change") {
+      setAppPage(action.value);
+    } else if (action.type === "action") {
+      switch (action.name) {
+        case "about":
+          setShowModal(true);
+          break;
+        default:
+      }
+    }
+  };
+
+  return { appPage, showModal, setShowModal, dispatch, appInfo, dbinfo };
+};
+
+const queryClient = new QueryClient();
+
+function App() {
+  const { appPage, showModal, setShowModal, dispatch, appInfo, dbinfo } =
+    useApp();
+
+  /*
   const handleClick = () => {
     invoke("get_db_version");
     setShowModal(true);
   };
-
+*/
   return (
     <div className="columns" style={{ height: "612px" }}>
       <div className="column is-2 pb-0">
-        <Menu selected={appPage} onChange={setAppPage}>
-          <MenuHeader>Daily log</MenuHeader>
-          <MenuItems>
-            <MenuItem
-              value={AppPage.HOME}
-              label={
-                <IconText>
-                  <Icon icon="fas fa-home" />
-                  <Icon.Text>Home</Icon.Text>
-                </IconText>
-              }
-            />
-            <MenuItem
-              value={AppPage.TASKS}
-              label={
-                <IconText>
-                  <Icon icon="fas fa-tasks" />
-                  <Icon.Text>Tasks</Icon.Text>
-                </IconText>
-              }
-            />
-            <MenuItem
-              value={AppPage.CONFIGURATION}
-              label={
-                <IconText>
-                  <Icon icon="fas fa-project-diagram" />
-                  <Icon.Text>Manage</Icon.Text>
-                </IconText>
-              }
-            />
-            <MenuItem
-              value={AppPage.SETTINGS}
-              label={
-                <IconText>
-                  <Icon icon="fas fa-cog" />
-                  <Icon.Text>Settings</Icon.Text>
-                </IconText>
-              }
-            />
-          </MenuItems>
-
-          <MenuFooter>
-            <IconButton
-              icon="fas fa-info"
-              color={ButtonColor.LINK}
-              onClick={handleClick}
-              size={ButtonSize.NORMAL}
-            >
-              About
-            </IconButton>
-          </MenuFooter>
-        </Menu>
+        <AppMenu menu={AppMenuItems} selected={appPage} dispatch={dispatch} />
       </div>
       <div className="column is-10 pb-0">
         <QueryClientProvider client={queryClient}>
