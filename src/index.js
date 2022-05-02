@@ -1,11 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import { ToastProvider } from "components/shared";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ToastProvider deleteTime={5} position="bottom-right">
+      <App />
+    </ToastProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
