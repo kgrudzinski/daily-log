@@ -1,16 +1,16 @@
-import { useState } from "react";
 import {
   Card,
   IconButton,
   ButtonColor,
   Modal,
+  useModal,
   useToast,
 } from "components/shared";
 import { TaskForm } from "components/forms";
 import { useTaskMutations, useTasks } from "hooks";
 
 export function ActiveTasks() {
-  const { visible, show, hide, save, tasks } = useActiveTasks();
+  const { show, save, tasks } = useActiveTasks();
 
   return (
     <>
@@ -34,7 +34,7 @@ export function ActiveTasks() {
           </Card.FooterItem>
         </Card.Footer>
       </Card>
-      <FormModal visible={visible} hide={hide} save={save} />
+      <FormModal save={save} />
     </>
   );
 }
@@ -64,12 +64,12 @@ function TaskTable({ data }) {
           );
         })}
       </tbody>
-      <tfooter></tfooter>
+      <tfoot></tfoot>
     </table>
   );
 }
 
-function FormModal({ visible, hide, save }) {
+function FormModal({ save }) {
   const task = {
     id: 0,
     name: "",
@@ -78,8 +78,12 @@ function FormModal({ visible, hide, save }) {
     categoryId: 0,
     projectId: 0,
   };
+
+  const showModal = useModal();
+  const hide = () => showModal("");
+
   return (
-    <Modal opened={visible}>
+    <Modal id="task_form">
       <div className="box">
         <TaskForm
           data={task}
@@ -96,27 +100,25 @@ function FormModal({ visible, hide, save }) {
 
 function useActiveTasks() {
   const { data: tasks } = useTasks();
-  const [formVisible, setFormVisible] = useState(false);
   const { error, success } = useToast();
+  const showModal = useModal();
 
-  const hideForm = () => setFormVisible(false);
   const saveForm = (data) => {
     console.log(data);
     add(data);
   };
-  const showForm = () => setFormVisible(true);
 
   const { add } = useTaskMutations(
     () => {
-      hideForm();
+      showModal("");
       success("Task added");
     },
     (err) => error(err)
   );
 
+  const showForm = () => showModal("task_form");
+
   return {
-    visible: formVisible,
-    hide: hideForm,
     save: saveForm,
     show: showForm,
     tasks: tasks || [],
