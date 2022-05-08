@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { ToastProvider } from "components/shared";
+import { ToastProvider, ModalProvider } from "components/shared";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
     <ToastProvider deleteTime={5} position="bottom-right">
-      <App />
+      <ModalProvider>
+        <App />
+      </ModalProvider>
     </ToastProvider>
   </React.StrictMode>,
   document.getElementById("root")

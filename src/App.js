@@ -13,14 +13,13 @@ import {
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { Pages, Page } from "components/shared";
+import { Pages, Page, Modal, useModal } from "components/shared";
 
 import { AppMenu } from "components/layout/appmenu/AppMenu";
 
-import { Start } from "./pages";
+import { Start, Tasks } from "./pages";
 
 import { Settings } from "./pages/Settings";
-import { Tasks } from "./pages/Tasks";
 import { Configuration } from "./pages/Configuration";
 import "./App.scss";
 import "@fortawesome/fontawesome-free/js/all";
@@ -69,7 +68,7 @@ const useApp = () => {
 
   const [appPage, setAppPage] = useState(AppPage.HOME);
 
-  const [showModal, setShowModal] = useState(false);
+  const showModal = useModal();
 
   useEffect(() => {
     const getData = async () => {
@@ -100,21 +99,20 @@ const useApp = () => {
     } else if (action.type === "action") {
       switch (action.name) {
         case "about":
-          setShowModal(true);
+          showModal("about");
           break;
         default:
       }
     }
   };
 
-  return { appPage, showModal, setShowModal, dispatch, appInfo, dbinfo };
+  return { appPage, dispatch, appInfo, dbinfo };
 };
 
 const queryClient = new QueryClient();
 
 function App() {
-  const { appPage, showModal, setShowModal, dispatch, appInfo, dbinfo } =
-    useApp();
+  const { appPage, dispatch, appInfo, dbinfo } = useApp();
 
   /*
   const handleClick = () => {
@@ -145,21 +143,21 @@ function App() {
           </Pages>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-        <Modal opened={showModal} onClose={() => setShowModal(false)}>
+        <Modal id="about">
           <div className="box mt-1 mx-1">
             <p>App Name {appInfo.name}</p>
             <p>Version: {appInfo.version}</p>
             <p>Tauri version: {appInfo.tauriVersion}</p>
             <p>Database name: {dbinfo.name}</p>
             <p>Database version: {dbinfo.version}</p>
-            <p>{appPage}</p>
+            <Modal.Close />
           </div>
         </Modal>
       </div>
     </div>
   );
 }
-
+/*
 function Modal({ opened, onClose, children }) {
   return (
     <div className={(opened ? "is-active " : "") + "modal"}>
@@ -173,5 +171,5 @@ function Modal({ opened, onClose, children }) {
     </div>
   );
 }
-
+*/
 export default App;
