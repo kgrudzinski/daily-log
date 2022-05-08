@@ -1,8 +1,7 @@
 
 use tauri::State;
 use crate::models::{
-    Project,
-    Status,
+    Project,    
     Entry,
     Task,
     Category
@@ -26,29 +25,18 @@ pub fn get_project_list(ds: State<Datastore>) -> Vec<Project> {
 }
 
 #[tauri::command]
-pub fn add_project(name: String, description: String, categories: Vec<u64>, ds: State<Datastore>) -> Result<u64, String> {
-    let item = Project {
-        id: 0,
-        name,
-        description,
-        status: Status::Idle,
-        categories
-    };
-
+pub fn add_project(item: Project, ds: State<Datastore>) -> Result<u64, String> {    
     ds.insert_item::<Project>(item).map_err(stringify_err)
 }
 
 #[tauri::command]
-pub fn update_project(id: u64, name: String, description: String, status: Status, categories: Vec<u64>, ds: State<Datastore>) -> Result<(), String> {
-    let item = Project {
-        id,
-        name,
-        description,
-        status,
-        categories
-    };
-
+pub fn update_project(item: Project, ds: State<Datastore>) -> Result<(), String> {    
     ds.update_item(item).map_err(stringify_err)
+}
+
+#[tauri::command]
+pub fn delete_project(id: u64, ds: State<Datastore>) -> Result<(), String> {
+    ds.delete_item::<Project>(id).map_err(stringify_err)
 }
 
 // categories
@@ -58,20 +46,12 @@ pub fn get_category_list(ds: State<Datastore>) -> Vec<Category> {
 }
 
 #[tauri::command]
-pub fn add_category(name: String, ds: State<Datastore>) -> Result<u64, String> {
-    let item = Category {
-        id: 0,
-        name
-    };
+pub fn add_category(item: Category, ds: State<Datastore>) -> Result<u64, String> {   
     ds.insert_item(item).map_err(stringify_err)
 }
 
 #[tauri::command]
-pub fn update_category(id: u64, name: String, ds: State<Datastore>) -> Result<(), String> {
-    let item = Category {
-        id,
-        name
-    };
+pub fn update_category(item: Category, ds: State<Datastore>) -> Result<(), String> {   
     ds.update_item(item).map_err(stringify_err)
 }
 
@@ -87,30 +67,12 @@ pub fn get_task_list(ds: State<Datastore>) -> Vec<Task> {
 }
 
 #[tauri::command]
-pub fn add_task(name: String, description: String, category: u64, project: u64, status: Status, ds: State<Datastore>) -> Result<u64, String> {
-    let item = Task {
-        id: 0,
-        name,
-        description,
-        category_id: category,
-        project_id: project,
-        status
-    };
-
+pub fn add_task(item: Task, ds: State<Datastore>) -> Result<u64, String> {   
     ds.insert_item(item).map_err(stringify_err)
 }
 
 #[tauri::command]
-pub fn update_task(id: u64, name: String, description: String, category: u64, project: u64, status: Status, ds: State<Datastore>) -> Result<(), String> {
-    let item = Task {
-        id,
-        name,
-        description,
-        category_id: category,
-        project_id: project,
-        status
-    };
-
+pub fn update_task(item: Task, ds: State<Datastore>) -> Result<(), String> {    
     ds.update_item(item).map_err(stringify_err)
 }
 
@@ -126,28 +88,12 @@ pub fn get_entry_list(ds: State<Datastore>) -> Vec<Entry> {
 }
 
 #[tauri::command]
-pub fn add_entry(description: String, task: u64, duration: u64, date: u64, ds: State<Datastore>) -> Result<u64, String> {
-    let item = Entry {
-        id: 0,
-        description,
-        task_id: task,
-        duration,
-        date
-    };
-
+pub fn add_entry(item: Entry, ds: State<Datastore>) -> Result<u64, String> {    
     ds.insert_item(item).map_err(stringify_err)
 }
 
 #[tauri::command]
-pub fn update_entry(id: u64, description: String, task: u64, duration: u64, date: u64, ds: State<Datastore>) -> Result<(), String> {
-    let item = Entry {
-        id,
-        description,
-        task_id: task,
-        duration,
-        date
-    };
-
+pub fn update_entry(item: Entry, ds: State<Datastore>) -> Result<(), String> {    
     ds.update_item(item).map_err(stringify_err)
 }
 

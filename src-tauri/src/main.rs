@@ -46,6 +46,7 @@ fn main() {
     commands::get_project_list,
     commands::add_project,
     commands::update_project,
+    commands::delete_project,
     commands::get_task_list,
     commands::add_task,
     commands::update_task,

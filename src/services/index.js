@@ -18,10 +18,10 @@ let createService = (name) => {
       return query(`get_${name}_list`);
     },
     add: function (item) {
-      return query(`add_${name}`, item);
+      return query(`add_${name}`, { item });
     },
     update: function (item) {
-      return query(`update_${name}`, item);
+      return query(`update_${name}`, { item });
     },
     remove: function (id) {
       return query(`delete_${name}`, { id: id });
