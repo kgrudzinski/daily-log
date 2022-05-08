@@ -23,10 +23,11 @@ const State = {
   VIEW: "view",
 };
 
-const Status = ["Idle", "InProgress, Completed"];
+const Status = ["Idle", "InProgress", "Completed"];
 
 export function TaskForm({ data, onClose, onCancel }) {
-  const { lists, mode, state, errors, changeView, operations } = useTaskForm();
+  const { lists, mode, state, errors, changeView, operations, item } =
+    useTaskForm(data);
 
   console.log(mode, state);
 
@@ -53,7 +54,7 @@ export function TaskForm({ data, onClose, onCancel }) {
         <TaskFormRaw
           changeView={changeView}
           lists={lists}
-          data={data}
+          data={item}
           onClose={onClose}
           onCancel={onCancel}
         />
@@ -76,7 +77,7 @@ export function TaskForm({ data, onClose, onCancel }) {
   );
 }
 
-function useTaskForm() {
+function useTaskForm(data) {
   const {
     data: categories,
     status: catStatus,
@@ -111,6 +112,17 @@ function useTaskForm() {
 
   const [mode, setMode] = useState(ViewMode.TASK);
 
+  //new data - set default values from lists
+  if (data.id === 0) {
+    if (projects && projects.length > 0) {
+      data.projectId = projects[0].id;
+    }
+
+    if (categories && categories.length > 0) {
+      data.categoryId = categories[0].id;
+    }
+  }
+
   return {
     lists: {
       categories,
@@ -124,6 +136,7 @@ function useTaskForm() {
     state,
     errors,
     changeView: setMode,
+    item: data,
   };
 }
 
@@ -146,21 +159,19 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
         <Form.Label>Category</Form.Label>
       </Form.Field>
       <Form.FieldGroup dense>
-        <Form.Select name="categoryId">
+        <Form.Select name="categoryId" expanded={true}>
           {categories.map((it) => {
             return (
               <Form.Option
                 key={it.id}
                 value={it.id}
                 name={it.name}
-                selected={data.categoryId === it.id}
               ></Form.Option>
             );
           })}
         </Form.Select>
         <Form.IconButton
           icon="fas fa-plus"
-          color={ButtonColor.LINK}
           onClick={add_category}
         ></Form.IconButton>
       </Form.FieldGroup>
@@ -168,14 +179,13 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
         <Form.Label>Project</Form.Label>
       </Form.Field>
       <Form.FieldGroup dense>
-        <Form.Select name="projectId">
+        <Form.Select name="projectId" expanded={true}>
           {projects.map((it) => {
             return (
               <Form.Option
                 key={it.id}
                 value={it.id}
                 name={it.name}
-                selected={data.projectId === it.id}
               ></Form.Option>
             );
           })}
@@ -184,20 +194,14 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
           icon="fas fa-plus"
           color={ButtonColor.LINK}
           onClick={add_project}
+          outlined={true}
         ></Form.IconButton>
       </Form.FieldGroup>
       <Form.Field>
         <Form.Label>Status</Form.Label>
-        <Form.Select name="status">
+        <Form.Select name="status" expanded={true}>
           {Status.map((it) => {
-            return (
-              <Form.Option
-                key={it}
-                value={it}
-                name={it}
-                selected={data.status === it}
-              ></Form.Option>
-            );
+            return <Form.Option key={it} value={it} name={it}></Form.Option>;
           })}
         </Form.Select>
       </Form.Field>
