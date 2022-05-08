@@ -68,11 +68,12 @@ function Control({ children }) {
 
 function Input(props) {
   const { value, onChange } = useFormControl(props.name);
+  const [c_classes, w_classes] = useControlStyles("input", props);
 
   return (
-    <div className="control">
+    <div className={w_classes}>
       <input
-        className="input"
+        className={c_classes}
         type={props.text || "text"}
         value={value}
         onChange={onChange}
@@ -84,11 +85,11 @@ function Input(props) {
 
 function Textarea(props) {
   const { value, onChange } = useFormControl(props.name);
-
+  const [c_classes, w_classes] = useControlStyles("textarea", props);
   return (
-    <div className="control">
+    <div className={w_classes}>
       <textarea
-        className="textarea"
+        className={c_classes}
         value={value}
         onChange={onChange}
         {...props}
@@ -99,9 +100,10 @@ function Textarea(props) {
 
 function Select({ children, ...rest }) {
   const { value, onChange } = useFormControl(rest.name);
+  const [c_classes, w_classes] = useControlStyles("select", rest);
   return (
-    <div className="control">
-      <div className="select">
+    <div className={w_classes}>
+      <div className={c_classes}>
         <select onChange={onChange} value={value} {...rest}>
           {children}
         </select>
@@ -182,6 +184,60 @@ function useFormControl(control) {
   const { data, onChange } = useContext(FormContext);
 
   return { value: data[control], onChange: onChange };
+}
+
+const AttrTypes = [
+  {
+    name: "rounded",
+    terget: "control",
+    value: "is-rounded",
+  },
+  {
+    name: "loading",
+    target: "wrapper",
+    value: "is-loading",
+  },
+  {
+    name: "expanded",
+    target: "wrapper",
+    value: "is-expanded",
+  },
+  {
+    name: "static",
+    target: "control",
+    value: "is-static",
+  },
+  {
+    name: "leftIcon",
+    target: "wrapper",
+    value: "has-left-icons",
+  },
+  {
+    name: "rightIcon",
+    target: "wrapper",
+    value: "has-right-icons",
+  },
+];
+
+function useControlStyles(type, data) {
+  let control_classes = [type, data.color || "", data.size || ""];
+  let wrapper_classes = ["control"];
+
+  for (let attr of AttrTypes) {
+    if (data[attr.name]) {
+      if (attr.target === "wrapper") {
+        wrapper_classes.push(attr.value);
+      } else {
+        control_classes.push(attr.value);
+      }
+
+      if (type === "select" && attr.name === "expanded") {
+        control_classes.push("is-fullwidth");
+      }
+    }
+  }
+
+  return [control_classes.join(" "), wrapper_classes.join(" ")];
 }
 
 function useFormSubmit() {
