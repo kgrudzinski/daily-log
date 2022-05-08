@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCategories, useCategoryMutations } from "hooks";
-import { List, Card, Tabs, Page, Pages } from "components/shared";
+import { List, Card, Tabs, Page, Pages, useToast } from "components/shared";
 
 import { Projects } from "./Projects";
 
@@ -42,9 +42,13 @@ export function Configuration() {
 
 function CategoryList() {
   const { data: categories, isLoading, isError, error } = useCategories();
+  const { error: errorToast, success } = useToast();
   const operations = useCategoryMutations(
-    () => {},
+    () => {
+      success("Success");
+    },
     (err) => {
+      errorToast(err);
       console.log(err.message);
     }
   );
