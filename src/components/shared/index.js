@@ -14,5 +14,6 @@ export { Icon, IconText } from "./Icon";
 export { Form } from "./Form";
 export { Tabs } from "./Tabs";
 export { Message } from "./Message";
-export { Modal, ModalCard } from "./Modal";
+export { Modal, ModalCard, useModal, ModalProvider } from "./Modal";
 export { ToastProvider, useToast } from "./toast/Toast";
+export { Table } from "./Table";

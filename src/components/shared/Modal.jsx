@@ -1,17 +1,56 @@
-export function Modal({ opened, closeButton, children }) {
+import { useState, useContext, createContext } from "react";
+
+const ModalContext = createContext();
+
+function useModalProvider() {
+  const [opened, setOpened] = useState("");
+
+  const showModal = (id) => {
+    setOpened(id);
+  };
+
+  return {
+    opened,
+    showModal,
+  };
+}
+
+export function ModalProvider({ children }) {
+  const value = useModalProvider();
+  return (
+    <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
+  );
+}
+
+export function useModal() {
+  const { showModal } = useContext(ModalContext);
+
+  return showModal;
+}
+
+function useModalControl(id) {
+  const { opened, showModal } = useContext(ModalContext);
+
+  return {
+    showModal,
+    opened: opened === id,
+  };
+}
+
+export function Modal({ id, children }) {
+  const { opened } = useModalControl(id);
+
   const classes = "modal" + (opened ? " is-active" : "");
   return (
     <div className={classes}>
       <div className="modal-background"></div>
       <div className="modal-content">{children}</div>
-      {closeButton && (
-        <button className="modal-close is-large" aria-label="close"></button>
-      )}
     </div>
   );
 }
 
-export function ModalCard({ opened, children }) {
+export function ModalCard({ id, children }) {
+  const { opened } = useModalControl(id);
   const classes = "modal" + (opened ? " is-active" : "");
   return (
     <div className={classes}>
@@ -30,7 +69,16 @@ function Title({ children }) {
 }
 
 function Close() {
-  return <button className="modal-close is-large" aria-label="close"></button>;
+  const { showModal } = useModalControl("");
+  return (
+    <button
+      className="modal-close is-large"
+      aria-label="close"
+      onClick={() => {
+        showModal("");
+      }}
+    ></button>
+  );
 }
 
 function Body({ children }) {
@@ -43,6 +91,6 @@ function Footer({ children }) {
 
 ModalCard.Header = Header;
 ModalCard.Title = Title;
-ModalCard.Close = Close;
+Modal.Close = Close;
 ModalCard.Body = Body;
 ModalCard.Footer = Footer;
