@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTasks, useTaskMutations } from "hooks";
+import { useTasks, useTaskMutations, useEntryMutations } from "hooks";
 import {
   IconButton,
   ButtonColor,
@@ -7,11 +7,14 @@ import {
   useToast,
   Table,
 } from "components/shared";
-import { TaskForm } from "components/forms";
+import { EntryForm, TaskForm } from "components/forms";
+import { DateService } from "services";
+import "./tasks.scss";
 
 const Mode = {
   VIEW: "view",
   EDIT: "edit",
+  ADD_ENTRY: "add_entry",
 };
 
 const EmptyTask = {
@@ -34,6 +37,8 @@ export function Tasks() {
     newTask,
     deleteTask,
     editTask,
+    addEntry,
+    completeTask,
     selected,
   } = useTasksView();
 
@@ -51,6 +56,13 @@ export function Tasks() {
     <>
       {mode === Mode.VIEW ? (
         <>
+          <TaskTable
+            tasks={tasks}
+            onEdit={editTask}
+            onDelete={deleteTask}
+            onAddEntry={addEntry}
+            onComplete={completeTask}
+          />
           <IconButton
             icon="fas fa-plus"
             color={ButtonColor.LINK_LIGHT}
@@ -58,20 +70,27 @@ export function Tasks() {
           >
             Add task
           </IconButton>
-          <TaskTable tasks={tasks} onEdit={editTask} onDelete={deleteTask} />
         </>
-      ) : (
+      ) : null}
+      {mode === Mode.EDIT ? (
         <TaskDialog
           task={selected}
           onCancel={onFormCancel}
           onClose={onFormClose}
         />
-      )}
+      ) : null}
+      {mode === Mode.ADD_ENTRY ? (
+        <EntryDialog
+          parentId={selected.id}
+          onClose={onFormClose}
+          onCancel={onFormCancel}
+        />
+      ) : null}
     </>
   );
 }
 
-function TaskTable({ tasks, onEdit, onDelete }) {
+function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
   const columns = [
     {
       field: "name",
@@ -96,7 +115,15 @@ function TaskTable({ tasks, onEdit, onDelete }) {
     {
       label: "Actions",
       render: (row) => {
-        return <TaskControls id={row.id} onEdit={onEdit} onDelete={onDelete} />;
+        return (
+          <TaskControls
+            row={row}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onAddEntry={onAddEntry}
+            onComplete={onComplete}
+          />
+        );
       },
     },
   ];
@@ -104,14 +131,37 @@ function TaskTable({ tasks, onEdit, onDelete }) {
   if (tasks.length === 0) {
     return <p>No data to show</p>;
   }
-  return <Table columns={columns} data={tasks} />;
+  return (
+    <div className="mb-2 table-container">
+      <Table columns={columns} data={tasks} />
+    </div>
+  );
 }
 
-function TaskControls({ id, onEdit, onDelete }) {
+function TaskControls({ row, onEdit, onDelete, onAddEntry, onComplete }) {
   return (
     <div>
-      <IconButton icon="fas fa-edit" onClick={() => onEdit(id)} />
-      <IconButton icon="fas fa-trash-alt" onClick={() => onDelete(id)} />
+      <IconButton
+        icon="fas fa-edit"
+        title="Edit task"
+        onClick={() => onEdit(row.id)}
+      />
+      <IconButton
+        icon="fas fa-trash-alt"
+        title="Delete task"
+        onClick={() => onDelete(row.id)}
+      />
+      <IconButton
+        icon="fas fa-plus"
+        title="Add entry"
+        onClick={() => onAddEntry(row.id)}
+      />
+      <IconButton
+        icon="fas fa-check"
+        title="Mark as completed"
+        onClick={() => onComplete(row.id)}
+        disabled={row.status === "Completed"}
+      />
     </div>
   );
 }
@@ -120,6 +170,21 @@ function TaskDialog({ task, onClose, onCancel }) {
   return (
     <div className="box">
       <TaskForm data={task} onClose={onClose} onCancel={onCancel} />
+    </div>
+  );
+}
+
+function EntryDialog({ parentId, onClose, onCancel }) {
+  const new_entry = {
+    id: 0,
+    taskId: parentId,
+    date: DateService.format(new Date()),
+    description: "",
+    duration: 0,
+  };
+  return (
+    <div className="box">
+      <EntryForm data={new_entry} onClose={onClose} onCancel={onCancel} />
     </div>
   );
 }
@@ -144,6 +209,13 @@ function useTasksView() {
     (err) => errorToast(err)
   );
 
+  const { add: addEntry } = useEntryMutations(
+    () => {
+      successToast("Entry added");
+    },
+    (err) => errorToast(err)
+  );
+
   const { data: tasks, status, error } = useTasks();
   const [mode, setMode] = useState(Mode.VIEW);
   const [selected, setSelected] = useState(null);
@@ -154,12 +226,22 @@ function useTasksView() {
     setMode(Mode.EDIT);
   };
 
+  const addNewEntry = (id) => {
+    setSelected(tasks.find((it) => it.id === id));
+    setMode(Mode.ADD_ENTRY);
+  };
+
+  const completeTask = (id) => {
+    const task = { ...tasks.find((it) => it.id === id), status: "Completed" };
+    update(task);
+  };
+
   const newTask = () => {
     setSelected(EmptyTask);
     setMode(Mode.EDIT);
   };
 
-  const onFormClose = (data) => {
+  const saveTask = (data) => {
     data.categoryId = +data.categoryId;
     data.projectId = +data.projectId;
 
@@ -170,7 +252,22 @@ function useTasksView() {
     } else {
       update(data);
     }
+  };
 
+  const saveEntry = (data) => {
+    data.taskId = +data.taskId;
+    data.duration = +data.duration;
+    data.date = DateService.fromString(data.date);
+    addEntry(data);
+  };
+
+  const onFormClose = (data) => {
+    console.log("onFormClose", mode, data);
+    if (mode === Mode.EDIT) {
+      saveTask(data);
+    } else {
+      saveEntry(data);
+    }
     setMode(Mode.VIEW);
   };
 
@@ -186,6 +283,8 @@ function useTasksView() {
     newTask,
     editTask,
     deleteTask,
+    addEntry: addNewEntry,
+    completeTask,
     selected,
   };
 }
