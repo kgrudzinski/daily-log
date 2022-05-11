@@ -35,5 +35,9 @@ export function useEntryMutations(onSuccess, onError) {
     onSuccess: on_success,
     onError: on_error,
   });
-  return { add: add_mut, update: update_mut, remove: remove_mut };
+  return {
+    add: add_mut.mutate,
+    update: update_mut.mutate,
+    remove: remove_mut.mutate,
+  };
 }
