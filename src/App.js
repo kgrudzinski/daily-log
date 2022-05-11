@@ -1,26 +1,14 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { getName, getVersion, getTauriVersion } from "@tauri-apps/api/app";
 import { getCurrent } from "@tauri-apps/api/window";
-//import { invoke } from "@tauri-apps/api/tauri";
-
-import {
-  //useQuery,
-  //useMutation,
-  //useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-
-import { Pages, Page, Modal, useModal } from "components/shared";
-
-import { AppMenu } from "components/layout/appmenu/AppMenu";
-
+import { Pages, Page, useModal } from "components/shared";
+import { AppMenu, AppContent, About } from "components/layout";
 import { Start, Tasks } from "./pages";
-
 import { Settings } from "./pages/Settings";
 import { Configuration } from "./pages/Configuration";
+import { AppService } from "services";
 import "./App.scss";
 import "@fortawesome/fontawesome-free/js/all";
 
@@ -55,6 +43,10 @@ const AppMenuItems = [
 ];
 
 const useApp = () => {
+  const [appPage, setAppPage] = useState(AppPage.HOME);
+
+  const showModal = useModal();
+
   const [appInfo, setAppInfo] = useState({
     name: "",
     version: "",
@@ -66,29 +58,23 @@ const useApp = () => {
     version: "",
   });
 
-  const [appPage, setAppPage] = useState(AppPage.HOME);
-
-  const showModal = useModal();
-
   useEffect(() => {
-    const getData = async () => {
-      const name = await getName();
-      const version = await getVersion();
-      const tauriVersion = await getTauriVersion();
-      console.log(name, version, tauriVersion);
-      setAppInfo({
-        name,
-        version,
-        tauriVersion,
-      });
+    const getAppInfo = async () => {
+      setAppInfo(await AppService.getAppInfo());
     };
-
-    getData();
+    getAppInfo();
   }, []);
-
+  /*
+  useEffect(() => {
+    const getDbInfo = async () => {
+      setDbinfo(await AppService.getDbInfo());
+    };
+    getDbInfo();
+  }, []);
+*/
   useEffect(() => {
     return getCurrent().listen("db-initialized", (event) => {
-      console.log(event.payload);
+      console.log("payload", event.payload);
       setDbinfo(event.payload);
     });
   }, []);
@@ -99,6 +85,7 @@ const useApp = () => {
     } else if (action.type === "action") {
       switch (action.name) {
         case "about":
+          AppService.getDbInfo();
           showModal("about");
           break;
         default:
@@ -114,12 +101,8 @@ const queryClient = new QueryClient();
 function App() {
   const { appPage, dispatch, appInfo, dbinfo } = useApp();
 
-  /*
-  const handleClick = () => {
-    invoke("get_db_version");
-    setShowModal(true);
-  };
-*/
+  console.log("app", dbinfo);
+
   return (
     <div className="columns" style={{ height: "612px" }}>
       <div className="column is-2 pb-0">
@@ -127,49 +110,28 @@ function App() {
       </div>
       <div className="column is-10 pb-0">
         <QueryClientProvider client={queryClient}>
-          <Pages selected={appPage}>
-            <Page value={AppPage.HOME}>
-              <Start></Start>
-            </Page>
-            <Page value={AppPage.TASKS}>
-              <Tasks></Tasks>
-            </Page>
-            <Page value={AppPage.CONFIGURATION}>
-              <Configuration></Configuration>
-            </Page>
-            <Page value={AppPage.SETTINGS}>
-              <Settings></Settings>
-            </Page>
-          </Pages>
+          <AppContent>
+            <Pages selected={appPage}>
+              <Page value={AppPage.HOME}>
+                <Start></Start>
+              </Page>
+              <Page value={AppPage.TASKS}>
+                <Tasks></Tasks>
+              </Page>
+              <Page value={AppPage.CONFIGURATION}>
+                <Configuration></Configuration>
+              </Page>
+              <Page value={AppPage.SETTINGS}>
+                <Settings></Settings>
+              </Page>
+            </Pages>
+          </AppContent>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-        <Modal id="about">
-          <div className="box mt-1 mx-1">
-            <p>App Name {appInfo.name}</p>
-            <p>Version: {appInfo.version}</p>
-            <p>Tauri version: {appInfo.tauriVersion}</p>
-            <p>Database name: {dbinfo.name}</p>
-            <p>Database version: {dbinfo.version}</p>
-            <Modal.Close />
-          </div>
-        </Modal>
+        <About appInfo={appInfo} dbInfo={dbinfo} />
       </div>
     </div>
   );
 }
-/*
-function Modal({ opened, onClose, children }) {
-  return (
-    <div className={(opened ? "is-active " : "") + "modal"}>
-      <div className="modal-background"></div>
-      <div className="modal-content">{children}</div>
-      <button
-        className="modal-close is-large"
-        aria-label="close"
-        onClick={onClose}
-      ></button>
-    </div>
-  );
-}
-*/
+
 export default App;
