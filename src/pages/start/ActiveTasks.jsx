@@ -11,6 +11,7 @@ import { useTaskMutations, useTasks } from "hooks";
 
 export function ActiveTasks() {
   const { show, save, tasks } = useActiveTasks();
+  const activeTasks = tasks.filter((it) => it.status === "InProgress");
 
   return (
     <>
@@ -20,7 +21,7 @@ export function ActiveTasks() {
           <Card.Icon></Card.Icon>
         </Card.Header>
         <Card.Content>
-          <TaskTable data={tasks} />
+          <TaskTable data={activeTasks} />
         </Card.Content>
         <Card.Footer>
           <Card.FooterItem>
