@@ -1,6 +1,6 @@
 export function Table({ columns, data }) {
   return (
-    <table className="table">
+    <table className="table is-fullwidth">
       <thead>
         <tr>
           {columns.map((col) => {
@@ -21,7 +21,9 @@ function TableRow({ row, columns }) {
   return (
     <tr>
       {columns.map((col) => {
-        return <TableCell key={col.field} row={row} column={col} />;
+        return (
+          <TableCell key={`${row.id}_${col.field}`} row={row} column={col} />
+        );
       })}
     </tr>
   );
@@ -35,5 +37,5 @@ function TableCell({ row, column }) {
   const raw_value = row[column.field];
   const value = column.format ? column.format(raw_value) : raw_value;
 
-  return <td>{value}</td>;
+  return <td style={{ verticalAlign: "middle" }}>{value}</td>;
 }
