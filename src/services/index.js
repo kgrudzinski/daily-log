@@ -1,5 +1,8 @@
 import { invoke } from "@tauri-apps/api/tauri";
 
+export { DateService } from "./dates";
+export { AppService } from "./app";
+
 let query = (name, args) => {
   return invoke(name, args)
     .then((data) => {
