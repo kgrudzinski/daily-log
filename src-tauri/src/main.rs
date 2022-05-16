@@ -3,14 +3,6 @@
   windows_subsystem = "windows"
 )]
 
-mod database;
-mod sql;
-mod models;
-mod commands;
-mod datastore;
-mod query;
-mod mutations;
-
 use std::fs::File;
 
 use simplelog::{WriteLogger, LevelFilter, Config};
@@ -18,8 +10,11 @@ use tauri::{
   Manager,
   RunEvent
 };
-use datastore::Datastore;
-use models::{Project, Task, Entry, Category};
+use app::{
+  datastore::Datastore,
+  models::{Project, Task, Entry, Category},
+  commands
+};
 
 const DB_INITIALIZED_EVENT: &str = "db-initialized";
 const DB_INITIALZE_ERROR_EVENT: &str = "db-initialize-error";
