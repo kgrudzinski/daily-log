@@ -21,6 +21,15 @@ export const DateService = {
     );
     return this.toTimestamp(date);
   },
+  formatTime: function (minutes) {
+    let mins = minutes % 60;
+    let hours = (minutes - mins) / 60;
+
+    return {
+      m: mins < 10 ? `0${mins}` : `${mins}`,
+      h: hours < 10 ? `0${hours}` : `${hours}`,
+    };
+  },
 };
 
 function formatDate(date) {
