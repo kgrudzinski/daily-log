@@ -43,9 +43,15 @@ function Icon() {
   );
 }
 
-function Content({ children }) {
+function Content({ children, sx }) {
   const { expanded } = useCard();
-  return expanded && <div className="card-content">{children}</div>;
+  return (
+    expanded && (
+      <div className="card-content" style={sx}>
+        {children}
+      </div>
+    )
+  );
 }
 
 function Image({ children }) {
