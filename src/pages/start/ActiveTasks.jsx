@@ -59,8 +59,8 @@ function TaskTable({ data }) {
           return (
             <tr key={it.id}>
               <td>{it.name}</td>
-              <td>{it.projectId}</td>
-              <td>{it.categoryId}</td>
+              <td>{it.projectName}</td>
+              <td>{it.categoryName}</td>
             </tr>
           );
         })}

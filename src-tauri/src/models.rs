@@ -316,6 +316,22 @@ pub struct Task {
     pub status: Status
 }
 
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct TaskView {
+    pub id: u64,
+    pub name: String,
+    pub description: String,
+    #[serde(rename="categoryId")]
+    pub category_id: u64,
+    #[serde(rename="projectId")]
+    pub project_id: u64,
+    pub status: Status,
+    #[serde(rename="categoryName")]
+    pub category_name: String,
+    #[serde(rename="projectName")]
+    pub project_name: String,
+}
+
 #[derive(Debug, Default, serde::Deserialize)]
 pub struct TaskParams {
     pub name: Option<String>,
@@ -424,6 +440,43 @@ impl Model for Task {
             category_id: r.get(3)?,
             project_id: r.get(4)?,
             status: sts.into(),            
+        })
+    }
+}
+
+const TASKVIEW_COLS: [&str; 7] = ["Name", "Description", "CategoryId", "ProjectId", "Status", "ProjectName", "CategoryName"];
+
+impl Model for TaskView {
+    const NAME: &'static str = "TaskView";
+    const PRIMARY_KEY: &'static str = "Id";
+
+    fn pk(&self) -> u64 {
+        self.id
+    }
+    
+    fn into_data(self) -> ModelData {
+        ModelData {
+            pk: self.id,
+            params: vec![],
+            relations: vec![]
+        }
+    }
+
+    fn fields() -> &'static[&'static str] {
+        &TASKVIEW_COLS
+    }
+
+    fn from_sql(r: &Row<'_>) -> SqlResult<Self> {
+        let sts: u64 = r.get(5)?;
+        Ok(TaskView{
+            id: r.get(0)?,
+            name: r.get(1)?,
+            description: r.get(2)?,
+            category_id: r.get(3)?,
+            project_id: r.get(4)?,
+            status: sts.into(),
+            project_name: r.get(6)?,
+            category_name: r.get(7)?
         })
     }
 }

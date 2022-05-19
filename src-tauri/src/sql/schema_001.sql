@@ -78,3 +78,37 @@ BEGIN
     UPDATE Tasks SET StatusId = 1 WHERE TaskId = New.TaskId;
     UPDATE Projects SET StatusId = 1 WHERE ProjectId = (Select ProjectId FROM Tasks WHERE TaskId = New.TaskId);
 END;
+
+CREATE VIEW IF NOT EXISTS TaskView AS 
+SELECT 
+    t.TaskId AS Id,
+    t.Name AS Name, 
+    t.Description AS DESCRIPTION, 
+    t.CategoryId AS CategoryId, 
+    c.Name AS CategoryName,
+    t.StatusId AS Status,
+    t.ProjectId AS ProjectId,
+    p.Name AS ProjectName
+FROM
+    Tasks t,
+    Projects p,
+    Category c
+WHERE
+    t.CategoryId = c.CategoryId AND
+    t.ProjectId = p.ProjectId;
+
+/*
+CREATE VIEW IF NOT EXISTS EntryView AS
+SELECT
+    e.EntryId AS Id
+    e.Description AS Description,
+    e.Duration AS Duration,
+    e.TaskId AS TaskId,
+    e.Date AS Date,
+    t.Name as TaskName
+FROM
+    Entries e,
+    Tasks t
+WHERE
+    t.TaskId = e.TaskId;
+*/

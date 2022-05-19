@@ -101,11 +101,11 @@ function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
       label: "Description",
     },
     {
-      field: "categoryId",
+      field: "categoryName",
       label: "Category",
     },
     {
-      field: "projectId",
+      field: "projectName",
       label: "Project",
     },
     {

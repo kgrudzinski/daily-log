@@ -12,12 +12,12 @@ use tauri::{
 };
 use app::{
   datastore::Datastore,
-  models::{Project, Task, Entry, Category},
+  models::{Project, Task, Entry, Category, TaskView},
   commands
 };
 
 const DB_INITIALIZED_EVENT: &str = "db-initialized";
-const DB_INITIALZE_ERROR_EVENT: &str = "db-initialize-error";
+const DB_INITIALIZE_ERROR_EVENT: &str = "db-initialize-error";
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -35,6 +35,7 @@ fn main() {
   ds.add_model_schema::<Task>();
   ds.add_model_schema::<Entry>();
   ds.add_model_schema::<Category>();
+  ds.add_model_schema::<TaskView>();
 
   let app = tauri::Builder::default()
   .invoke_handler(tauri::generate_handler![
@@ -43,10 +44,12 @@ fn main() {
     commands::update_project,
     commands::delete_project,
     commands::get_task_list,
+    commands::get_tasks,
     commands::add_task,
     commands::update_task,
     commands::delete_task,
     commands::get_entry_list,
+    commands::get_entries,
     commands::add_entry,
     commands::update_entry,
     commands::delete_entry,
@@ -66,11 +69,12 @@ fn main() {
       Ok(info) => {
         log::info!("Database {} loaded. Version: {}", info.name, info.version);
         win.emit(DB_INITIALIZED_EVENT, info).unwrap();
-      },             
+      },
       Err(e) => {
         let err = e.to_string();
         log::error!("Error loading database: {}", err);
-        win.emit(DB_INITIALZE_ERROR_EVENT, Payload { message: err}).unwrap(); 
+        win.emit(DB_INITIALIZE_ERROR_EVENT, Payload { message: err}).unwrap();
+        ds.close().unwrap();
       }
 
      

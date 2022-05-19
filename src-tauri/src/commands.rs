@@ -4,7 +4,10 @@ use crate::models::{
     Project,    
     Entry,
     Task,
-    Category
+    Category,
+    TaskView,
+    TaskParams,
+    EntryParams
 };
 
 use crate::datastore::Datastore;
@@ -62,8 +65,13 @@ pub fn delete_category(id: u64, ds: State<Datastore>) -> Result<(), String> {
 
 //Tasks
 #[tauri::command]
-pub fn get_task_list(ds: State<Datastore>) -> Vec<Task> {
-    ds.get_items::<Task>().unwrap()
+pub fn get_task_list(ds: State<Datastore>) -> Vec<TaskView> {
+    ds.get_items::<TaskView>().unwrap()
+}
+
+#[tauri::command]
+pub fn get_tasks(params: TaskParams, ds: State<Datastore>) -> Result<Vec<TaskView>, String> {
+    ds.get_items_filtered::<TaskView, TaskParams>(params).map_err(stringify_err)
 }
 
 #[tauri::command]
@@ -85,6 +93,11 @@ pub fn delete_task(id: u64, ds: State<Datastore>) -> Result<(), String> {
 #[tauri::command]
 pub fn get_entry_list(ds: State<Datastore>) -> Vec<Entry> {
     ds.get_items::<Entry>().unwrap()
+}
+
+#[tauri::command]
+pub fn get_entries(params: EntryParams, ds: State<Datastore>) -> Result<Vec<Entry>, String> {
+    ds.get_items_filtered::<Entry, EntryParams>(params).map_err(stringify_err)
 }
 
 #[tauri::command]
