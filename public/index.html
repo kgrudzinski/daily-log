@@ -26,11 +26,17 @@
     -->
     <title>React App</title>
     <style>
+      #loader-text {
+        color: hsl(217, 71%, 53%);
+        font-size: large;
+        text-transform: capitalize;
+      }
+
       .loader {
         margin: auto;
         border: 20px solid #eaf0f6;
         border-radius: 50%;
-        border-top: 20px solid #ff7a59;
+        border-top: 20px solid hsl(217, 71%, 53%);
         width: 200px;
         height: 200px;
         animation: spinner 4s linear infinite;
@@ -50,6 +56,7 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="loader"></div>
+      <div id="loader-text">Loading...</div>
     </div>
     <div id="toaster"></div>
     <!--
