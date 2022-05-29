@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Form, ButtonColor, Button, Message } from "components/shared";
+import {
+  Form,
+  ButtonColor,
+  Button,
+  Message,
+  useToast,
+} from "components/shared";
 import {
   useCategories,
   useProjects,
@@ -78,6 +84,7 @@ export function TaskForm({ data, onClose, onCancel }) {
 }
 
 function useTaskForm(data) {
+  const { success, error } = useToast();
   const {
     data: categories,
     status: catStatus,
@@ -89,8 +96,22 @@ function useTaskForm(data) {
     error: projError,
   } = useProjects();
 
-  const { add: cat_add } = useCategoryMutations();
-  const { add: proj_add } = useProjectMutations();
+  const { add: cat_add } = useCategoryMutations(
+    () => {
+      success("Category added");
+    },
+    (err) => {
+      error(err);
+    }
+  );
+  const { add: proj_add } = useProjectMutations(
+    () => {
+      success("Project added");
+    },
+    (err) => {
+      error(err);
+    }
+  );
 
   const loading = catStatus === "loading" || projStatus === "loading";
   let errors = [];
