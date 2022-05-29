@@ -1,5 +1,5 @@
 import { useContext, useReducer, createContext } from "react";
-import "bulma-list/sass/bulma-list.sass";
+import "bulma-list/css/bulma-list.css";
 
 const ListActionType = {
   CLEAR: "clear",

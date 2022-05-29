@@ -36,11 +36,11 @@ export function useCategoryMutations(onSuccess, onError) {
     onError: on_error,
   });
   return {
-    add: (value) => {
-      add_mut.mutate({ id: 0, name: value });
+    add: (item) => {
+      add_mut.mutate(item);
     },
-    update: (id, value) => {
-      update_mut.mutate({ id: id, name: value });
+    update: (item) => {
+      update_mut.mutate(item);
     },
     remove: (id) => {
       remove_mut.mutate(id);

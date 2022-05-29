@@ -43,7 +43,7 @@ export function Configuration() {
 function CategoryList() {
   const { data: categories, isLoading, isError, error } = useCategories();
   const { error: errorToast, success } = useToast();
-  const operations = useCategoryMutations(
+  const { add, remove, update } = useCategoryMutations(
     () => {
       success("Success");
     },
@@ -52,6 +52,16 @@ function CategoryList() {
       console.log(err.message);
     }
   );
+
+  const operations = {
+    add: function (value) {
+      add({ id: 0, name: value });
+    },
+    remove: remove,
+    update: function (id, value) {
+      update({ id, name: value });
+    },
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
