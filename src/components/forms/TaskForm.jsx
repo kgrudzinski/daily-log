@@ -180,7 +180,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
         <Form.Label>Category</Form.Label>
       </Form.Field>
       <Form.FieldGroup dense>
-        <Form.Select name="categoryId" expanded={true}>
+        <Form.Select name="categoryId" expanded={1}>
           {categories.map((it) => {
             return (
               <Form.Option
@@ -200,7 +200,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
         <Form.Label>Project</Form.Label>
       </Form.Field>
       <Form.FieldGroup dense>
-        <Form.Select name="projectId" expanded={true}>
+        <Form.Select name="projectId" expanded={1}>
           {projects.map((it) => {
             return (
               <Form.Option
@@ -220,7 +220,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
       </Form.FieldGroup>
       <Form.Field>
         <Form.Label>Status</Form.Label>
-        <Form.Select name="status" expanded={true}>
+        <Form.Select name="status" expanded={1}>
           {Status.map((it) => {
             return <Form.Option key={it} value={it} name={it}></Form.Option>;
           })}
