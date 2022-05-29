@@ -25,11 +25,31 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      .loader {
+        margin: auto;
+        border: 20px solid #eaf0f6;
+        border-radius: 50%;
+        border-top: 20px solid #ff7a59;
+        width: 200px;
+        height: 200px;
+        animation: spinner 4s linear infinite;
+      }
+
+      @keyframes spinner {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <p>Preloader!</p>
+      <div class="loader"></div>
     </div>
     <div id="toaster"></div>
     <!--
