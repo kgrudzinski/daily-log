@@ -18,6 +18,8 @@ use app::{
 
 const DB_INITIALIZED_EVENT: &str = "db-initialized";
 const DB_INITIALIZE_ERROR_EVENT: &str = "db-initialize-error";
+const FRONTEND_READY_EVENT: &str = "frontend-ready";
+
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
@@ -60,8 +62,32 @@ fn main() {
     commands::get_db_version
   ])
   .manage(ds)
-  .on_page_load(|win, payload| {
+  .setup(|app| {
+    log::info!("Registering event handlers");
+    let win = app.get_window("main").unwrap();
+    let app_handle = app.app_handle().clone();
+    let _id = win.listen(FRONTEND_READY_EVENT, move |_| {
+      log::info!("Received frontend event: {}", FRONTEND_READY_EVENT);
+      let win = app_handle.get_window("main").unwrap();
+      let ds = win.state::<Datastore>();
+      let res = ds.open("database.db");
+      match res {
+        Ok(info) => {
+          log::info!("Database {} loaded. Version: {}", info.name, info.version);
+          win.emit(DB_INITIALIZED_EVENT, info).unwrap();
+        },
+        Err(e) => {
+          let err = e.to_string();
+          log::error!("Error loading database: {}", err);
+          win.emit(DB_INITIALIZE_ERROR_EVENT, Payload { message: err}).unwrap();
+          ds.close().unwrap();
+        }
+      }});      
+      Ok(())
+  })
+  .on_page_load(|_, payload| {
     log::info!("Url {} loaded", payload.url());
+    /*
     let ds = win.state::<Datastore>();
     
     let res = ds.open("database.db");
@@ -75,10 +101,8 @@ fn main() {
         log::error!("Error loading database: {}", err);
         win.emit(DB_INITIALIZE_ERROR_EVENT, Payload { message: err}).unwrap();
         ds.close().unwrap();
-      }
-
-     
-    }
+      }     
+    }*/
   })
   .build(tauri::generate_context!())    
     .expect("error while running tauri application");

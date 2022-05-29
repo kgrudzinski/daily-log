@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getCurrent } from "@tauri-apps/api/window";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Pages, Page, useModal } from "components/shared";
+import { Pages, Page, useModal, Message } from "components/shared";
 import { AppMenu, AppContent, About } from "components/layout";
 import { Start, Tasks } from "./pages";
 import { Settings } from "./pages/Settings";
@@ -42,8 +42,16 @@ const AppMenuItems = [
   },
 ];
 
+const AppState = {
+  LOADING: "loading",
+  READY: "ready",
+  ERROR: "error",
+};
+
 const useApp = () => {
   const [appPage, setAppPage] = useState(AppPage.HOME);
+  const [appState, setAppState] = useState(AppState.LOADING);
+  const [appError, setAppError] = useState("");
 
   const showModal = useModal();
 
@@ -72,11 +80,27 @@ const useApp = () => {
     getDbInfo();
   }, []);
 */
+
   useEffect(() => {
+    console.log("listening to init");
     return getCurrent().listen("db-initialized", (event) => {
       console.log("payload", event.payload);
       setDbinfo(event.payload);
+      setAppState(AppState.READY);
     });
+  }, []);
+
+  useEffect(() => {
+    console.log("listenig to errors");
+    return getCurrent().listen("db-initialize-error", (event) => {
+      console.log("Server Error", event.payload);
+      setAppState(AppState.ERROR);
+      setAppError(event.payload);
+    });
+  }, []);
+
+  useEffect(() => {
+    getCurrent().emit("frontend-ready");
   }, []);
 
   const dispatch = (action) => {
@@ -93,15 +117,28 @@ const useApp = () => {
     }
   };
 
-  return { appPage, dispatch, appInfo, dbinfo };
+  return { appPage, dispatch, appInfo, dbinfo, appState, appError };
 };
 
 const queryClient = new QueryClient();
 
 function App() {
-  const { appPage, dispatch, appInfo, dbinfo } = useApp();
+  const { appPage, dispatch, appInfo, dbinfo, appState, appError } = useApp();
 
-  console.log("app", dbinfo);
+  console.log("app", dbinfo, appState);
+
+  if (appState === AppState.LOADING) {
+    return <p>Loading...</p>;
+  }
+
+  if (appState === AppState.ERROR) {
+    return (
+      <Message color="is-danger">
+        <Message.Header>Initialization error</Message.Header>
+        <Message.Body>{appError}</Message.Body>
+      </Message>
+    );
+  }
 
   return (
     <div className="columns" style={{ height: "612px" }}>
