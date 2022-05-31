@@ -350,6 +350,17 @@ pub struct Entry {
     pub date: u64
 }
 
+#[derive(Debug, serde::Serialize)]
+pub struct EntryView {
+    pub id: u64,
+    pub description: String,
+    pub task: String,    
+    #[serde(rename="taskId")]
+    pub task_id: u64,
+    pub duration: u64,
+    pub date: u64
+}
+
 #[derive(Debug, Default, serde::Deserialize)]
 pub struct EntryParams {
     pub date: Option<u64>,
@@ -510,6 +521,40 @@ impl Model for Entry {
             task_id: r.get(2)?,
             duration: r.get(3)?,
             date: r.get(4)?
+        })
+    }
+}
+
+const ENTRY_VIEW_COLS: [&str; 5] = ["Description", "Task", "TaskId", "Duration", "Date"];
+
+impl Model for EntryView {
+    const NAME: &'static str = "EntryView";
+    const PRIMARY_KEY: &'static str = "Id";
+
+    fn pk(&self) -> u64 {
+        self.id
+    }
+
+    fn into_data(self) -> ModelData {
+        ModelData {
+            pk: self.id,
+            params: vec![Box::new(self.description), Box::new(self.task), Box::new(self.task_id), Box::new(self.duration), Box::new(self.date)], 
+            relations: vec![]
+        }
+    }
+
+    fn fields() -> &'static[&'static str] {
+        &ENTRY_VIEW_COLS
+    }
+
+    fn from_sql(r: &Row<'_>) -> SqlResult<Self> {        
+        Ok(EntryView{
+            id: r.get(0)?,            
+            description: r.get(1)?,
+            task: r.get(2)?,
+            task_id: r.get(3)?,
+            duration: r.get(4)?,
+            date: r.get(5)?
         })
     }
 }

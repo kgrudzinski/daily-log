@@ -12,7 +12,7 @@ use tauri::{
 };
 use app::{
   datastore::Datastore,
-  models::{Project, Task, Entry, Category, TaskView},
+  models::{Project, Task, Entry, Category, TaskView, EntryView},
   commands
 };
 
@@ -38,6 +38,7 @@ fn main() {
   ds.add_model_schema::<Entry>();
   ds.add_model_schema::<Category>();
   ds.add_model_schema::<TaskView>();
+  ds.add_model_schema::<EntryView>();
 
   let app = tauri::Builder::default()
   .invoke_handler(tauri::generate_handler![
