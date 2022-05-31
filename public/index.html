@@ -28,8 +28,9 @@
     <style>
       #loader-text {
         color: hsl(217, 71%, 53%);
-        font-size: large;
+        font-size: 32pt;
         text-transform: capitalize;
+        text-align: center;
       }
 
       .loader {
@@ -40,6 +41,14 @@
         width: 200px;
         height: 200px;
         animation: spinner 4s linear infinite;
+      }
+
+      .loader-container {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
 
       @keyframes spinner {
@@ -55,8 +64,10 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div class="loader"></div>
-      <div id="loader-text">Loading...</div>
+      <div class="loader-container">
+        <div class="loader"></div>
+        <div id="loader-text">Loading...</div>
+      </div>
     </div>
     <div id="toaster"></div>
     <!--
