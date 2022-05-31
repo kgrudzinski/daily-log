@@ -1,5 +1,6 @@
 import { getName, getVersion, getTauriVersion } from "@tauri-apps/api/app";
 import { invoke } from "@tauri-apps/api/tauri";
+import { getCurrent } from "@tauri-apps/api/window";
 
 export const AppService = {
   getAppInfo: async function () {
@@ -16,5 +17,12 @@ export const AppService = {
 
   getDbInfo: async function () {
     invoke("get_db_version");
+  },
+
+  listen: async function (event, callback) {
+    return await getCurrent().listen(event, callback);
+  },
+  emit: function (event, params) {
+    getCurrent().emit(event, params);
   },
 };

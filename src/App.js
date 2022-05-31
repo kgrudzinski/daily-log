@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { getCurrent } from "@tauri-apps/api/window";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Pages, Page, useModal, Message } from "components/shared";
@@ -82,25 +81,22 @@ const useApp = () => {
 */
 
   useEffect(() => {
-    console.log("listening to init");
-    return getCurrent().listen("db-initialized", (event) => {
-      console.log("payload", event.payload);
+    return AppService.listen("db-initialized", (event) => {
       setDbinfo(event.payload);
       setAppState(AppState.READY);
     });
   }, []);
 
   useEffect(() => {
-    console.log("listenig to errors");
-    return getCurrent().listen("db-initialize-error", (event) => {
+    return AppService.listen("db-initialize-error", (event) => {
       console.log("Server Error", event.payload);
       setAppState(AppState.ERROR);
-      setAppError(event.payload);
+      setAppError(event.payload.message);
     });
   }, []);
 
   useEffect(() => {
-    getCurrent().emit("frontend-ready");
+    AppService.emit("frontend-ready");
   }, []);
 
   const dispatch = (action) => {
