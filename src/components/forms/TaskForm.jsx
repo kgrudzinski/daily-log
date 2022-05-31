@@ -35,8 +35,6 @@ export function TaskForm({ data, onClose, onCancel }) {
   const { lists, mode, state, errors, changeView, operations, item } =
     useTaskForm(data);
 
-  console.log(mode, state);
-
   if (state === State.LOADING) {
     return <p>Loading</p>;
   }
@@ -192,8 +190,11 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
           })}
         </Form.Select>
         <Form.IconButton
+          title="Add new category"
           icon="fas fa-plus"
+          color={ButtonColor.LINK}
           onClick={add_category}
+          outlined
         ></Form.IconButton>
       </Form.FieldGroup>
       <Form.Field>
@@ -212,10 +213,11 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
           })}
         </Form.Select>
         <Form.IconButton
+          title="Add new project"
           icon="fas fa-plus"
           color={ButtonColor.LINK}
           onClick={add_project}
-          outlined={true}
+          outlined
         ></Form.IconButton>
       </Form.FieldGroup>
       <Form.Field>
