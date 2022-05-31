@@ -121,8 +121,6 @@ const queryClient = new QueryClient();
 function App() {
   const { appPage, dispatch, appInfo, dbinfo, appState, appError } = useApp();
 
-  console.log("app", dbinfo, appState);
-
   if (appState === AppState.LOADING) {
     return <p>Loading...</p>;
   }
@@ -137,7 +135,7 @@ function App() {
   }
 
   return (
-    <div className="columns" style={{ height: "612px" }}>
+    <div className="columns" style={{ height: "782px" }}>
       <div className="column is-2 pb-0">
         <AppMenu menu={AppMenuItems} selected={appPage} dispatch={dispatch} />
       </div>
