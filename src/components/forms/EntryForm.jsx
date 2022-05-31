@@ -4,7 +4,9 @@ import { useTasks } from "hooks";
 export function EntryForm({ data, onClose, onCancel }) {
   const { data: tasks, isLoading, isError, error } = useTasks();
 
-  console.log(tasks);
+  if (data.id === 0) {
+    data.taskId = tasks && tasks.length > 0 ? tasks[0].id : 0;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -14,11 +16,13 @@ export function EntryForm({ data, onClose, onCancel }) {
     return <p>{error.message}</p>;
   }
 
+  console.log("Entry", data);
+
   return (
     <Form initialData={data} onSubmit={onClose}>
       <Form.Field>
         <Form.Label>Task</Form.Label>
-        <Form.Select name="taskId" expanded={true}>
+        <Form.Select name="taskId" expanded={1}>
           {tasks.map((it) => {
             return <Form.Option key={it.id} value={it.id} name={it.name} />;
           })}
