@@ -97,18 +97,17 @@ WHERE
     t.CategoryId = c.CategoryId AND
     t.ProjectId = p.ProjectId;
 
-/*
+
 CREATE VIEW IF NOT EXISTS EntryView AS
 SELECT
-    e.EntryId AS Id
+    e.EntryId AS Id,
     e.Description AS Description,
     e.Duration AS Duration,
     e.TaskId AS TaskId,
     e.Date AS Date,
-    t.Name as TaskName
+    t.Name As Task
 FROM
     Entries e,
     Tasks t
 WHERE
     t.TaskId = e.TaskId;
-*/
