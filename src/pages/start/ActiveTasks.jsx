@@ -8,6 +8,7 @@ import {
 } from "components/shared";
 import { TaskForm } from "components/forms";
 import { useTaskMutations, useTasks } from "hooks";
+import { RandService } from "services";
 
 export function ActiveTasks() {
   const { show, save, tasks } = useActiveTasks();
@@ -87,6 +88,7 @@ function FormModal({ save }) {
     <Modal id="task_form">
       <div className="box">
         <TaskForm
+          key={RandService.generateId()}
           data={task}
           onCancel={hide}
           onClose={(data) => {
@@ -105,7 +107,6 @@ function useActiveTasks() {
   const showModal = useModal();
 
   const saveForm = (data) => {
-    console.log(data);
     add(data);
   };
 

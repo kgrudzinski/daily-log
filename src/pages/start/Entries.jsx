@@ -10,7 +10,7 @@ import {
 } from "components/shared";
 import { EntryForm } from "components/forms";
 import { useEntries, useEntryMutations } from "hooks";
-import { DateService } from "services";
+import { DateService, RandService } from "services";
 
 export function Entries() {
   const { entries, show, save } = useTodaysEntries();
@@ -97,6 +97,7 @@ function FormModal({ save }) {
     <Modal id="entry_form">
       <div className="box">
         <EntryForm
+          key={RandService.generateId()}
           data={entry}
           onCancel={hide}
           onClose={(data) => {
@@ -115,14 +116,12 @@ function useTodaysEntries() {
   const showModal = useModal();
 
   const saveForm = (data) => {
-    console.log("entry to save", data);
     const dataToSave = {
       ...data,
       duration: +data.duration,
       taskId: +data.taskId,
       date: DateService.fromString(data.date),
     };
-    console.log("processed entry", dataToSave);
     add(dataToSave);
   };
 
