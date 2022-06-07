@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 export { DateService } from "./dates";
 export { AppService } from "./app";
+export { RandService } from "./rand";
 
 let query = (name, args) => {
   return invoke(name, args)
