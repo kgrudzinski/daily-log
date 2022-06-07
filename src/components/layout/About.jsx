@@ -1,8 +1,8 @@
 import { Modal } from "components/shared";
 
 export function About({ appInfo, dbInfo }) {
-  console.log("appInfo", appInfo);
-  console.log("dbinfo", dbInfo);
+  //console.log("appInfo", appInfo);
+  //console.log("dbinfo", dbInfo);
   return (
     <>
       <></>

@@ -16,8 +16,6 @@ export function EntryForm({ data, onClose, onCancel }) {
     return <p>{error.message}</p>;
   }
 
-  console.log("Entry", data);
-
   return (
     <Form initialData={data} onSubmit={onClose}>
       <Form.Field>
