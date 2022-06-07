@@ -20,10 +20,9 @@ export function Table({ columns, data }) {
 function TableRow({ row, columns }) {
   return (
     <tr>
-      {columns.map((col) => {
-        return (
-          <TableCell key={`${row.id}_${col.field}`} row={row} column={col} />
-        );
+      {columns.map((col, idx) => {
+        const col_id = col.field ? col.field : idx;
+        return <TableCell key={`${row.id}_${col_id}`} row={row} column={col} />;
       })}
     </tr>
   );

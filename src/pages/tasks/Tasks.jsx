@@ -113,6 +113,7 @@ function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
       label: "Status",
     },
     {
+      field: "",
       label: "Actions",
       render: (row) => {
         return (
