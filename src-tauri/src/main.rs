@@ -71,7 +71,7 @@ fn main() {
       log::info!("Received frontend event: {}", FRONTEND_READY_EVENT);
       let win = app_handle.get_window("main").unwrap();
       let ds = win.state::<Datastore>();
-      let res = ds.open("database.db");
+      let res = ds.open("database.sqlite");
       match res {
         Ok(info) => {
           log::info!("Database {} loaded. Version: {}", info.name, info.version);
