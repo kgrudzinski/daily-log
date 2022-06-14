@@ -9,6 +9,7 @@ export {
   ButtonColor,
   ButtonAlign,
   IconButton,
+  Fab,
 } from "./Button";
 export { Icon, IconText } from "./Icon";
 export { Form } from "./Form";

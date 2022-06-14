@@ -1,0 +1,74 @@
+.fab-btn {
+  width: 60px;
+  height: 60px;
+  background: hsl(229, 53%, 53%);
+  cursor: pointer;
+}
+
+.fab-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  box-shadow: 10px 10px 5px #aaaaaa;
+}
+
+.fab-icon span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: white;
+}
+
+.tooltip {
+  display: inline-block;
+  position: relative;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip .tooltip-text {
+  //content: attr(data-text);
+  position: absolute;
+
+  top: 50%;
+  transform: translateY(-50%);
+
+  right: 100%;
+  margin-right: 5px;
+  width: 150px;
+  padding: 3px;
+  border-radius: 10px;
+  background: hsl(219, 70%, 96%);
+  color: hsl(217, 71%, 53%);
+  border: 1px solid hsl(217, 71%, 53%);
+  text-align: center;
+  display: block;
+  visibility: hidden;
+}
+
+.fab-bottom-right {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+}
+
+.fab-bottom-left {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+}
+
+.fab-top-left {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+.fab-top-right {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}

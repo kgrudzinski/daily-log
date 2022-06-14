@@ -1,3 +1,5 @@
+import "./shared.scss";
+
 export const ButtonSize = {
   SMALL: "is-small",
   NORMAL: "is-normal",
@@ -125,6 +127,20 @@ export function IconButton({
     <button className={classes.join(" ")} {...other}>
       {content}
     </button>
+  );
+}
+
+export function Fab({ icon, tooltip, position, ...rest }) {
+  return (
+    <div className={`tooltip fab-${position}`}>
+      <div className="tooltip-text">{tooltip}</div>
+      <div className="fab-btn fab-icon" {...rest}>
+        {/*children && <span className="tooltip">{children}</span>*/}
+        <span>
+          <i className={icon} />
+        </span>
+      </div>
+    </div>
   );
 }
 
