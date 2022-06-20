@@ -1,7 +1,9 @@
+@use "bulma/bulma.sass";
+
 .fab-btn {
   width: 60px;
   height: 60px;
-  background: hsl(229, 53%, 53%);
+  background: bulma.$blue;
   cursor: pointer;
 }
 
@@ -50,25 +52,25 @@
 }
 
 .fab-bottom-right {
-  position: absolute;
+  position: fixed;
   bottom: 30px;
   right: 30px;
 }
 
 .fab-bottom-left {
-  position: absolute;
+  position: fixed;
   bottom: 30px;
   left: 30px;
 }
 
 .fab-top-left {
-  position: absolute;
+  position: fixed;
   top: 30px;
   left: 30px;
 }
 
 .fab-top-right {
-  position: absolute;
+  position: fixed;
   top: 30px;
   right: 30px;
 }
