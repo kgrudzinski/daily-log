@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { useTasks, useTaskMutations, useEntryMutations } from "hooks";
-import {
-  IconButton,
-  ButtonColor,
-  Message,
-  useToast,
-  Table,
-} from "components/shared";
+import { Fab, Message, Tabs, Pages, Page, useToast } from "components/shared";
 import { EntryForm, TaskForm } from "components/forms";
 import { DateService } from "services";
+import { TaskTable } from "./TaskTable";
+import { TaskBoard } from "./TaskBoard";
+import { TaskList } from "./TaskList";
 import "./tasks.scss";
 
 const Mode = {
   VIEW: "view",
   EDIT: "edit",
   ADD_ENTRY: "add_entry",
+};
+
+const TaskTabs = {
+  TABLE: "table",
+  LIST: "list",
+  BOARD: "board",
 };
 
 const EmptyTask = {
@@ -40,9 +43,9 @@ export function Tasks() {
     addEntry,
     completeTask,
     selected,
+    tab,
+    setTab,
   } = useTasksView();
-
-  console.log("render");
 
   if (status === "loading") {
     return <p>Loading...</p>;
@@ -53,23 +56,37 @@ export function Tasks() {
   }
 
   return (
-    <>
+    <div style={{ height: "780px", position: "relative" }}>
       {mode === Mode.VIEW ? (
         <>
-          <TaskTable
-            tasks={tasks}
-            onEdit={editTask}
-            onDelete={deleteTask}
-            onAddEntry={addEntry}
-            onComplete={completeTask}
-          />
-          <IconButton
+          <Tabs selected={tab} onChange={setTab}>
+            <Tabs.Tab id={TaskTabs.TABLE}>Table</Tabs.Tab>
+            <Tabs.Tab id={TaskTabs.BOARD}>Board</Tabs.Tab>
+            <Tabs.Tab id={TaskTabs.LIST}>List</Tabs.Tab>
+          </Tabs>
+          <Pages selected={tab}>
+            <Page value={TaskTabs.TABLE}>
+              <TaskTable
+                tasks={tasks}
+                onEdit={editTask}
+                onDelete={deleteTask}
+                onAddEntry={addEntry}
+                onComplete={completeTask}
+              />
+            </Page>
+            <Page value={TaskTabs.BOARD}>
+              <TaskBoard tasks={tasks} />
+            </Page>
+            <Page value={TaskTabs.LIST}>
+              <TaskList tasks={tasks} />
+            </Page>
+          </Pages>
+          <Fab
             icon="fas fa-plus"
-            color={ButtonColor.LINK_LIGHT}
+            position="bottom-right"
+            tooltip="New task"
             onClick={newTask}
-          >
-            Add task
-          </IconButton>
+          ></Fab>
         </>
       ) : null}
       {mode === Mode.EDIT ? (
@@ -86,83 +103,6 @@ export function Tasks() {
           onCancel={onFormCancel}
         />
       ) : null}
-    </>
-  );
-}
-
-function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
-  const columns = [
-    {
-      field: "name",
-      label: "Name",
-    },
-    {
-      field: "description",
-      label: "Description",
-    },
-    {
-      field: "categoryName",
-      label: "Category",
-    },
-    {
-      field: "projectName",
-      label: "Project",
-    },
-    {
-      field: "status",
-      label: "Status",
-    },
-    {
-      field: "",
-      label: "Actions",
-      render: (row) => {
-        return (
-          <TaskControls
-            row={row}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onAddEntry={onAddEntry}
-            onComplete={onComplete}
-          />
-        );
-      },
-    },
-  ];
-
-  if (tasks.length === 0) {
-    return <p>No data to show</p>;
-  }
-  return (
-    <div className="mb-2 table-container">
-      <Table columns={columns} data={tasks} />
-    </div>
-  );
-}
-
-function TaskControls({ row, onEdit, onDelete, onAddEntry, onComplete }) {
-  return (
-    <div>
-      <IconButton
-        icon="fas fa-edit"
-        title="Edit task"
-        onClick={() => onEdit(row.id)}
-      />
-      <IconButton
-        icon="fas fa-trash-alt"
-        title="Delete task"
-        onClick={() => onDelete(row.id)}
-      />
-      <IconButton
-        icon="fas fa-plus"
-        title="Add entry"
-        onClick={() => onAddEntry(row.id)}
-      />
-      <IconButton
-        icon="fas fa-check"
-        title="Mark as completed"
-        onClick={() => onComplete(row.id)}
-        disabled={row.status === "Completed"}
-      />
     </div>
   );
 }
@@ -219,6 +159,7 @@ function useTasksView() {
 
   const { data: tasks, status, error } = useTasks();
   const [mode, setMode] = useState(Mode.VIEW);
+  const [tab, setTab] = useState(TaskTabs.TABLE);
   const [selected, setSelected] = useState(null);
 
   const deleteTask = (id) => remove(id);
@@ -287,5 +228,7 @@ function useTasksView() {
     addEntry: addNewEntry,
     completeTask,
     selected,
+    tab,
+    setTab,
   };
 }

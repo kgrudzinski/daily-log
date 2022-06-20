@@ -1,5 +1,31 @@
+@use "bulma/bulma.sass";
+
 .table-container {
   border-bottom: 1px solid hsl(0, 0%, 71%);
   max-height: 90%;
   overflow-y: auto;
+}
+
+.board-item {
+  border: 1px solid bulma.$blue;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px;
+  background-color: hsl(219, 70%, 96%);
+  cursor: default;
+}
+
+.board-item:hover {
+  background-color: bulma.$blue;
+  color: hsl(219, 70%, 96%);
+  border-color: hsl(219, 70%, 96%);
+}
+
+.item-details {
+  display: none;
+  color: hsl(219, 70%, 96%);
+}
+
+.board-item:hover .item-details {
+  display: block;
 }
