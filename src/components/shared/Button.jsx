@@ -144,7 +144,7 @@ export function Fab({ icon, tooltip, position, ...rest }) {
   );
 }
 
-export function Buttons(dense, align, children) {
+export function Buttons({ dense, align, children }) {
   const classes = ["buttons"];
   if (dense) {
     classes.push("has-addons");
