@@ -55,6 +55,13 @@ export function Tasks() {
     return <ErrorMessage error={error.message} />;
   }
 
+  const operations = {
+    onDelete: deleteTask,
+    onEdit: editTask,
+    onAddEntry: addEntry,
+    onComplete: completeTask,
+  };
+
   return (
     <div style={{ height: "780px", position: "relative" }}>
       {mode === Mode.VIEW ? (
@@ -75,10 +82,10 @@ export function Tasks() {
               />
             </Page>
             <Page value={TaskTabs.BOARD}>
-              <TaskBoard tasks={tasks} />
+              <TaskBoard tasks={tasks} operations={operations} />
             </Page>
             <Page value={TaskTabs.LIST}>
-              <TaskList tasks={tasks} />
+              <TaskList tasks={tasks} operations={operations} />
             </Page>
           </Pages>
           <Fab

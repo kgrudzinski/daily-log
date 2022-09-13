@@ -10,22 +10,26 @@
   border: 1px solid bulma.$blue;
   border-radius: 10px;
   padding: 10px;
-  margin: 5px;
+  margin: 10px;
   background-color: hsl(219, 70%, 96%);
   cursor: default;
 }
 
 .board-item:hover {
-  background-color: bulma.$blue;
-  color: hsl(219, 70%, 96%);
-  border-color: hsl(219, 70%, 96%);
+  box-shadow: 5px 5px 5px lightgray;
+  margin-bottom: 20px;
 }
 
 .item-details {
   display: none;
-  color: hsl(219, 70%, 96%);
 }
 
 .board-item:hover .item-details {
   display: block;
+}
+
+.task-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 40%;
 }
