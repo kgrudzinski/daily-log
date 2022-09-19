@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Pages, Page, useModal, Message } from "components/shared";
 import { AppMenu, AppContent, About } from "components/layout";
-import { Start, Tasks } from "./pages";
+import { Start, Tasks, Entries } from "./pages";
 import { Settings } from "./pages/Settings";
 import { Configuration } from "./pages/Configuration";
 import { AppService } from "services";
@@ -14,6 +14,7 @@ import "@fortawesome/fontawesome-free/js/all";
 const AppPage = {
   HOME: "home",
   TASKS: "tasks",
+  ENTRIES: "entries",
   SETTINGS: "settings",
   CONFIGURATION: "configuration",
 };
@@ -28,6 +29,11 @@ const AppMenuItems = [
     id: AppPage.TASKS,
     label: "Tasks",
     icon: "fas fa-tasks",
+  },
+  {
+    id: AppPage.ENTRIES,
+    label: "Entries",
+    icon: "fas fa-file",
   },
   {
     id: AppPage.CONFIGURATION,
@@ -148,6 +154,9 @@ function App() {
               </Page>
               <Page value={AppPage.TASKS}>
                 <Tasks></Tasks>
+              </Page>
+              <Page value={AppPage.ENTRIES}>
+                <Entries />
               </Page>
               <Page value={AppPage.CONFIGURATION}>
                 <Configuration></Configuration>

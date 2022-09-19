@@ -1,0 +1,35 @@
+@use "bulma/bulma.sass";
+
+.item {
+  border: 1px solid bulma.$blue;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  background-color: hsl(219, 70%, 96%);
+  cursor: default;
+}
+
+.week-item {
+  padding: 5px;
+  border: 1px solid black;
+  width: 14%;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  gap: 2px;
+}
+
+.calendar-item {
+  border: 1px solid black;
+  padding: 5px;
+  //width: 14%;
+  //height: 20%;
+}
+
+.calendar-item-header {
+  border: 1px solid black;
+  padding: 5px;
+  background-color: gray;
+}
