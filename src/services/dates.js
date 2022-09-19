@@ -30,6 +30,65 @@ export const DateService = {
       h: hours < 10 ? `0${hours}` : `${hours}`,
     };
   },
+
+  addDays: function (date, days) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+  },
+
+  addMonths: function (date, months) {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth() + months,
+      date.getDate()
+    );
+  },
+
+  getCurrentDate: function () {
+    let d = new Date();
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d;
+  },
+
+  getWeekNumber: function (d) {
+    // Copy date so don't modify original
+    let tmp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    // Set to nearest Thursday: current date + 4 - current day number
+    // Make Sunday's day number 7
+    tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7));
+    // Get first day of year
+    const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+    // Calculate full weeks to nearest Thursday
+    const weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+    // Return array of year and week number
+    return [d.getUTCFullYear(), weekNo];
+  },
+
+  getWeekStart: function (d) {
+    const weekDay = d.getDay(); //0-6 => sunday = 0, saturday = 6
+    //sunday
+    if (weekDay === 0) {
+      return this.addDays(d, -6);
+    } else {
+      return this.addDays(d, -(weekDay - 1));
+    }
+  },
+
+  generateDays: function (start, count) {
+    return Array.from(dayGenerator(start, count));
+  },
+
+  lastDayOfMonth: function (d) {
+    return new Date(d.getFullYear(), d.getMonth() + 1, 0);
+  },
+
+  firstdayOfMonth: function (d) {
+    let month_start = d ? new Date(d) : this.getCurrentDate();
+    month_start.setDate(1);
+    return month_start;
+  },
 };
 
 function formatDate(date) {
@@ -41,4 +100,10 @@ function formatDate(date) {
   const pd = day < 10 ? `0${day}` : day;
 
   return `${year}-${pm}-${pd}`;
+}
+
+function* dayGenerator(start, count) {
+  for (let i = 0; i < count; ++i) {
+    yield DateService.addDays(start, i);
+  }
 }
