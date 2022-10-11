@@ -4,7 +4,7 @@ import { useTasks } from "hooks";
 export function EntryForm({ data, onClose, onCancel }) {
   const { data: tasks, isLoading, isError, error } = useTasks();
 
-  if (data.id === 0) {
+  if (data.taskId === 0) {
     data.taskId = tasks && tasks.length > 0 ? tasks[0].id : 0;
   }
 
