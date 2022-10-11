@@ -5,7 +5,7 @@ export function useEntries() {
   const entries = useQuery(["entries"], EntriesService.get, {
     refetchInterval: false,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 
   return entries;
