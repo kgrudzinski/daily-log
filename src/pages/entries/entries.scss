@@ -1,35 +1,88 @@
 @use "bulma/bulma.sass";
 
-.item {
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
+  align-items: baseline;
+}
+
+.entry-item {
   border: 1px solid bulma.$blue;
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
   background-color: hsl(219, 70%, 96%);
   cursor: default;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .week-item {
-  padding: 5px;
+  //padding: 5px;
   border: 1px solid black;
   width: 14%;
+  overflow-x: hidden;
+  //display: flex;
+  //flex-direction: column;
 }
 
 .calendar {
+  height: 550px;
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
+  grid-template-columns: repeat(7, 14%);
+  grid-template-rows: 32px repeat(5, calc((100% - 32px) / 5));
   gap: 2px;
 }
 
 .calendar-item {
   border: 1px solid black;
-  padding: 5px;
-  //width: 14%;
-  //height: 20%;
+  overflow-y: auto;
+}
+
+.calendar-item-label {
+  padding: 2px 0 2px 10px;
+  background-color: beige;
+}
+
+.calendar-item-label:hover {
+  background-color: hsl(219, 70%, 96%);
 }
 
 .calendar-item-header {
-  border: 1px solid black;
+  border: 1px solid bulma.$blue;
+  padding: 5px 5px 5px 10px;
+  background-color: hsl(219, 70%, 96%);
+  color: bulma.$blue;
+}
+
+.calendar-entry {
+  border: 1px solid bulma.$blue;
+  border-radius: 10px;
+  padding: 0 5px;
+  margin: 2px 2px;
+  background-color: hsl(219, 70%, 96%);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 10pt;
+  color: bulma.$blue;
+}
+
+.week-item-header {
+  padding: 2px 0 2px 10px;
+  background-color: beige;
+}
+
+.week-entry {
+  border: 1px solid bulma.$blue;
+  border-radius: 10px;
   padding: 5px;
-  background-color: gray;
+  margin: 5px;
+  background-color: hsl(219, 70%, 96%);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 36px;
+  color: bulma.$blue;
 }

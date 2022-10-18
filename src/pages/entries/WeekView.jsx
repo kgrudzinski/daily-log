@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DateService } from "services";
 import { Buttons, Button } from "components/shared";
-import { EntryItem } from "./EntryItem";
+//import { EntryItem } from "./EntryItem";
 import "./entries.scss";
 
 export function WeekView({ entries }) {
@@ -24,8 +24,8 @@ export function WeekView({ entries }) {
   });
 
   return (
-    <>
-      <div>
+    <div style={{ height: "90%", display: "flex", flexDirection: "column" }}>
+      <div className="toolbar" style={{ flex: "0 1 auto" }}>
         <Buttons>
           <Button
             onClick={() => {
@@ -51,16 +51,19 @@ export function WeekView({ entries }) {
             &gt;
           </Button>
         </Buttons>
-        <span>
+        <div>
           Tydzień {weekNo}, {year}
-        </span>
+        </div>
       </div>
-      <div className="is-flex is-flex-direction-row is-justify-content-space-evenly">
+      <div
+        className="is-flex is-flex-direction-row is-justify-content-space-evenly"
+        style={{ flex: "1 1 auto" }}
+      >
         {days.map((day) => {
           return <DayView key={day} day={day} entries={visibleEntries} />;
         })}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -71,12 +74,16 @@ function DayView({ day, entries }) {
 
   return (
     <div className="week-item">
-      <div>{DateService.format(day)}</div>
+      <div className="week-item-header">{DateService.format(day)}</div>
       <div>
         {items.map((it) => {
-          return <EntryItem key={it.id} item={it} />;
+          return <Item key={it.id} item={it} />;
         })}
       </div>
     </div>
   );
+}
+
+function Item({ item }) {
+  return <div className="week-entry">{item.task}</div>;
 }

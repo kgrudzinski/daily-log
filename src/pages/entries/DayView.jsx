@@ -20,7 +20,7 @@ export function DailyVew({ entries }) {
 
   return (
     <>
-      <div>
+      <div className="toolbar">
         <Buttons>
           <Button
             onClick={() => {
@@ -44,7 +44,7 @@ export function DailyVew({ entries }) {
             &gt;
           </Button>
         </Buttons>
-        <span>{DateService.format(currDate)}</span>
+        <div>{DateService.format(currDate)}</div>
       </div>
       <div>
         {visibleEntries.map((it) => {

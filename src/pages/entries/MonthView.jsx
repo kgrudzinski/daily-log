@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { DateService } from "services";
 import { Buttons, Button } from "components/shared";
-//import { EntryItem } from "./EntryItem";
 import "./entries.scss";
 
 export function MonthView({ entries }) {
@@ -24,7 +23,7 @@ export function MonthView({ entries }) {
 
   return (
     <>
-      <div>
+      <div className="toolbar">
         <Buttons>
           <Button
             onClick={() => {
@@ -69,5 +68,21 @@ function DayHeader({ text }) {
 }
 
 function DayView({ day, entries }) {
-  return <div className="calendar-item">{day.getDate()}</div>;
+  const ventries = entries.filter((it) => {
+    return it.date === DateService.toTimestamp(day);
+  });
+  return (
+    <div className="calendar-item">
+      <div className="calendar-item-label">{day.getDate()}</div>
+      <div>
+        {ventries.map((it) => {
+          return <Item key={it.id} item={it} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Item({ item }) {
+  return <div className="calendar-entry">{item.task}</div>;
 }
