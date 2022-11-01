@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { DateService } from "services";
 import { Buttons, Button } from "components/shared";
-//import { EntryItem } from "./EntryItem";
+import { useEntryContext } from "./Context";
 import "./entries.scss";
 
-export function WeekView({ entries }) {
+export function WeekView({ date, entries }) {
   const [weekStart, setWeekStart] = useState(
-    DateService.getWeekStart(DateService.getCurrentDate())
+    DateService.getWeekStart(date || DateService.getCurrentDate())
   );
   const [year, weekNo] = DateService.getWeekNumber(weekStart);
   const weekEnd = DateService.addDays(weekStart, 6);
@@ -72,9 +72,13 @@ function DayView({ day, entries }) {
     (it) => it.date === DateService.toTimestamp(day)
   );
 
+  const { goToDay } = useEntryContext();
+
   return (
     <div className="week-item">
-      <div className="week-item-header">{DateService.format(day)}</div>
+      <div className="week-item-header" onClick={() => goToDay(day)}>
+        {DateService.format(day)}
+      </div>
       <div>
         {items.map((it) => {
           return <Item key={it.id} item={it} />;
@@ -85,5 +89,11 @@ function DayView({ day, entries }) {
 }
 
 function Item({ item }) {
-  return <div className="week-entry">{item.task}</div>;
+  const { editEntry } = useEntryContext();
+
+  return (
+    <div className="week-entry" onClick={() => editEntry(item)}>
+      {item.task}
+    </div>
+  );
 }

@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { DateService } from "services";
 import { Buttons, Button } from "components/shared";
+import { useEntryContext } from "./Context";
 import "./entries.scss";
 
-export function MonthView({ entries }) {
-  const [monthStart, setMonthStart] = useState(DateService.firstdayOfMonth());
+export function MonthView({ date, entries }) {
+  const [monthStart, setMonthStart] = useState(
+    DateService.firstdayOfMonth(date)
+  );
   const monthEnd = DateService.lastDayOfMonth(monthStart);
 
   const changeMonth = (dir) => {
@@ -68,12 +71,20 @@ function DayHeader({ text }) {
 }
 
 function DayView({ day, entries }) {
+  const { goToDay } = useEntryContext();
   const ventries = entries.filter((it) => {
     return it.date === DateService.toTimestamp(day);
   });
   return (
     <div className="calendar-item">
-      <div className="calendar-item-label">{day.getDate()}</div>
+      <div
+        className="calendar-item-label"
+        onClick={() => {
+          goToDay(day);
+        }}
+      >
+        {day.getDate()}
+      </div>
       <div>
         {ventries.map((it) => {
           return <Item key={it.id} item={it} />;
@@ -84,5 +95,10 @@ function DayView({ day, entries }) {
 }
 
 function Item({ item }) {
-  return <div className="calendar-entry">{item.task}</div>;
+  const { editEntry } = useEntryContext();
+  return (
+    <div className="calendar-entry" onClick={() => editEntry(item)}>
+      {item.task}
+    </div>
+  );
 }

@@ -4,8 +4,10 @@ import { DateService } from "services";
 import { Buttons, Button } from "components/shared";
 import { EntryItem } from "./EntryItem";
 
-export function DailyVew({ entries }) {
-  const [currDate, setCurrDate] = useState(DateService.getCurrentDate());
+export function DailyVew({ date, entries }) {
+  const [currDate, setCurrDate] = useState(
+    date || DateService.getCurrentDate()
+  );
   //const { deleteEntry, setMode, setSelectedId } = useEntryContext();
 
   const changeDate = (val) => {
