@@ -31,7 +31,7 @@
   height: 550px;
   display: grid;
   grid-template-columns: repeat(7, 14%);
-  grid-template-rows: 32px repeat(5, calc((100% - 32px) / 5));
+  grid-template-rows: 32px repeat(6, calc((100%) / 6));
   gap: 2px;
 }
 

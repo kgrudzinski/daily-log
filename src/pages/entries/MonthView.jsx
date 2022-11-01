@@ -15,7 +15,7 @@ export function MonthView({ date, entries }) {
   };
 
   const weekStart = DateService.getWeekStart(monthStart);
-  const days = DateService.generateDays(weekStart, 35);
+  const days = DateService.generateDays(weekStart, 42);
   const dayNames = ["Pon", "Wto", "Śro", "Czw", "Pią", "Sob", "Nie"];
 
   const visibleEntries = entries.filter((it) => {
