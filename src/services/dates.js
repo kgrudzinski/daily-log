@@ -3,7 +3,8 @@ export const DateService = {
     return formatDate(date);
   },
   toTimestamp: function (date) {
-    return Math.floor(date.getTime() / 1000);
+    const d = date || this.getCurrentDate();
+    return Math.floor(d.getTime() / 1000);
   },
   fromTimestamp: function (ts) {
     return new Date(ts * 1000);
