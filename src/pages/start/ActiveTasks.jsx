@@ -21,7 +21,7 @@ export function ActiveTasks() {
           <Card.Title title="Active tasks"></Card.Title>
           <Card.Icon></Card.Icon>
         </Card.Header>
-        <Card.Content>
+        <Card.Content sx={{ maxheight: "250px", overflowY: "auto" }}>
           <TaskTable data={activeTasks} />
         </Card.Content>
         <Card.Footer>
