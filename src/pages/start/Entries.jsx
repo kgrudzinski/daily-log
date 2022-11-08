@@ -134,10 +134,11 @@ function useTodaysEntries() {
   );
 
   const showForm = () => showModal("entry_form");
+  const today = DateService.toTimestamp();
 
   return {
     save: saveForm,
     show: showForm,
-    entries: entries || [],
+    entries: entries ? entries.filter((e) => e.date === today) : [],
   };
 }
