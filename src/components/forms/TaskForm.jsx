@@ -14,6 +14,7 @@ import {
 } from "hooks";
 import { CategoryForm } from "./CategoryForm";
 import { ProjectForm } from "./ProjectForm";
+import { Icons } from "consts";
 
 // what form are we displaying
 const ViewMode = {
@@ -191,7 +192,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
         </Form.Select>
         <Form.IconButton
           title="Add new category"
-          icon="fas fa-plus"
+          icon={Icons.PLUS}
           color={ButtonColor.LINK}
           onClick={add_category}
           outlined
@@ -214,7 +215,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
         </Form.Select>
         <Form.IconButton
           title="Add new project"
-          icon="fas fa-plus"
+          icon={Icons.PLUS}
           color={ButtonColor.LINK}
           onClick={add_project}
           outlined

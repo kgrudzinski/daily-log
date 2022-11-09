@@ -1,4 +1,5 @@
 import { IconButton, Table } from "components/shared";
+import { Icons } from "consts";
 
 export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
   const columns = [
@@ -53,22 +54,22 @@ function TaskControls({ row, onEdit, onDelete, onAddEntry, onComplete }) {
   return (
     <div>
       <IconButton
-        icon="fas fa-edit"
+        icon={Icons.EDIT}
         title="Edit task"
         onClick={() => onEdit(row.id)}
       />
       <IconButton
-        icon="fas fa-trash-alt"
+        icon={Icons.DELETE}
         title="Delete task"
         onClick={() => onDelete(row.id)}
       />
       <IconButton
-        icon="fas fa-plus"
+        icon={Icons.PLUS}
         title="Add entry"
         onClick={() => onAddEntry(row.id)}
       />
       <IconButton
-        icon="fas fa-check"
+        icon={Icons.CHECK}
         title="Mark as completed"
         onClick={() => onComplete(row.id)}
         disabled={row.status === "Completed"}

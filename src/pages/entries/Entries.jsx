@@ -5,6 +5,7 @@ import { EntryProvider, useEntryContext } from "./Context";
 import { DailyVew } from "./DayView";
 import { WeekView } from "./WeekView";
 import { MonthView } from "./MonthView";
+import { Icons } from "consts";
 
 export function Entries() {
   const {
@@ -66,7 +67,7 @@ export function Entries() {
           </Pages>
 
           <Fab
-            icon="fas fa-plus"
+            icon={Icons.PLUS}
             position="bottom-right"
             tooltip="New entry "
             onClick={() => newEntry()}

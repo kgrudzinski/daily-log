@@ -1,5 +1,6 @@
 import { useContext, useReducer, createContext } from "react";
 import "bulma-list/css/bulma-list.css";
+import { Icons } from "consts";
 
 const ListActionType = {
   CLEAR: "clear",
@@ -106,12 +107,12 @@ function ListViewItem({ value, onEdit, onRemove }) {
         <div className="buttons is-right">
           <button className="button" onClick={onEdit}>
             <span className="icon">
-              <i className="fas fa-edit"></i>
+              <i className={Icons.EDIT}></i>
             </span>
           </button>
           <button className="button" onClick={onRemove}>
             <span className="icon">
-              <i className="fas fa-trash-alt"></i>
+              <i className={Icons.DELETE}></i>
             </span>
           </button>
         </div>
@@ -139,12 +140,12 @@ function ListEditItem({ value, onChange, onAccept, onCancel }) {
         <div className="buttons is-right">
           <button className="button" onClick={onAccept}>
             <span className="icon">
-              <i className="fas fa-check"></i>
+              <i className={Icons.CHECK}></i>
             </span>
           </button>
           <button className="button" onClick={onCancel}>
             <span className="icon">
-              <i className="fas fa-times-circle"></i>
+              <i className={Icons.CANCEL}></i>
             </span>
           </button>
         </div>
@@ -188,7 +189,7 @@ function ListNewItem() {
         <div className="buttons is-right">
           <button className="button" onClick={() => onAddClicked()}>
             <span className="icon">
-              <i className="fas fa-plus"></i>
+              <i className={Icons.PLUS}></i>
             </span>
           </button>
         </div>

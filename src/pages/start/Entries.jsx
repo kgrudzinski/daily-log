@@ -11,6 +11,7 @@ import {
 import { EntryForm } from "components/forms";
 import { useEntries, useEntryMutations } from "hooks";
 import { DateService, RandService } from "services";
+import { Icons } from "consts";
 
 export function Entries() {
   const { entries, show, save } = useTodaysEntries();
@@ -22,7 +23,7 @@ export function Entries() {
           <Card.Title
             title={
               <IconText>
-                <Icon icon="fas fa-bars" />
+                <Icon icon={Icons.ENTRIES} />
                 <Icon.Text>Today's entries</Icon.Text>
               </IconText>
             }
@@ -35,7 +36,7 @@ export function Entries() {
         <Card.Footer>
           <Card.FooterItem>
             <IconButton
-              icon="fas fa-plus"
+              icon={Icons.PLUS}
               color={ButtonColor.LINK_LIGHT}
               onClick={show}
             >

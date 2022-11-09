@@ -1,4 +1,5 @@
 import { IconButton, Buttons } from "components/shared";
+import { Icons } from "consts";
 import "bulma-list/css/bulma-list.css";
 
 export function TaskList({ tasks, operations }) {
@@ -32,22 +33,22 @@ function ListItem({ data, operations }) {
       <div className="list-item-controls">
         <Buttons>
           <IconButton
-            icon="fas fa-edit"
+            icon={Icons.EDIT}
             title="Edit task"
             onClick={() => onEdit(data.id)}
           />
           <IconButton
-            icon="fas fa-trash-alt"
+            icon={Icons.DELETE}
             title="Delete task"
             onClick={() => onDelete(data.id)}
           />
           <IconButton
-            icon="fas fa-plus"
+            icon={Icons.PLUS}
             title="Add entry"
             onClick={() => onAddEntry(data.id)}
           />
           <IconButton
-            icon="fas fa-check"
+            icon={Icons.CHECK}
             title="Mark as completed"
             onClick={() => onComplete(data.id)}
             disabled={data.status === "Completed"}

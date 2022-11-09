@@ -1,4 +1,5 @@
 import { IconButton, Buttons, ButtonSize } from "components/shared";
+import { Icons } from "consts";
 import "./tasks.scss";
 
 export function TaskBoard({ tasks, operations }) {
@@ -46,28 +47,28 @@ function BoardItem({ item, operations }) {
         <div>
           <Buttons dense align="is-right">
             <IconButton
-              icon="fas fa-edit"
+              icon={Icons.EDIT}
               title="Edit task"
               size={ButtonSize.SMALL}
               onClick={() => onEdit(item.id)}
               rounded
             />
             <IconButton
-              icon="fas fa-trash-alt"
+              icon={Icons.DELETE}
               title="Delete task"
               size={ButtonSize.SMALL}
               onClick={() => onDelete(item.id)}
               rounded
             />
             <IconButton
-              icon="fas fa-plus"
+              icon={Icons.PLUS}
               title="Add entry"
               size={ButtonSize.SMALL}
               onClick={() => onAddEntry(item.id)}
               rounded
             />
             <IconButton
-              icon="fas fa-check"
+              icon={Icons.CHECK}
               title="Mark as completed"
               size={ButtonSize.SMALL}
               onClick={() => onComplete(item.id)}

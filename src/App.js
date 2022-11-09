@@ -8,8 +8,9 @@ import { Start, Tasks, Entries } from "./pages";
 import { Settings } from "./pages/Settings";
 import { Configuration } from "./pages/Configuration";
 import { AppService } from "services";
+import { Icons } from "consts";
 import "./App.scss";
-import "@fortawesome/fontawesome-free/js/all";
+import "@mdi/font/css/materialdesignicons.css";
 
 const AppPage = {
   HOME: "home",
@@ -23,27 +24,27 @@ const AppMenuItems = [
   {
     id: AppPage.HOME,
     label: "Home",
-    icon: "fas fa-home",
+    icon: Icons.HOME,
   },
   {
     id: AppPage.TASKS,
     label: "Tasks",
-    icon: "fas fa-tasks",
+    icon: Icons.TASKS,
   },
   {
     id: AppPage.ENTRIES,
     label: "Entries",
-    icon: "fas fa-file",
+    icon: Icons.ENTRIES,
   },
   {
     id: AppPage.CONFIGURATION,
     label: "Manage",
-    icon: "fas fa-project-diagram",
+    icon: Icons.CONFIGURATION,
   },
   {
     id: AppPage.SETTINGS,
     label: "Settings",
-    icon: "fas fa-cog",
+    icon: Icons.SETTINGS,
   },
 ];
 

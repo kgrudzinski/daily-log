@@ -1,3 +1,4 @@
+//import { mdiInformationVariant } from "@mdi/js";
 import { Menu, MenuHeader, MenuItems, MenuItem, MenuFooter } from "components";
 import {
   Icon,
@@ -6,6 +7,7 @@ import {
   ButtonColor,
   ButtonSize,
 } from "components/shared";
+import { Icons } from "consts";
 
 export function AppMenu({ menu, selected, dispatch }) {
   const onChange = (value) => {
@@ -34,7 +36,7 @@ export function AppMenu({ menu, selected, dispatch }) {
 
       <MenuFooter>
         <AppMenuButton
-          icon="fas fa-info"
+          icon={Icons.INFO}
           text="About"
           onClick={() => onButtonClick("about")}
         />

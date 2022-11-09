@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { ProjectsService } from "services";
 import { ProjectForm } from "components/forms";
+import { Icons } from "consts";
 
 const NEW_TASK = {
   id: 0,
@@ -99,7 +100,7 @@ export function Projects() {
             }}
           >
             <span className="icon">
-              <i className="fas fa-plus"></i>
+              <i className={Icons.PLUS}></i>
             </span>
             <span>Add project</span>
           </button>
@@ -149,10 +150,10 @@ function ProjectList({ data, onEdit, onDelete }) {
               <td>{row.status}</td>
               <td>
                 <span className="icon" onClick={() => onEdit(row)}>
-                  <i className="fas fa-edit"></i>
+                  <i className={Icons.EDIT}></i>
                 </span>
                 <span className="icon" onClick={() => onDelete(row.id)}>
-                  <i className="fas fa-trash-alt"></i>
+                  <i className={Icons.DELETE}></i>
                 </span>
               </td>
             </tr>

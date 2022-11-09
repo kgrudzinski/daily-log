@@ -1,3 +1,4 @@
+import { Icons } from "consts";
 import { useState, useContext, createContext } from "react";
 
 const CardContext = createContext();
@@ -32,7 +33,7 @@ function Icon() {
     setExpanded(!expanded);
   };
 
-  const iconClass = expanded ? "fas fa-angle-up" : "fas fa-angle-down";
+  const iconClass = expanded ? Icons.CHEVRON_UP : Icons.CHEVRON_DOWN;
 
   return (
     <button key={expanded} className="card-header-icon" onClick={handleClick}>

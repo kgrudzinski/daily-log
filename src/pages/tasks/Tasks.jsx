@@ -6,6 +6,7 @@ import { DateService } from "services";
 import { TaskTable } from "./TaskTable";
 import { TaskBoard } from "./TaskBoard";
 import { TaskList } from "./TaskList";
+import { Icons } from "consts";
 import "./tasks.scss";
 
 const Mode = {
@@ -89,7 +90,7 @@ export function Tasks() {
             </Page>
           </Pages>
           <Fab
-            icon="fas fa-plus"
+            icon={Icons.PLUS}
             position="bottom-right"
             tooltip="New task"
             onClick={newTask}

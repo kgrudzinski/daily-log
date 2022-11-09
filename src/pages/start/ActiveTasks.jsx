@@ -9,6 +9,7 @@ import {
 import { TaskForm } from "components/forms";
 import { useTaskMutations, useTasks } from "hooks";
 import { RandService } from "services";
+import { Icons } from "consts";
 
 export function ActiveTasks() {
   const { show, save, tasks } = useActiveTasks();
@@ -27,7 +28,7 @@ export function ActiveTasks() {
         <Card.Footer>
           <Card.FooterItem>
             <IconButton
-              icon="fas fa-plus"
+              icon={Icons.PLUS}
               color={ButtonColor.LINK_LIGHT}
               onClick={show}
             >
