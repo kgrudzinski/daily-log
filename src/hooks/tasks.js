@@ -2,7 +2,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { TasksService } from "../services";
 
 export function useTasks() {
-  const tasks = useQuery(["tasks"], TasksService.get, {
+  const tasks = useQuery("tasks", TasksService.get, {
     refetchInterval: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -15,7 +15,7 @@ export function useTaskMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
-    queryClient.invalidateQueries(["tasks"]);
+    queryClient.invalidateQueries("tasks");
     onSuccess();
   };
 
