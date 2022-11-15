@@ -13,3 +13,9 @@ export const Icons = {
   INFO: "mdi mdi-information-variant",
   CANCEL: "mdi mdi-close-circle-outline",
 };
+
+export const Status = {
+  IDLE: "Idle",
+  IN_PROGRESS: "InProgress",
+  COMPLETED: "Completed",
+};

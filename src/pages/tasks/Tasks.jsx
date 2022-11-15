@@ -6,7 +6,7 @@ import { DateService } from "services";
 import { TaskTable } from "./TaskTable";
 import { TaskBoard } from "./TaskBoard";
 import { TaskList } from "./TaskList";
-import { Icons } from "consts";
+import { Icons, Status } from "consts";
 import "./tasks.scss";
 
 const Mode = {
@@ -27,7 +27,7 @@ const EmptyTask = {
   description: "",
   projectId: 0,
   categoryId: 0,
-  status: "Idle",
+  status: Status.IDLE,
 };
 
 export function Tasks() {

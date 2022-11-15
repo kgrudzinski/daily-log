@@ -1,11 +1,11 @@
 import { IconButton, Buttons, ButtonSize } from "components/shared";
-import { Icons } from "consts";
+import { Icons, Status } from "consts";
 import "./tasks.scss";
 
 export function TaskBoard({ tasks, operations }) {
-  const waiting = tasks.filter((it) => it.status === "Idle");
-  const inProgress = tasks.filter((it) => it.status === "InProgress");
-  const completed = tasks.filter((it) => it.status === "Complete");
+  const waiting = tasks.filter((it) => it.status === Status.IDLE);
+  const inProgress = tasks.filter((it) => it.status === Status.IN_PROGRESS);
+  const completed = tasks.filter((it) => it.status === Status.COMPLETED);
 
   return (
     <div className="columns is-gapless">

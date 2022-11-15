@@ -9,7 +9,7 @@ import {
 import { TaskForm } from "components/forms";
 import { useTaskMutations, useTasks } from "hooks";
 import { RandService } from "services";
-import { Icons } from "consts";
+import { Icons, Status } from "consts";
 
 export function ActiveTasks() {
   const { show, save, tasks } = useActiveTasks();
@@ -77,7 +77,7 @@ function FormModal({ save }) {
     id: 0,
     name: "",
     description: "",
-    status: "Idle",
+    status: Status.IDLE,
     categoryId: 0,
     projectId: 0,
   };
