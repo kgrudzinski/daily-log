@@ -30,8 +30,6 @@ const State = {
   VIEW: "view",
 };
 
-const Status = ["Idle", "InProgress", "Completed"];
-
 export function TaskForm({ data, onClose, onCancel }) {
   const { lists, mode, state, errors, changeView, operations, item } =
     useTaskForm(data);
@@ -221,6 +219,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
           outlined
         ></Form.IconButton>
       </Form.FieldGroup>
+      {/*
       <Form.Field>
         <Form.Label>Status</Form.Label>
         <Form.Select name="status" expanded={1}>
@@ -229,6 +228,7 @@ function TaskFormRaw({ changeView, data, lists, onClose, onCancel }) {
           })}
         </Form.Select>
       </Form.Field>
+        */}
       <Form.Field>
         <Form.Label>Description</Form.Label>
         <Form.Textarea
