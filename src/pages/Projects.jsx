@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { ProjectsService } from "services";
 import { ProjectForm } from "components/forms";
-import { Icons } from "consts";
+import { Icons, Status } from "consts";
 
-const NEW_TASK = {
+const NEW_PROJECT = {
   id: 0,
   name: "",
   description: "",
-  status: "Idle",
+  status: Status.IDLE,
   categories: [],
 };
 
@@ -20,7 +20,7 @@ const Mode = {
 export function Projects() {
   const [mode, setMode] = useState(Mode.VIEW);
   const [error, setError] = useState(null);
-  const [selected, setSelected] = useState(NEW_TASK);
+  const [selected, setSelected] = useState(NEW_PROJECT);
 
   const queryClient = useQueryClient();
 
@@ -95,7 +95,7 @@ export function Projects() {
           <button
             className="button"
             onClick={() => {
-              setSelected(NEW_TASK);
+              setSelected(NEW_PROJECT);
               setMode(Mode.EDIT);
             }}
           >
