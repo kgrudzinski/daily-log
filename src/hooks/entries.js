@@ -5,7 +5,7 @@ export function useEntries() {
   const entries = useQuery(["entries"], EntriesService.get, {
     refetchInterval: false,
     refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    refetchOnMount: false,
   });
 
   return entries;
@@ -15,7 +15,8 @@ export function useEntryMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
-    queryClient.invalidateQueries(["entries"]);
+    queryClient.invalidateQueries("entries");
+    queryClient.invalidateQueries("tasks", { refetchInactive: true });
     onSuccess();
   };
 
