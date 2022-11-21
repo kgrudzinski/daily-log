@@ -108,6 +108,8 @@ function useActiveTasks() {
   const showModal = useModal();
 
   const saveForm = (data) => {
+    data.projectId = +data.projectId;
+    data.categoryId = +data.categoryId;
     add(data);
   };
 
