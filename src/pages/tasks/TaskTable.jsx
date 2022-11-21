@@ -1,5 +1,5 @@
-import { IconButton, Table } from "components/shared";
-import { Icons } from "consts";
+import { Table } from "components/shared";
+import { TaskControls } from "./TaskControls";
 
 export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
   const columns = [
@@ -29,7 +29,7 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
       render: (row) => {
         return (
           <TaskControls
-            row={row}
+            item={row}
             onEdit={onEdit}
             onDelete={onDelete}
             onAddEntry={onAddEntry}
@@ -46,34 +46,6 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
   return (
     <div className="mb-2 table-container">
       <Table columns={columns} data={tasks} />
-    </div>
-  );
-}
-
-function TaskControls({ row, onEdit, onDelete, onAddEntry, onComplete }) {
-  return (
-    <div>
-      <IconButton
-        icon={Icons.EDIT}
-        title="Edit task"
-        onClick={() => onEdit(row.id)}
-      />
-      <IconButton
-        icon={Icons.DELETE}
-        title="Delete task"
-        onClick={() => onDelete(row.id)}
-      />
-      <IconButton
-        icon={Icons.PLUS}
-        title="Add entry"
-        onClick={() => onAddEntry(row.id)}
-      />
-      <IconButton
-        icon={Icons.CHECK}
-        title="Mark as completed"
-        onClick={() => onComplete(row.id)}
-        disabled={row.status === "Completed"}
-      />
     </div>
   );
 }

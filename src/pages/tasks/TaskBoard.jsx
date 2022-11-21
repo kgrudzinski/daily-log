@@ -1,5 +1,6 @@
-import { IconButton, Buttons, ButtonSize } from "components/shared";
-import { Icons, Status } from "consts";
+import { ButtonSize } from "components/shared";
+import { Align, Status } from "consts";
+import { TaskControls } from "./TaskControls";
 import "./tasks.scss";
 
 export function TaskBoard({ tasks, operations }) {
@@ -45,37 +46,16 @@ function BoardItem({ item, operations }) {
       <div className="item-details">
         <div className="subtitle is-6">{item.description}</div>
         <div>
-          <Buttons dense align="is-right">
-            <IconButton
-              icon={Icons.EDIT}
-              title="Edit task"
-              size={ButtonSize.SMALL}
-              onClick={() => onEdit(item.id)}
-              rounded
-            />
-            <IconButton
-              icon={Icons.DELETE}
-              title="Delete task"
-              size={ButtonSize.SMALL}
-              onClick={() => onDelete(item.id)}
-              rounded
-            />
-            <IconButton
-              icon={Icons.PLUS}
-              title="Add entry"
-              size={ButtonSize.SMALL}
-              onClick={() => onAddEntry(item.id)}
-              rounded
-            />
-            <IconButton
-              icon={Icons.CHECK}
-              title="Mark as completed"
-              size={ButtonSize.SMALL}
-              onClick={() => onComplete(item.id)}
-              disabled={item.status === "Completed"}
-              rounded
-            />
-          </Buttons>
+          <TaskControls
+            item={item}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onAddEntry={onAddEntry}
+            onComplete={onComplete}
+            size={ButtonSize.SMALL}
+            rounded
+            align={Align.RIGHT}
+          />
         </div>
       </div>
     </div>
