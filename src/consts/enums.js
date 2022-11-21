@@ -19,3 +19,9 @@ export const Status = {
   IN_PROGRESS: "InProgress",
   COMPLETED: "Completed",
 };
+
+export const Align = {
+  LEFT: "is-left",
+  RIGHT: "is-right",
+  CENTER: "is-centered",
+};
