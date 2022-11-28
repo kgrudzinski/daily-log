@@ -1,9 +1,11 @@
-import { Modal, useModal, useToast } from "components/shared";
+import { Modal, useModal, useModalData, useToast } from "components/shared";
 import { EntryForm } from "components/forms";
 import { useEntryMutations } from "hooks";
 import { RandService, DateService } from "services";
 
-export function EntryModal({ taskId }) {
+export function EntryModal() {
+  const taskId = useModalData();
+
   const entry = {
     id: 0,
     taskId: taskId,

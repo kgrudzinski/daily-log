@@ -1,10 +1,16 @@
-import { Card, IconButton, ButtonColor, useModal } from "components/shared";
+import {
+  Card,
+  IconButton,
+  ButtonColor,
+  useModal,
+  ButtonSize,
+} from "components/shared";
 import { useTasks } from "hooks";
 import { Icons } from "consts";
 import { TaskModal } from "./TaskModal";
 
 export function ActiveTasks() {
-  const { show, tasks } = useActiveTasks();
+  const { showTaskForm, showEntryForm, tasks } = useActiveTasks();
   const activeTasks = tasks.filter((it) => it.status === "InProgress");
 
   return (
@@ -15,14 +21,14 @@ export function ActiveTasks() {
           <Card.Icon></Card.Icon>
         </Card.Header>
         <Card.Content sx={{ maxheight: "250px", overflowY: "auto" }}>
-          <TaskTable data={activeTasks} />
+          <TaskTable data={activeTasks} showEntryForm={showEntryForm} />
         </Card.Content>
         <Card.Footer>
           <Card.FooterItem>
             <IconButton
               icon={Icons.PLUS}
               color={ButtonColor.LINK_LIGHT}
-              onClick={show}
+              onClick={showTaskForm}
             >
               Add task
             </IconButton>
@@ -34,7 +40,7 @@ export function ActiveTasks() {
   );
 }
 
-function TaskTable({ data }) {
+function TaskTable({ data, showEntryForm }) {
   if (!data.length || data.length === 0) {
     return <p>No data to show</p>;
   }
@@ -46,6 +52,7 @@ function TaskTable({ data }) {
           <th>Name</th>
           <th>Project</th>
           <th>Category</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -55,6 +62,13 @@ function TaskTable({ data }) {
               <td>{it.name}</td>
               <td>{it.projectName}</td>
               <td>{it.categoryName}</td>
+              <td>
+                <IconButton
+                  icon={Icons.PLUS}
+                  size={ButtonSize.SMALL}
+                  onClick={() => showEntryForm(it.id)}
+                />
+              </td>
             </tr>
           );
         })}
@@ -68,12 +82,17 @@ function useActiveTasks() {
   const { data: tasks } = useTasks();
   const showModal = useModal();
 
-  const showForm = () => {
+  const showTaskForm = () => {
     showModal("task_form");
   };
 
+  const showEntryForm = (taskId) => {
+    showModal("entry_form", taskId);
+  };
+
   return {
-    show: showForm,
+    showTaskForm,
+    showEntryForm,
     tasks: tasks || [],
   };
 }
