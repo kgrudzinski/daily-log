@@ -3,14 +3,14 @@ import { useState, useContext, createContext } from "react";
 const ModalContext = createContext();
 
 function useModalProvider() {
-  const [opened, setOpened] = useState("");
+  const [modal, setModal] = useState({ id: "", data: null });
 
-  const showModal = (id) => {
-    setOpened(id);
+  const showModal = (id, data) => {
+    setModal({ id: id, data: data });
   };
 
   return {
-    opened,
+    modal,
     showModal,
   };
 }
@@ -28,12 +28,18 @@ export function useModal() {
   return showModal;
 }
 
+export function useModalData() {
+  const { modal } = useContext(ModalContext);
+
+  return modal.data;
+}
+
 function useModalControl(id) {
-  const { opened, showModal } = useContext(ModalContext);
+  const { modal, showModal } = useContext(ModalContext);
 
   return {
     showModal,
-    opened: opened === id,
+    opened: modal.id === id,
   };
 }
 
