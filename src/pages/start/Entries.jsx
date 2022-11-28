@@ -4,17 +4,15 @@ import {
   ButtonColor,
   Icon,
   IconText,
-  Modal,
   useModal,
-  useToast,
 } from "components/shared";
-import { EntryForm } from "components/forms";
-import { useEntries, useEntryMutations } from "hooks";
-import { DateService, RandService } from "services";
+import { useEntries } from "hooks";
+import { DateService } from "services";
 import { Icons } from "consts";
+import { EntryModal } from "./EntryModal";
 
 export function Entries() {
-  const { entries, show, save } = useTodaysEntries();
+  const { entries, show } = useTodaysEntries();
 
   return (
     <>
@@ -45,7 +43,7 @@ export function Entries() {
           </Card.FooterItem>
         </Card.Footer>
       </Card>
-      <FormModal save={save} />
+      <EntryModal />
     </>
   );
 }
@@ -82,63 +80,16 @@ function EntryTable({ data }) {
   );
 }
 
-function FormModal({ save }) {
-  const entry = {
-    id: 0,
-    taskId: 0,
-    description: "",
-    duration: 0,
-    date: DateService.format(new Date()),
-  };
-
-  const showModal = useModal();
-  const hide = () => showModal("");
-
-  return (
-    <Modal id="entry_form">
-      <div className="box">
-        <EntryForm
-          key={RandService.generateId()}
-          data={entry}
-          onCancel={hide}
-          onClose={(data) => {
-            save(data);
-            hide();
-          }}
-        />
-      </div>
-    </Modal>
-  );
-}
-
 function useTodaysEntries() {
   const { data: entries } = useEntries();
-  const { error, success } = useToast();
   const showModal = useModal();
 
-  const saveForm = (data) => {
-    const dataToSave = {
-      ...data,
-      duration: +data.duration,
-      taskId: +data.taskId,
-      date: DateService.fromString(data.date),
-    };
-    add(dataToSave);
+  const showForm = () => {
+    showModal("entry_form");
   };
-
-  const { add } = useEntryMutations(
-    () => {
-      showModal("");
-      success("Entry added");
-    },
-    (err) => error(err)
-  );
-
-  const showForm = () => showModal("entry_form");
   const today = DateService.toTimestamp();
 
   return {
-    save: saveForm,
     show: showForm,
     entries: entries ? entries.filter((e) => e.date === today) : [],
   };

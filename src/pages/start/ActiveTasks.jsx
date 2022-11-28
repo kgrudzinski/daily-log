@@ -1,18 +1,10 @@
-import {
-  Card,
-  IconButton,
-  ButtonColor,
-  Modal,
-  useModal,
-  useToast,
-} from "components/shared";
-import { TaskForm } from "components/forms";
-import { useTaskMutations, useTasks } from "hooks";
-import { RandService } from "services";
-import { Icons, Status } from "consts";
+import { Card, IconButton, ButtonColor, useModal } from "components/shared";
+import { useTasks } from "hooks";
+import { Icons } from "consts";
+import { TaskModal } from "./TaskModal";
 
 export function ActiveTasks() {
-  const { show, save, tasks } = useActiveTasks();
+  const { show, tasks } = useActiveTasks();
   const activeTasks = tasks.filter((it) => it.status === "InProgress");
 
   return (
@@ -37,7 +29,7 @@ export function ActiveTasks() {
           </Card.FooterItem>
         </Card.Footer>
       </Card>
-      <FormModal save={save} />
+      <TaskModal />
     </>
   );
 }
@@ -72,59 +64,15 @@ function TaskTable({ data }) {
   );
 }
 
-function FormModal({ save }) {
-  const task = {
-    id: 0,
-    name: "",
-    description: "",
-    status: Status.IDLE,
-    categoryId: 0,
-    projectId: 0,
-  };
-
-  const showModal = useModal();
-  const hide = () => showModal("");
-
-  return (
-    <Modal id="task_form">
-      <div className="box">
-        <TaskForm
-          key={RandService.generateId()}
-          data={task}
-          onCancel={hide}
-          onClose={(data) => {
-            save(data);
-            hide();
-          }}
-        />
-      </div>
-    </Modal>
-  );
-}
-
 function useActiveTasks() {
   const { data: tasks } = useTasks();
-  const { error, success } = useToast();
   const showModal = useModal();
 
-  const saveForm = (data) => {
-    data.projectId = +data.projectId;
-    data.categoryId = +data.categoryId;
-    add(data);
+  const showForm = () => {
+    showModal("task_form");
   };
 
-  const { add } = useTaskMutations(
-    () => {
-      showModal("");
-      success("Task added");
-    },
-    (err) => error(err)
-  );
-
-  const showForm = () => showModal("task_form");
-
   return {
-    save: saveForm,
     show: showForm,
     tasks: tasks || [],
   };
