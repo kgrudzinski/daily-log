@@ -5,7 +5,7 @@ const style =
 
 export function AppContent({ children }) {
   return (
-    <div className="content py-2 mr-2" style={style}>
+    <div className="content mr-2" style={style}>
       {children}
     </div>
   );

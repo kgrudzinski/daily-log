@@ -20,7 +20,7 @@ export function ActiveTasks() {
           <Card.Title title="Active tasks"></Card.Title>
           <Card.Icon></Card.Icon>
         </Card.Header>
-        <Card.Content sx={{ maxheight: "250px", overflowY: "auto" }}>
+        <Card.Content sx={{ maxHeight: "225px", overflowY: "auto" }}>
           <TaskTable data={activeTasks} showEntryForm={showEntryForm} />
         </Card.Content>
         <Card.Footer>

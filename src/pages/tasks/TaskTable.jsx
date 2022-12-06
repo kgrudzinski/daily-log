@@ -1,5 +1,6 @@
-import { Table } from "components/shared";
+import { Table, ButtonSize } from "components/shared";
 import { TaskControls } from "./TaskControls";
+import "./tasks.scss";
 
 export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
   const columns = [
@@ -7,10 +8,12 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
       field: "name",
       label: "Name",
     },
+    /*
     {
       field: "description",
       label: "Description",
     },
+    */
     {
       field: "categoryName",
       label: "Category",
@@ -29,6 +32,7 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
       render: (row) => {
         return (
           <TaskControls
+            size={ButtonSize.SMALL}
             item={row}
             onEdit={onEdit}
             onDelete={onDelete}
@@ -44,7 +48,7 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
     return <p>No data to show</p>;
   }
   return (
-    <div className="mb-2 table-container">
+    <div className="mb-2 tasks-table-container">
       <Table columns={columns} data={tasks} />
     </div>
   );

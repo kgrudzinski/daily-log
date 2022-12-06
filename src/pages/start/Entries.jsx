@@ -28,7 +28,7 @@ export function Entries() {
           ></Card.Title>
           <Card.Icon></Card.Icon>
         </Card.Header>
-        <Card.Content sx={{ maxHeight: "250px", overflowY: "auto" }}>
+        <Card.Content sx={{ maxHeight: "225px", overflowY: "auto" }}>
           <EntryTable data={entries}></EntryTable>
         </Card.Content>
         <Card.Footer>

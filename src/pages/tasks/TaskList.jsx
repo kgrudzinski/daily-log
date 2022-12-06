@@ -1,9 +1,10 @@
 import { TaskControls } from "./TaskControls";
 import "bulma-list/css/bulma-list.css";
+import "./tasks.scss";
 
 export function TaskList({ tasks, operations }) {
   return (
-    <ul className="list box">
+    <ul className="list box tasks-list">
       {tasks.map((it) => {
         return <ListItem key={it.id} data={it} operations={operations} />;
       })}

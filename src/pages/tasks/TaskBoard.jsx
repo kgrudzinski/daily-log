@@ -24,11 +24,23 @@ export function TaskBoard({ tasks, operations }) {
 function BoardColumn({ data, title, operations }) {
   return (
     <div className="column is-one-third">
-      <div style={{ height: "100%", borderRight: "1px solid lightgray" }}>
+      <div
+        style={{
+          height: "100%",
+          borderRight: "1px solid lightgray",
+        }}
+      >
         <h4 className="title is-4 has-text-centered">{title}</h4>
-        {data.map((it) => {
-          return <BoardItem key={it.id} item={it} operations={operations} />;
-        })}
+        <div
+          style={{
+            height: "calc(100% - 80px)",
+            overflowY: "auto",
+          }}
+        >
+          {data.map((it) => {
+            return <BoardItem key={it.id} item={it} operations={operations} />;
+          })}
+        </div>
       </div>
     </div>
   );

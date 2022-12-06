@@ -79,7 +79,7 @@ function DayView({ day, entries }) {
       <div className="week-item-header" onClick={() => goToDay(day)}>
         {DateService.format(day)}
       </div>
-      <div>
+      <div className="week-items">
         {items.map((it) => {
           return <Item key={it.id} item={it} />;
         })}

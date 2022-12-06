@@ -63,56 +63,59 @@ export function Tasks() {
     onComplete: completeTask,
   };
 
-  return (
-    <div style={{ height: "780px", position: "relative" }}>
-      {mode === Mode.VIEW ? (
-        <>
-          <Tabs selected={tab} onChange={setTab}>
-            <Tabs.Tab id={TaskTabs.TABLE}>Table</Tabs.Tab>
-            <Tabs.Tab id={TaskTabs.BOARD}>Board</Tabs.Tab>
-            <Tabs.Tab id={TaskTabs.LIST}>List</Tabs.Tab>
-          </Tabs>
-          <Pages selected={tab}>
-            <Page value={TaskTabs.TABLE}>
-              <TaskTable
-                tasks={tasks}
-                onEdit={editTask}
-                onDelete={deleteTask}
-                onAddEntry={addEntry}
-                onComplete={completeTask}
-              />
-            </Page>
-            <Page value={TaskTabs.BOARD}>
-              <TaskBoard tasks={tasks} operations={operations} />
-            </Page>
-            <Page value={TaskTabs.LIST}>
-              <TaskList tasks={tasks} operations={operations} />
-            </Page>
-          </Pages>
-          <Fab
-            icon={Icons.PLUS}
-            position="bottom-right"
-            tooltip="New task"
-            onClick={newTask}
-          ></Fab>
-        </>
-      ) : null}
-      {mode === Mode.EDIT ? (
-        <TaskDialog
-          task={selected}
-          onCancel={onFormCancel}
-          onClose={onFormClose}
-        />
-      ) : null}
-      {mode === Mode.ADD_ENTRY ? (
-        <EntryDialog
-          parentId={selected.id}
-          onClose={onFormClose}
-          onCancel={onFormCancel}
-        />
-      ) : null}
-    </div>
-  );
+  if (mode === Mode.VIEW) {
+    return (
+      <>
+        <Tabs selected={tab} onChange={setTab}>
+          <Tabs.Tab id={TaskTabs.TABLE}>Table</Tabs.Tab>
+          <Tabs.Tab id={TaskTabs.BOARD}>Board</Tabs.Tab>
+          <Tabs.Tab id={TaskTabs.LIST}>List</Tabs.Tab>
+        </Tabs>
+        <Pages selected={tab}>
+          <Page value={TaskTabs.TABLE}>
+            <TaskTable
+              tasks={tasks}
+              onEdit={editTask}
+              onDelete={deleteTask}
+              onAddEntry={addEntry}
+              onComplete={completeTask}
+            />
+          </Page>
+          <Page value={TaskTabs.BOARD}>
+            <TaskBoard tasks={tasks} operations={operations} />
+          </Page>
+          <Page value={TaskTabs.LIST}>
+            <TaskList tasks={tasks} operations={operations} />
+          </Page>
+        </Pages>
+        <Fab
+          icon={Icons.PLUS}
+          position="bottom-right"
+          tooltip="New task"
+          onClick={newTask}
+        ></Fab>
+      </>
+    );
+  }
+  if (mode === Mode.EDIT) {
+    return (
+      <TaskDialog
+        task={selected}
+        onCancel={onFormCancel}
+        onClose={onFormClose}
+      />
+    );
+  }
+
+  if (mode === Mode.ADD_ENTRY) {
+    return (
+      <EntryDialog
+        parentId={selected.id}
+        onClose={onFormClose}
+        onCancel={onFormCancel}
+      />
+    );
+  }
 }
 
 function TaskDialog({ task, onClose, onCancel }) {

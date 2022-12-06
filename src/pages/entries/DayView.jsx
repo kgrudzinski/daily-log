@@ -48,7 +48,7 @@ export function DailyVew({ date, entries }) {
         </Buttons>
         <div>{DateService.format(currDate)}</div>
       </div>
-      <div>
+      <div className="day-view">
         {visibleEntries.map((it) => {
           return <EntryItem key={it.id} item={it} />;
         })}

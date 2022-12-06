@@ -1,6 +1,6 @@
 export function Table({ columns, data }) {
   return (
-    <table className="table is-fullwidth">
+    <table className="table is-fullwidth is-striped">
       <thead>
         <tr>
           {columns.map((col) => {

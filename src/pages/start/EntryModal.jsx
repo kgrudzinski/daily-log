@@ -8,7 +8,7 @@ export function EntryModal() {
 
   const entry = {
     id: 0,
-    taskId: taskId,
+    taskId: taskId || 0,
     description: "",
     duration: 0,
     date: DateService.format(new Date()),

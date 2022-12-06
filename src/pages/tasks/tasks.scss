@@ -1,8 +1,25 @@
 @use "bulma/bulma.sass";
+@use "../../css/variables.scss";
 
-.table-container {
-  border-bottom: 1px solid hsl(0, 0%, 71%);
-  max-height: 90%;
+.tasks-table-container {
+  //border-bottom: 1px solid hsl(0, 0%, 71%);
+  height: calc(100% - variables.$tabs-height);
+  overflow-y: auto;
+
+  table {
+    table-layout: fixed;
+  }
+
+  td {
+    max-width: 20%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.tasks-list {
+  height: calc(100% - variables.$tabs-height - 16px);
   overflow-y: auto;
 }
 

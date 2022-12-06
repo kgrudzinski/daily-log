@@ -85,7 +85,7 @@ function DayView({ day, entries }) {
       >
         {day.getDate()}
       </div>
-      <div>
+      <div className="calendar-items">
         {ventries.map((it) => {
           return <Item key={it.id} item={it} />;
         })}

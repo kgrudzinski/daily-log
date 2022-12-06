@@ -1,10 +1,11 @@
 //import { Dashboard } from "./dashboard/Dashboard";
 import { ActiveTasks } from "./ActiveTasks";
 import { Entries } from "./Entries";
+import "./start.scss";
 
 export function Start() {
   return (
-    <article className="my-2 mr-2">
+    <article className="my-2 mr-2 start-container">
       {/*
       <section>
         <Dashboard>
