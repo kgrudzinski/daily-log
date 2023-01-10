@@ -4,7 +4,7 @@ import "./tasks.scss";
 
 export function TaskList({ tasks, operations }) {
   return (
-    <ul className="list box tasks-list">
+    <ul className="list box tasks-list ml-0">
       {tasks.map((it) => {
         return <ListItem key={it.id} data={it} operations={operations} />;
       })}

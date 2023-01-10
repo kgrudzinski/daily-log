@@ -4,7 +4,7 @@ const TabsContext = createContext();
 
 export function Tabs({ selected, onChange, children }) {
   const [selectedId, setSelectedId] = useState(selected);
-  let classes = ["tabs"];
+  let classes = ["tabs", "mb-1"];
 
   const onTabClick = (id) => {
     setSelectedId(id);
@@ -19,7 +19,7 @@ export function Tabs({ selected, onChange, children }) {
   return (
     <TabsContext.Provider value={context}>
       <div className={classes.join(" ")}>
-        <ul>{children}</ul>
+        <ul className="ml-0">{children}</ul>
       </div>
     </TabsContext.Provider>
   );

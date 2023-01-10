@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { DateService } from "services";
-import { Buttons, Button } from "components/shared";
+import { Toolbar, ButtonSize } from "components/shared";
 import { useEntryContext } from "./Context";
 import "./entries.scss";
+import { Icons } from "consts";
 
 export function WeekView({ date, entries }) {
   const [weekStart, setWeekStart] = useState(
@@ -24,17 +25,18 @@ export function WeekView({ date, entries }) {
   });
 
   return (
-    <div style={{ height: "90%", display: "flex", flexDirection: "column" }}>
-      <div className="toolbar" style={{ flex: "0 1 auto" }}>
-        <Buttons>
-          <Button
+    </*style={{ height: "90%", display: "flex", flexDirection: "column" }}*/>
+      <Toolbar classes="mb-1 toolbar pl-2 pr-2">
+        <Toolbar.Left>
+          <Toolbar.Button
+            icon={Icons.CHEVRON_LEFT}
+            size={ButtonSize.SMALL}
             onClick={() => {
               changeWeek(-1);
             }}
-          >
-            &lt;
-          </Button>
-          <Button
+          />
+          <Toolbar.Button
+            size={ButtonSize.SMALL}
             onClick={() => {
               setWeekStart(
                 DateService.getWeekStart(DateService.getCurrentDate())
@@ -42,28 +44,32 @@ export function WeekView({ date, entries }) {
             }}
           >
             Current Week
-          </Button>
-          <Button
+          </Toolbar.Button>
+          <Toolbar.Button
+            icon={Icons.CHEVRON_RIGHT}
+            size={ButtonSize.SMALL}
             onClick={() => {
               changeWeek(1);
             }}
-          >
-            &gt;
-          </Button>
-        </Buttons>
-        <div>
-          Tydzień {weekNo}, {year}
-        </div>
-      </div>
+          />
+
+          <Toolbar.Item classes="ml-6">
+            <p className="subtitle">
+              Tydzień {weekNo}, {year}
+            </p>
+          </Toolbar.Item>
+        </Toolbar.Left>
+      </Toolbar>
+
       <div
-        className="is-flex is-flex-direction-row is-justify-content-space-evenly"
+        className="is-flex is-flex-direction-row is-justify-content-space-evenly week-container"
         style={{ flex: "1 1 auto" }}
       >
         {days.map((day) => {
           return <DayView key={day} day={day} entries={visibleEntries} />;
         })}
       </div>
-    </div>
+    </>
   );
 }
 

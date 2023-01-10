@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { DateService } from "services";
-import { Buttons, Button } from "components/shared";
+import { Toolbar, ButtonSize } from "components/shared";
 import { useEntryContext } from "./Context";
 import "./entries.scss";
+import { Icons } from "consts";
 
 export function MonthView({ date, entries }) {
   const [monthStart, setMonthStart] = useState(
@@ -26,34 +27,39 @@ export function MonthView({ date, entries }) {
 
   return (
     <>
-      <div className="toolbar">
-        <Buttons>
-          <Button
+      <Toolbar classes="mb-1 toolbar pl-2 pr-2">
+        <Toolbar.Left>
+          <Toolbar.Button
+            icon={Icons.CHEVRON_LEFT}
+            size={ButtonSize.SMALL}
             onClick={() => {
               changeMonth(-1);
             }}
-          >
-            &lt;
-          </Button>
-          <Button
+          />
+
+          <Toolbar.Button
+            size={ButtonSize.SMALL}
             onClick={() => {
               setMonthStart(DateService.firstdayOfMonth());
             }}
           >
             Current Month
-          </Button>
-          <Button
+          </Toolbar.Button>
+          <Toolbar.Button
+            icon={Icons.CHEVRON_RIGHT}
+            size={ButtonSize.SMALL}
             onClick={() => {
               changeMonth(1);
             }}
-          >
-            &gt;
-          </Button>
-        </Buttons>
-        <span>
-          {monthStart.getMonth() + 1}, {monthStart.getFullYear()}
-        </span>
-      </div>
+          />
+
+          <Toolbar.Item classes="ml-6">
+            <p className="subtitle">
+              {monthStart.getMonth() + 1}, {monthStart.getFullYear()}
+            </p>
+          </Toolbar.Item>
+        </Toolbar.Left>
+      </Toolbar>
       <div className="calendar">
         {dayNames.map((day) => {
           return <DayHeader text={day} />;

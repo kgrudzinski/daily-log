@@ -12,6 +12,8 @@ export const Icons = {
   DELETE: "mdi mdi-delete",
   INFO: "mdi mdi-information-variant",
   CANCEL: "mdi mdi-close-circle-outline",
+  CHEVRON_LEFT: "mdi mdi-chevron-left",
+  CHEVRON_RIGHT: "mdi mdi-chevron-right",
 };
 
 export const Status = {

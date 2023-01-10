@@ -1,16 +1,15 @@
 @use "bulma/bulma.sass";
 @use "../../css/variables.scss";
 
-$toolbar-height: 66px;
+$toolbar-height: 44px;
 $month-item-header-height: 28px;
 $month-label-height: 28px;
 $calendar-gap: 1px;
 
 .toolbar {
-  display: flex;
-  flex-direction: row;
-  border: 1px solid black;
-  align-items: baseline;
+  border: 1px solid #cacaca;
+  padding: 0.25rem 0;
+  box-shadow: 1px 1px 1px #0a0a0a1a;
 }
 
 .day-view {
@@ -21,12 +20,16 @@ $calendar-gap: 1px;
 .entry-item {
   border: 1px solid bulma.$blue;
   border-radius: 10px;
-  padding: 10px;
-  margin: 10px;
+  padding: 0.5rem;
+  margin: 0.5rem;
   background-color: hsl(219, 70%, 96%);
   cursor: default;
   overflow-x: hidden;
   text-overflow: ellipsis;
+}
+
+.week-container {
+  height: calc(100% - variables.$tabs-height - $toolbar-height);
 }
 
 .week-item {
@@ -45,7 +48,7 @@ $calendar-gap: 1px;
 .calendar {
   height: calc(100% - variables.$tabs-height - $toolbar-height);
   display: grid;
-  grid-template-columns: repeat(7, 14%);
+  grid-template-columns: repeat(7, calc(100% / 7));
   grid-template-rows: $month-label-height repeat(
       6,
       calc((100% - $month-label-height - (6 * $calendar-gap)) / 6)

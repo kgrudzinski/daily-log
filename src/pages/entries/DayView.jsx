@@ -1,8 +1,9 @@
 import { useState } from "react";
 //import { useEntryContext } from "./Context";
 import { DateService } from "services";
-import { Buttons, Button } from "components/shared";
+import { ButtonSize, Toolbar } from "components/shared";
 import { EntryItem } from "./EntryItem";
+import { Icons } from "consts";
 
 export function DailyVew({ date, entries }) {
   const [currDate, setCurrDate] = useState(
@@ -22,32 +23,38 @@ export function DailyVew({ date, entries }) {
 
   return (
     <>
-      <div className="toolbar">
-        <Buttons>
-          <Button
+      <Toolbar classes="mb-1 toolbar pl-2 pr-2">
+        <Toolbar.Left>
+          <Toolbar.Button
+            size={ButtonSize.SMALL}
+            title="Prevoius day"
+            icon={Icons.CHEVRON_LEFT}
             onClick={() => {
               changeDate(-1);
             }}
-          >
-            &lt;
-          </Button>
-          <Button
+          />
+
+          <Toolbar.Button
+            size={ButtonSize.SMALL}
             onClick={() => {
               setCurrDate(new Date());
             }}
           >
             Today
-          </Button>
-          <Button
+          </Toolbar.Button>
+          <Toolbar.Button
+            size={ButtonSize.SMALL}
+            title="Next day"
+            icon={Icons.CHEVRON_RIGHT}
             onClick={() => {
               changeDate(1);
             }}
-          >
-            &gt;
-          </Button>
-        </Buttons>
-        <div>{DateService.format(currDate)}</div>
-      </div>
+          />
+          <Toolbar.Item classes="ml-6">
+            <p class="subtitle">{DateService.format(currDate)}</p>
+          </Toolbar.Item>
+        </Toolbar.Left>
+      </Toolbar>
       <div className="day-view">
         {visibleEntries.map((it) => {
           return <EntryItem key={it.id} item={it} />;
