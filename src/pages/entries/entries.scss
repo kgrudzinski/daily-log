@@ -26,6 +26,12 @@ $calendar-gap: 1px;
   cursor: default;
   overflow-x: hidden;
   text-overflow: ellipsis;
+
+  & .entry-item-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 .week-container {
