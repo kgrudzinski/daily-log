@@ -19,7 +19,7 @@ export function Card({ expand, children }) {
 }
 
 function Header({ children }) {
-  return <header className="card-header">{children}</header>;
+  return <header className="card-header mb-1">{children}</header>;
 }
 
 function Title({ title }) {
