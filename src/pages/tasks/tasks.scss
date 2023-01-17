@@ -1,6 +1,8 @@
 @use "bulma/bulma.sass";
 @use "../../css/variables.scss";
 
+$boardHeaderHeight: 38px;
+
 .tasks-table-container {
   //border-bottom: 1px solid hsl(0, 0%, 71%);
   height: calc(100% - variables.$tabs-height);
@@ -27,7 +29,7 @@
   border: 1px solid bulma.$blue;
   border-radius: 10px;
   padding: 10px;
-  margin: 10px;
+  margin: 5px;
   background-color: hsl(219, 70%, 96%);
   cursor: default;
 }
@@ -49,4 +51,24 @@
   text-overflow: ellipsis;
   overflow: hidden;
   width: 40%;
+}
+
+.board-column {
+  height: calc(100% - variables.$tabs-height);
+  border-right: 1px solid lightgray;
+
+  header {
+    background-color: beige;
+    border: 1px solid gray;
+    border-left: 0px;
+  }
+
+  header :last-child {
+    border-left: 1px solid gray;
+  }
+
+  article {
+    height: calc(100% - $boardHeaderHeight);
+    overflow-y: auto;
+  }
 }
