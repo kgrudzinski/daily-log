@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] 2023-03-20
+
+### Features
+
+- Change parameter type of Datastore and Database open methods
+- Add configuration and change location of application files
+
+### Fixes
+
+- Correct scrolling in task board view
+
 ## [0.2.0] 2023-01-16
 
 ### Features
