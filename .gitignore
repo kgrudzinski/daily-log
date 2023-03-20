@@ -25,4 +25,5 @@ yarn-error.log*
 *.log
 *.db
 *.sqlite
+config.json
 /.vscode
