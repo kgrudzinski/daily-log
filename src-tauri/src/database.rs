@@ -8,7 +8,10 @@ use rusqlite::{
 
 use thiserror::Error;
 
-use std::sync::{Mutex};
+use std::{
+    sync::Mutex,
+    path::Path
+};
 pub use rusqlite::params;
 
 #[derive(Error, Debug)]
@@ -28,7 +31,7 @@ impl Database {
         Self(Mutex::new(None))
     }
 
-    pub fn open(&self, db_file: &str) -> DbResult<()> {
+    pub fn open<P>(&self, db_file: P) -> DbResult<()> where P : AsRef<Path> {
         let mut inner = self.0.lock().unwrap();
         let opt = inner.take();
         if let Some(conn) = opt {

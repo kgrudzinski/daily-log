@@ -6,7 +6,8 @@ use crate::{database::{
 
 use std::{
     collections::HashMap,
-    any::TypeId
+    any::TypeId,
+    path::Path,
 };
 
 use crate::models::{
@@ -32,14 +33,13 @@ impl Datastore {
         }
     }
 
-    pub fn open(&self, filename: &str) -> DbResult<DatastoreInfo> {
-        use std::path::Path;
-        let exists = Path::new(filename).exists();
+    pub fn open<P>(&self, filename: P) -> DbResult<DatastoreInfo> where P: AsRef<Path> {        
+        let exists = filename.as_ref().exists();
         if exists {
-            log::info!("Opening database {}", filename);
+            log::info!("Opening database {}", filename.as_ref().display());
             self.db.open(filename)?;
         } else {
-            log::info!("Creating database {}", filename);
+            log::info!("Creating database {}", filename.as_ref().display());
             self.db.open(filename)?;
             self.create_new_db(&crate::sql::get_schemas(), None)?;
         }
