@@ -15,7 +15,7 @@ export function useEntryMutations(onSuccess, onError) {
   const queryClient = useQueryClient();
 
   const on_success = () => {
-    queryClient.invalidateQueries("entries");
+    queryClient.invalidateQueries("entries", { refetchInactive: true });
     queryClient.invalidateQueries("tasks", { refetchInactive: true });
     onSuccess();
   };
