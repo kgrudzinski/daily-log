@@ -51,7 +51,7 @@ export function DailyVew({ date, entries }) {
             }}
           />
           <Toolbar.Item classes="ml-6">
-            <p class="subtitle">{DateService.format(currDate)}</p>
+            <p className="subtitle">{DateService.format(currDate)}</p>
           </Toolbar.Item>
         </Toolbar.Left>
       </Toolbar>
