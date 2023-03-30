@@ -1,6 +1,6 @@
 {
   "name": "daily-log",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "dependencies": {
     "@mdi/font": "^7.0.96",

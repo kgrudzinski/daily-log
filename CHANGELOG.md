@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] 2023-03-20
+
+### Fixes
+
+- Correct html attribute
+- Entries added from Tasks view are now visible in Entries view
+- Bad notifications for data mutations
+
+### Refactor
+
+- Replace old code in Mnagement view
+
 ## [0.3.0] 2023-03-20
 
 ### Features
