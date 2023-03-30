@@ -61,12 +61,7 @@ export function useEntryPage() {
 
   const { data: entries, status, error } = useEntries();
   const { success: successToast, error: errorToast } = useToast();
-  const { add, update, remove } = useEntryMutations(
-    () => {
-      successToast("Entry added");
-    },
-    (err) => errorToast(err)
-  );
+  const { add, update, remove } = useEntryMutations();
   const [state, dispatch] = useReducer(dispatcher, initialState);
 
   const changeTab = (tab) => dispatch({ type: Actions.CHANGE_TAB, tab: tab });
@@ -89,9 +84,19 @@ export function useEntryPage() {
     data.duration = +data.duration;
     data.date = DateService.fromString(data.date);
     if (data.id > 0) {
-      update(data);
+      update(data, {
+        onSuccess: () => {
+          successToast("Entry updated");
+        },
+        onError: (err) => errorToast(err),
+      });
     } else {
-      add(data);
+      add(data, {
+        onSuccess: () => {
+          successToast("Entry added");
+        },
+        onError: (err) => errorToast(err),
+      });
     }
   };
 

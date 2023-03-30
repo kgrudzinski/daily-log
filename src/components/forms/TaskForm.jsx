@@ -93,22 +93,8 @@ function useTaskForm(data) {
     error: projError,
   } = useProjects();
 
-  const { add: cat_add } = useCategoryMutations(
-    () => {
-      success("Category added");
-    },
-    (err) => {
-      error(err);
-    }
-  );
-  const { add: proj_add } = useProjectMutations(
-    () => {
-      success("Project added");
-    },
-    (err) => {
-      error(err);
-    }
-  );
+  const { add: cat_add } = useCategoryMutations();
+  const { add: proj_add } = useProjectMutations();
 
   const loading = catStatus === "loading" || projStatus === "loading";
   let errors = [];
@@ -147,8 +133,25 @@ function useTaskForm(data) {
       projects,
     },
     operations: {
-      [ViewMode.CATEGORY]: cat_add,
-      [ViewMode.PROJECT]: proj_add,
+      [ViewMode.CATEGORY]: (data) => {
+        cat_add(data, {
+          onSuccess: () => {
+            success("Category added");
+          },
+          onError: (err) => {
+            error(err);
+          },
+        });
+      },
+      [ViewMode.PROJECT]: (data) =>
+        proj_add(data, {
+          onSuccess: () => {
+            success("Project added");
+          },
+          onError: (err) => {
+            error(err);
+          },
+        }),
     },
     mode,
     state,

@@ -154,12 +154,7 @@ function ErrorMessage({ error }) {
 
 function useTasksView() {
   const { success: successToast, error: errorToast } = useToast();
-  const { add, update, remove } = useTaskMutations(
-    () => {
-      successToast("Task added");
-    },
-    (err) => errorToast(err)
-  );
+  const { add, update, remove } = useTaskMutations();
 
   const { add: addEntry } = useEntryMutations(
     () => {
@@ -173,7 +168,14 @@ function useTasksView() {
   const [tab, setTab] = useState(TaskTabs.TABLE);
   const [selected, setSelected] = useState(null);
 
-  const deleteTask = (id) => remove(id);
+  const deleteTask = (id) => {
+    remove(id, {
+      onSuccess: () => {
+        successToast("Task deleted");
+      },
+      onError: (err) => errorToast(err),
+    });
+  };
   const editTask = (id) => {
     setSelected(tasks.find((it) => it.id === id));
     setMode(Mode.EDIT);
@@ -186,7 +188,12 @@ function useTasksView() {
 
   const completeTask = (id) => {
     const task = { ...tasks.find((it) => it.id === id), status: "Completed" };
-    update(task);
+    update(task, {
+      onSuccess: () => {
+        successToast("Task marked as completed");
+      },
+      onError: (err) => errorToast(err),
+    });
   };
 
   const newTask = () => {
@@ -201,9 +208,19 @@ function useTasksView() {
     console.log(data);
 
     if (data.id === 0) {
-      add(data);
+      add(data, {
+        onSuccess: () => {
+          successToast("Task added");
+        },
+        onError: (err) => errorToast(err),
+      });
     } else {
-      update(data);
+      update(data, {
+        onSuccess: () => {
+          successToast("Task updated");
+        },
+        onError: (err) => errorToast(err),
+      });
     }
   };
 
@@ -211,7 +228,12 @@ function useTasksView() {
     data.taskId = +data.taskId;
     data.duration = +data.duration;
     data.date = DateService.fromString(data.date);
-    addEntry(data);
+    addEntry(data, {
+      onSuccess: () => {
+        successToast("Entry added");
+      },
+      onError: (err) => errorToast(err),
+    });
   };
 
   const onFormClose = (data) => {

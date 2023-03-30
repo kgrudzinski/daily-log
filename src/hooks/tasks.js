@@ -11,29 +11,24 @@ export function useTasks() {
   return tasks;
 }
 
-export function useTaskMutations(onSuccess, onError) {
+export function useTaskMutations() {
   const queryClient = useQueryClient();
 
   const on_success = () => {
     queryClient.invalidateQueries("tasks");
-    onSuccess();
-  };
-
-  const on_error = (error) => {
-    onError(error);
   };
 
   const add_mut = useMutation(TasksService.add, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const update_mut = useMutation(TasksService.update, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const remove_mut = useMutation(TasksService.remove, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   return {
     add: add_mut.mutate,

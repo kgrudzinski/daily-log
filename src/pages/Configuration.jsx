@@ -33,23 +33,47 @@ export function Configuration() {
 function CategoryList() {
   const { data: categories, isLoading, isError, error } = useCategories();
   const { error: errorToast, success } = useToast();
-  const { add, remove, update } = useCategoryMutations(
-    () => {
-      success("Success");
-    },
-    (err) => {
-      errorToast(err);
-      console.log(err.message);
-    }
-  );
+  const { add, remove, update } = useCategoryMutations();
 
   const operations = {
     add: function (value) {
-      add({ id: 0, name: value });
+      add(
+        { id: 0, name: value },
+        {
+          onSuccess: () => {
+            success("Category added");
+          },
+          onError: (err) => {
+            errorToast(err);
+            console.log(err.message);
+          },
+        }
+      );
     },
-    remove: remove,
+    remove: function (id) {
+      remove(id, {
+        onSuccess: () => {
+          success("Category deleted");
+        },
+        onError: (err) => {
+          errorToast(err);
+          console.log(err.message);
+        },
+      });
+    },
     update: function (id, value) {
-      update({ id, name: value });
+      update(
+        { id, name: value },
+        {
+          onSuccess: () => {
+            success("Category updated");
+          },
+          onError: (err) => {
+            errorToast(err);
+            console.log(err.message);
+          },
+        }
+      );
     },
   };
 

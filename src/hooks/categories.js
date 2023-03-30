@@ -11,39 +11,28 @@ export function useCategories() {
   return categories;
 }
 
-export function useCategoryMutations(onSuccess, onError) {
+export function useCategoryMutations() {
   const queryClient = useQueryClient();
 
   const on_success = () => {
     queryClient.invalidateQueries(["categories"]);
-    onSuccess();
-  };
-
-  const on_error = (error) => {
-    onError(error);
   };
 
   const add_mut = useMutation(CategoriesService.add, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const update_mut = useMutation(CategoriesService.update, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const remove_mut = useMutation(CategoriesService.remove, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   return {
-    add: (item) => {
-      add_mut.mutate(item);
-    },
-    update: (item) => {
-      update_mut.mutate(item);
-    },
-    remove: (id) => {
-      remove_mut.mutate(id);
-    },
+    add: add_mut.mutate,
+    update: update_mut.mutate,
+    remove: remove_mut.mutate,
   };
 }

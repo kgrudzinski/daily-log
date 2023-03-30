@@ -11,29 +11,24 @@ export function useProjects() {
   return projects;
 }
 
-export function useProjectMutations(onSuccess, onError) {
+export function useProjectMutations() {
   const queryClient = useQueryClient();
 
   const on_success = () => {
     queryClient.invalidateQueries(["projects"]);
-    onSuccess();
-  };
-
-  const on_error = (error) => {
-    onError(error);
   };
 
   const add_mut = useMutation(ProjectsService.add, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const update_mut = useMutation(ProjectsService.update, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const remove_mut = useMutation(ProjectsService.remove, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   return {
     add: add_mut.mutate,

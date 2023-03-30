@@ -11,30 +11,25 @@ export function useEntries() {
   return entries;
 }
 
-export function useEntryMutations(onSuccess, onError) {
+export function useEntryMutations() {
   const queryClient = useQueryClient();
 
   const on_success = () => {
     queryClient.invalidateQueries("entries", { refetchInactive: true });
     queryClient.invalidateQueries("tasks", { refetchInactive: true });
-    onSuccess();
-  };
-
-  const on_error = (error) => {
-    onError(error);
   };
 
   const add_mut = useMutation(EntriesService.add, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const update_mut = useMutation(EntriesService.update, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   const remove_mut = useMutation(EntriesService.remove, {
     onSuccess: on_success,
-    onError: on_error,
+    //onError: on_error,
   });
   return {
     add: add_mut.mutate,
