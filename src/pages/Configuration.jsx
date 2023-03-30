@@ -13,7 +13,7 @@ export function Configuration() {
   const [activeTab, setActiveTab] = useState(TabNames.CATEGORIES);
 
   return (
-    <div className="m-2">
+    <>
       <Tabs selected={activeTab} onChange={setActiveTab}>
         <Tabs.Tab id={TabNames.CATEGORIES}>Categories</Tabs.Tab>
         <Tabs.Tab id={TabNames.PROJECTS}>Projects</Tabs.Tab>
@@ -26,7 +26,7 @@ export function Configuration() {
           <Projects />
         </Page>
       </Pages>
-    </div>
+    </>
   );
 }
 

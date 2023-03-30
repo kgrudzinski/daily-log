@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { ProjectsService } from "services";
+import { useProjects, useProjectMutations } from "hooks";
 import { ProjectForm } from "components/forms";
+import {
+  useToast,
+  Buttons,
+  IconButton,
+  ButtonColor,
+  Table,
+} from "components/shared";
 import { Icons, Status } from "consts";
 
 const NEW_PROJECT = {
@@ -19,52 +25,54 @@ const Mode = {
 
 export function Projects() {
   const [mode, setMode] = useState(Mode.VIEW);
-  const [error, setError] = useState(null);
   const [selected, setSelected] = useState(NEW_PROJECT);
 
-  const queryClient = useQueryClient();
+  const { success, error } = useToast();
+  const projects = useProjects();
 
-  const projects = useQuery(["projects"], ProjectsService.get, {
-    refetchInterval: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  const mutations = useProjectMutations();
 
-  console.log("projects", projects);
+  const add_project_mut = (data) => {
+    mutations.add(data, {
+      onSuccess: () => {
+        success("Project added");
+        setMode(Mode.VIEW);
+      },
+      onError: (err) => {
+        setMode(Mode.VIEW);
+        error(err);
+        console.log(err);
+      },
+    });
+  };
 
-  const add_project_mut = useMutation(ProjectsService.add, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("projects");
-      setMode(Mode.VIEW);
-    },
-    onError: (error) => {
-      setMode(Mode.VIEW);
-      setError(error);
-    },
-  });
+  const update_project_mut = (data) => {
+    mutations.update(data, {
+      onSuccess: () => {
+        success("Project updated");
+        setMode(Mode.VIEW);
+      },
+      onError: (err) => {
+        setMode(Mode.VIEW);
+        console.log(err);
+        error(err);
+      },
+    });
+  };
 
-  const update_project_mut = useMutation(ProjectsService.update, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("projects");
-      setMode(Mode.VIEW);
-    },
-    onError: (error) => {
-      setMode(Mode.VIEW);
-      setError(error);
-    },
-  });
-
-  const delete_project_mut = useMutation(ProjectsService.remove, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("projects");
-      setMode(Mode.VIEW);
-    },
-    onError: (error) => {
-      setMode(Mode.VIEW);
-      setError(error);
-      console.log(error);
-    },
-  });
+  const delete_project_mut = (id) => {
+    mutations.remove(id, {
+      onSuccess: () => {
+        success("Project deleted");
+        setMode(Mode.VIEW);
+      },
+      onError: (err) => {
+        setMode(Mode.VIEW);
+        error(err);
+        console.log(err);
+      },
+    });
+  };
 
   const onEditClick = (item) => {
     setSelected(item);
@@ -72,7 +80,7 @@ export function Projects() {
   };
 
   const onDeleteClick = (id) => {
-    delete_project_mut.mutate(id);
+    delete_project_mut(id);
   };
 
   if (projects.isLoading) {
@@ -92,18 +100,16 @@ export function Projects() {
             onEdit={onEditClick}
             onDelete={onDeleteClick}
           />
-          <button
-            className="button"
+          <IconButton
+            icon={Icons.PLUS}
+            color={ButtonColor.LINK_LIGHT}
             onClick={() => {
               setSelected(NEW_PROJECT);
               setMode(Mode.EDIT);
             }}
           >
-            <span className="icon">
-              <i className={Icons.PLUS}></i>
-            </span>
-            <span>Add project</span>
-          </button>
+            Add project
+          </IconButton>
         </>
       ) : (
         <div className="box">
@@ -111,55 +117,55 @@ export function Projects() {
             data={selected}
             onClose={(item) => {
               if (item.id === 0) {
-                add_project_mut.mutate(item);
+                add_project_mut(item);
               } else {
-                update_project_mut.mutate(item);
+                update_project_mut(item);
               }
             }}
             onCancel={() => setMode(Mode.VIEW)}
           />
         </div>
       )}
-      {error && (
-        <div className="notification is-danger">
-          <button className="delete" onClick={() => setError(null)}></button>
-          {error}
-        </div>
-      )}
     </div>
   );
 }
 
-function ProjectList({ data, onEdit, onDelete }) {
+function ProjectControls({ item, onEdit, onDelete }) {
   return (
-    <table className="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row) => {
-          return (
-            <tr key={row.id}>
-              <td>{row.name}</td>
-              <td>{row.description}</td>
-              <td>{row.status}</td>
-              <td>
-                <span className="icon" onClick={() => onEdit(row)}>
-                  <i className={Icons.EDIT}></i>
-                </span>
-                <span className="icon" onClick={() => onDelete(row.id)}>
-                  <i className={Icons.DELETE}></i>
-                </span>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <Buttons dense>
+      <IconButton icon={Icons.EDIT} onClick={() => onEdit(item)}></IconButton>
+      <IconButton
+        icon={Icons.DELETE}
+        onClick={() => onDelete(item.id)}
+      ></IconButton>
+    </Buttons>
   );
+}
+
+function ProjectList({ data, onEdit, onDelete }) {
+  const columns = [
+    {
+      field: "name",
+      label: "Name",
+    },
+    {
+      field: "description",
+      label: "Description",
+    },
+    {
+      field: "",
+      label: "Actions",
+      render: (row) => {
+        return (
+          <ProjectControls item={row} onDelete={onDelete} onEdit={onEdit} />
+        );
+      },
+    },
+  ];
+
+  if (data.length === 0) {
+    return <p>No data to show</p>;
+  }
+
+  return <Table columns={columns} data={data} />;
 }
