@@ -36,13 +36,7 @@ export function EntryModal() {
 function useEntryModal() {
   const showModal = useModal();
   const { success, error } = useToast();
-  const { add } = useEntryMutations(
-    () => {
-      showModal("");
-      success("Entry added");
-    },
-    (err) => error(err)
-  );
+  const { add } = useEntryMutations();
 
   const hide = () => showModal("");
 
@@ -55,7 +49,13 @@ function useEntryModal() {
         taskId: +data.taskId,
         date: DateService.fromString(data.date),
       };
-      add(dataToSave);
+      add(dataToSave, {
+        onSuccess: () => {
+          showModal("");
+          success("Entry added");
+        },
+        onError: (err) => error(err),
+      });
     },
   };
 }
