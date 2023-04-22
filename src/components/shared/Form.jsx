@@ -116,16 +116,21 @@ function Option({ value, name }) {
   return <option value={value}>{name}</option>;
 }
 
-function Checkbox({ children, ...rest }) {
-  const { value, onChange } = useFormControl(rest.name);
+function Checkbox({ children, value, onChange, ...rest }) {
+  const { value: _value, onChange: _onChange } = useFormControl(
+    rest.name,
+    value,
+    onChange
+  );
   return (
     <div className="control">
       <label className="checkbox">
         <input
           type="checkbox"
-          checked={value ? true : false}
-          onChange={onChange}
+          checked={_value ? true : false}
+          onChange={_onChange}
           {...rest}
+          className="mr-1"
         />
         {children}
       </label>
@@ -180,10 +185,13 @@ function FormIconButton({ submit, children, ...rest }) {
   );
 }
 
-function useFormControl(control) {
+function useFormControl(control, value, changeFunc) {
   const { data, onChange } = useContext(FormContext);
-
-  return { value: data[control], onChange: onChange };
+  if (data[control] !== undefined) {
+    return { value: data[control], onChange: onChange };
+  } else {
+    return { value: value, onChange: changeFunc };
+  }
 }
 
 const AttrTypes = [
