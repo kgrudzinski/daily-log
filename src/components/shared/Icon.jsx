@@ -14,13 +14,17 @@ export const IconColor = {
   DANGER: "has-text-danger",
 };
 
-export function Icon({ icon, size, color, ...rest }) {
+export function Icon({ icon, size, color, dir, ...rest }) {
   const classes = ["icon"];
   if (size) {
     classes.push(size);
   }
   if (color) {
     classes.push(color);
+  }
+
+  if (dir) {
+    classes.push(dir);
   }
 
   return (
