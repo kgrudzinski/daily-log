@@ -74,3 +74,11 @@
   top: 30px;
   right: 30px;
 }
+
+.auto-item {
+  cursor: pointer;
+}
+
+.auto-item:hover {
+  background-color: hsl(219, 70%, 96%);
+}
