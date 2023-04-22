@@ -25,3 +25,4 @@ export {
 export { ToastProvider, useToast } from "./toast/Toast";
 export { Table } from "./Table";
 export { Toolbar } from "./Toolbar";
+export { Autocomplete } from "./Autocomplete";
