@@ -210,12 +210,12 @@ const AttrTypes = [
   {
     name: "leftIcon",
     target: "wrapper",
-    value: "has-left-icons",
+    value: "has-icons-left",
   },
   {
     name: "rightIcon",
     target: "wrapper",
-    value: "has-right-icons",
+    value: "has-icons-right",
   },
 ];
 
