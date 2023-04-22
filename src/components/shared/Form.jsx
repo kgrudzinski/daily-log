@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { Button, IconButton } from "./Button";
+import { Autocomplete } from "./Autocomplete";
 
 const FormContext = createContext();
 
@@ -254,6 +255,22 @@ function useFormSubmit() {
   return onSubmit;
 }
 
+function FormAutocomplete(props) {
+  const defIdFunc = (item) => item.id;
+  const { value, onChange } = useFormControl(props.name);
+  const getId = props.idFunc || defIdFunc;
+  const item = props.items.find((it) => value === getId(it));
+  return (
+    <Autocomplete
+      {...props}
+      value={item}
+      onChange={(item) => {
+        onChange({ target: { name: props.name, value: item.id } });
+      }}
+    />
+  );
+}
+
 Form.Field = Field;
 Form.FieldGroup = FieldGroup;
 Form.Control = Control;
@@ -261,6 +278,7 @@ Form.Label = Label;
 Form.Input = Input;
 Form.Textarea = Textarea;
 Form.Select = Select;
+Form.Autocomplete = FormAutocomplete;
 Form.Option = Option;
 Form.Checkbox = Checkbox;
 Form.Radio = Radio;
