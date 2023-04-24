@@ -54,6 +54,7 @@ export function Autocomplete({
 
   return (
     <div
+      onBlur={() => setExpanded(false)}
       className={
         expanded && filteredItems.length > 0 ? expanded_cls : hidden_cls
       }
