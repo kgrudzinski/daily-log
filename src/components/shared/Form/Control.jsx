@@ -1,3 +1,5 @@
+import { useControlStyles } from "./hooks";
+
 export function Field({ children }) {
   return <div className="field">{children}</div>;
 }
@@ -33,6 +35,7 @@ export function Label({ children }) {
   return <label className="label">{children}</label>;
 }
 
-export function Control({ children }) {
-  return <div className="control">{children}</div>;
+export function Control({ children, ...rest }) {
+  const [, classes] = useControlStyles("control", rest);
+  return <div className={classes}>{children}</div>;
 }

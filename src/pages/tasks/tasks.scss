@@ -21,7 +21,9 @@ $boardHeaderHeight: 38px;
 }
 
 .tasks-list {
-  height: calc(100% - variables.$tabs-height - 16px);
+  height: calc(
+    100% - variables.$tabs-height - variables.$toolbar-height - 16px
+  );
   overflow-y: auto;
 }
 

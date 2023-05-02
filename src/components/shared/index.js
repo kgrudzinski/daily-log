@@ -26,3 +26,5 @@ export { ToastProvider, useToast } from "./toast/Toast";
 export { Table } from "./Table";
 export { Toolbar } from "./Toolbar";
 export { Autocomplete } from "./Autocomplete";
+export { FilterProvider, useFilter, useFilterControl } from "./Filter";
+export { SearchProvider, SearchInput, useSearch } from "./search";

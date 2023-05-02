@@ -1,7 +1,7 @@
 @use "bulma/bulma.sass";
 @use "../../css/variables.scss";
 
-$toolbar-height: 44px;
+$toolbar-height: variables.$toolbar-height;
 $month-item-header-height: 28px;
 $month-label-height: 28px;
 $calendar-gap: 1px;

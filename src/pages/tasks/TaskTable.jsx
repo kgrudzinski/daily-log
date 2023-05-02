@@ -1,4 +1,4 @@
-import { Table, ButtonSize } from "components/shared";
+import { Table, ButtonSize, FilterProvider } from "components/shared";
 import { TaskControls } from "./TaskControls";
 import "./tasks.scss";
 
@@ -7,6 +7,7 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
     {
       field: "name",
       label: "Name",
+      filterable: true,
     },
     /*
     {
@@ -17,14 +18,17 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
     {
       field: "categoryName",
       label: "Category",
+      filterable: true,
     },
     {
       field: "projectName",
       label: "Project",
+      filterable: true,
     },
     {
       field: "status",
       label: "Status",
+      filterable: true,
     },
     {
       field: "",
@@ -49,7 +53,9 @@ export function TaskTable({ tasks, onEdit, onDelete, onAddEntry, onComplete }) {
   }
   return (
     <div className="mb-2 tasks-table-container">
-      <Table columns={columns} data={tasks} />
+      <FilterProvider caseSensitive={false}>
+        <Table columns={columns} data={tasks} filterRow={true} />
+      </FilterProvider>
     </div>
   );
 }

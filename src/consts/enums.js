@@ -14,6 +14,8 @@ export const Icons = {
   CANCEL: "mdi mdi-close-circle-outline",
   CHEVRON_LEFT: "mdi mdi-chevron-left",
   CHEVRON_RIGHT: "mdi mdi-chevron-right",
+  SEARCH: "mdi mdi-magnify",
+  CLOSE: "mdi mdi-close",
 };
 
 export const Status = {
