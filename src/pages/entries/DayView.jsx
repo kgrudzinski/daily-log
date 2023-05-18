@@ -19,8 +19,6 @@ export function DailyVew({ date, entries }) {
     (it) => it.date === DateService.toTimestamp(currDate)
   );
 
-  console.log(visibleEntries);
-
   return (
     <>
       <Toolbar classes="mb-1 toolbar pl-2 pr-2">

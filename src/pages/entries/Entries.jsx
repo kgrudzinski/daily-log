@@ -1,7 +1,7 @@
 import { Tabs, Fab, Pages, Page, Message } from "components/shared";
 import { EntryForm } from "components/forms";
 import { useEntryPage, EntryTabs, Mode, Actions } from "./useEntryPage";
-import { EntryProvider, useEntryContext } from "./Context";
+import { EntryProvider } from "./Context";
 import { DailyVew } from "./DayView";
 import { WeekView } from "./WeekView";
 import { MonthView } from "./MonthView";
@@ -16,7 +16,6 @@ export function Entries() {
     error,
     newEntry,
     changeTab,
-    saveEntry,
     deleteEntry,
     editEntry,
   } = useEntryPage();
@@ -30,7 +29,6 @@ export function Entries() {
   }
 
   const contextData = {
-    saveEntry,
     deleteEntry,
     newEntry,
     editEntry,
@@ -81,28 +79,20 @@ export function Entries() {
 }
 
 function EntryDialog({ data, dispatch }) {
-  const { onCancel, onClose } = useEntryDialog(dispatch);
+  const { onClose } = useEntryDialog(dispatch);
   return (
     <div className="box">
-      <EntryForm data={data} onClose={onClose} onCancel={onCancel} />
+      <EntryForm data={data} onClose={onClose} />
     </div>
   );
 }
 
 function useEntryDialog(dispatch) {
-  const { saveEntry } = useEntryContext();
-
-  const cancelDialog = () => {
-    dispatch({ type: Actions.VIEW_MODE, mode: Mode.VIEW });
-  };
-
-  const closeDialog = (item) => {
-    saveEntry(item);
+  const closeDialog = () => {
     dispatch({ type: Actions.VIEW_MODE, mode: Mode.VIEW });
   };
 
   return {
-    onCancel: cancelDialog,
     onClose: closeDialog,
   };
 }

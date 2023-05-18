@@ -1,15 +1,21 @@
 import { useState } from "react";
-import { Form, ButtonColor } from "components/shared";
-import { useTasks } from "hooks";
+import { Form, ButtonColor, useToast } from "components/shared";
+import { useTasks, useTaskMutations, useEntryMutations } from "hooks";
 import { Status } from "consts";
+import { DateService } from "services";
 
-export function EntryForm({ data, onClose, onCancel }) {
-  const { data: tasks, isLoading, isError, error } = useTasks();
-  const [showCompleted, setShowCompleted] = useState(false);
-
-  if (data.taskId === 0) {
-    data.taskId = tasks && tasks.length > 0 ? tasks[0].id : 0;
-  }
+export function EntryForm({ data, onClose }) {
+  const {
+    tasks,
+    isLoading,
+    isError,
+    error,
+    showCompleted,
+    setShowCompleted,
+    setCompleteTask,
+    completeTask,
+    saveEntry,
+  } = useEntryForm(data, onClose);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -31,7 +37,7 @@ export function EntryForm({ data, onClose, onCancel }) {
   };
 
   return (
-    <Form initialData={data} onSubmit={onClose}>
+    <Form initialData={data} onSubmit={saveEntry}>
       <Form.Field>
         <Form.Label>Task</Form.Label>
         <Form.Autocomplete
@@ -61,11 +67,19 @@ export function EntryForm({ data, onClose, onCancel }) {
         <Form.Label>Date</Form.Label>
         <Form.Input type="date" name="date" />
       </Form.Field>
+      <Form.Field>
+        <Form.Checkbox
+          value={completeTask}
+          onChange={(evt) => setCompleteTask(evt.target.checked)}
+        >
+          Mark task as completed
+        </Form.Checkbox>
+      </Form.Field>
       <Form.FieldGroup>
         <Form.Button submit color={ButtonColor.LINK}>
           Save
         </Form.Button>
-        <Form.Button color={ButtonColor.LINK_LIGHT} onClick={onCancel}>
+        <Form.Button color={ButtonColor.LINK_LIGHT} onClick={onClose}>
           Cancel
         </Form.Button>
       </Form.FieldGroup>
@@ -86,4 +100,91 @@ function TaskListItem({ item }) {
       <div>{item.name}</div>
     </>
   );
+}
+
+function useEntryForm(data, onClose) {
+  const { data: tasks, isLoading, isError, error } = useTasks();
+  const [showCompleted, setShowCompleted] = useState(false);
+  const [completeTask, setCompleteTask] = useState(false);
+
+  const { success: successToast, error: errorToast } = useToast();
+
+  const { add, update } = useEntryMutations();
+  const { update: updateTask } = useTaskMutations();
+
+  if (data.taskId === 0) {
+    data.taskId = tasks && tasks.length > 0 ? tasks[0].id : 0;
+  }
+
+  const doCompleteTask = (taskId) => {
+    console.log("completing task");
+    const task = tasks.find((t) => t.id === taskId);
+    updateTask(
+      { ...task, status: Status.COMPLETED },
+      {
+        onSuccess: () => {
+          successToast("Task marked as completed");
+        },
+        onError: (err) => {
+          errorToast(`Failed to complete task: ${err}`);
+          console.log(err);
+        },
+        onSettled: () => {
+          onClose();
+        },
+      }
+    );
+  };
+
+  const onSettled = () => {
+    if (!completeTask) {
+      onClose();
+    }
+  };
+
+  const onSuccess = (message, id) => {
+    successToast(message);
+    if (completeTask) {
+      doCompleteTask(id);
+    }
+  };
+
+  const saveEntry = (data) => {
+    const toSave = {
+      ...data,
+      taskId: +data.taskId,
+      duration: +data.duration,
+      date: DateService.fromString(data.date),
+    };
+
+    if (toSave.id > 0) {
+      update(toSave, {
+        onSuccess: () => {
+          onSuccess("Entry updated", toSave.taskId);
+        },
+        onError: (err) => errorToast(err),
+        onSettled: onSettled,
+      });
+    } else {
+      add(toSave, {
+        onSuccess: () => {
+          onSuccess("Entry added", toSave.taskId);
+        },
+        onError: (err) => errorToast(err),
+        onSettled: onSettled,
+      });
+    }
+  };
+
+  return {
+    tasks,
+    isLoading,
+    isError,
+    error,
+    showCompleted,
+    setShowCompleted,
+    setCompleteTask,
+    completeTask,
+    saveEntry,
+  };
 }

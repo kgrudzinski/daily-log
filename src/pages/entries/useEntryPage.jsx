@@ -2,7 +2,6 @@ import { useReducer } from "react";
 import { useEntries } from "hooks";
 import { DateService, RandService } from "services";
 import { useEntryMutations } from "hooks";
-import { useToast } from "components/shared";
 
 export const EntryTabs = {
   DAY: "day",
@@ -24,7 +23,7 @@ export const Actions = {
 
 function dispatcher(state, action) {
   let newState;
-  console.log(state);
+
   switch (action.type) {
     case Actions.VIEW_MODE:
       newState = { ...state, mode: Mode.VIEW };
@@ -60,8 +59,7 @@ export function useEntryPage() {
   };
 
   const { data: entries, status, error } = useEntries();
-  const { success: successToast, error: errorToast } = useToast();
-  const { add, update, remove } = useEntryMutations();
+  const { remove } = useEntryMutations();
   const [state, dispatch] = useReducer(dispatcher, initialState);
 
   const changeTab = (tab) => dispatch({ type: Actions.CHANGE_TAB, tab: tab });
@@ -77,27 +75,6 @@ export function useEntryPage() {
       type: Actions.NEW_ENTRY,
       selected: item,
     });
-  };
-
-  const saveEntry = (data) => {
-    data.taskId = +data.taskId;
-    data.duration = +data.duration;
-    data.date = DateService.fromString(data.date);
-    if (data.id > 0) {
-      update(data, {
-        onSuccess: () => {
-          successToast("Entry updated");
-        },
-        onError: (err) => errorToast(err),
-      });
-    } else {
-      add(data, {
-        onSuccess: () => {
-          successToast("Entry added");
-        },
-        onError: (err) => errorToast(err),
-      });
-    }
   };
 
   const deleteEntry = (id) => {
@@ -118,7 +95,6 @@ export function useEntryPage() {
     changeTab,
     newEntry,
     editEntry,
-    saveEntry,
     deleteEntry,
   };
 }

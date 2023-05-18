@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTasks, useTaskMutations, useEntryMutations } from "hooks";
+import { useTasks, useTaskMutations } from "hooks";
 import { Fab, Message, Tabs, Pages, Page, useToast } from "components/shared";
 import { EntryForm, TaskForm } from "components/forms";
 import { DateService } from "services";
@@ -36,8 +36,8 @@ export function Tasks() {
     mode,
     status,
     error,
-    onFormCancel,
-    onFormClose,
+    formSubmit,
+    formClose,
     newTask,
     deleteTask,
     editTask,
@@ -99,22 +99,12 @@ export function Tasks() {
   }
   if (mode === Mode.EDIT) {
     return (
-      <TaskDialog
-        task={selected}
-        onCancel={onFormCancel}
-        onClose={onFormClose}
-      />
+      <TaskDialog task={selected} onCancel={formClose} onClose={formSubmit} />
     );
   }
 
   if (mode === Mode.ADD_ENTRY) {
-    return (
-      <EntryDialog
-        parentId={selected.id}
-        onClose={onFormClose}
-        onCancel={onFormCancel}
-      />
-    );
+    return <EntryDialog parentId={selected.id} onClose={formClose} />;
   }
 }
 
@@ -126,7 +116,7 @@ function TaskDialog({ task, onClose, onCancel }) {
   );
 }
 
-function EntryDialog({ parentId, onClose, onCancel }) {
+function EntryDialog({ parentId, onClose }) {
   const new_entry = {
     id: 0,
     taskId: parentId,
@@ -136,7 +126,7 @@ function EntryDialog({ parentId, onClose, onCancel }) {
   };
   return (
     <div className="box">
-      <EntryForm data={new_entry} onClose={onClose} onCancel={onCancel} />
+      <EntryForm data={new_entry} onClose={onClose} />
     </div>
   );
 }
@@ -155,13 +145,6 @@ function ErrorMessage({ error }) {
 function useTasksView() {
   const { success: successToast, error: errorToast } = useToast();
   const { add, update, remove } = useTaskMutations();
-
-  const { add: addEntry } = useEntryMutations(
-    () => {
-      successToast("Entry added");
-    },
-    (err) => errorToast(err)
-  );
 
   const { data: tasks, status, error } = useTasks();
   const [mode, setMode] = useState(Mode.VIEW);
@@ -224,37 +207,22 @@ function useTasksView() {
     }
   };
 
-  const saveEntry = (data) => {
-    data.taskId = +data.taskId;
-    data.duration = +data.duration;
-    data.date = DateService.fromString(data.date);
-    addEntry(data, {
-      onSuccess: () => {
-        successToast("Entry added");
-      },
-      onError: (err) => errorToast(err),
-    });
-  };
+  const formClose = () => setMode(Mode.VIEW);
 
-  const onFormClose = (data) => {
-    console.log("onFormClose", mode, data);
+  const formSubmit = (data) => {
     if (mode === Mode.EDIT) {
       saveTask(data);
-    } else {
-      saveEntry(data);
     }
-    setMode(Mode.VIEW);
+    formClose();
   };
-
-  const onFormCancel = () => setMode(Mode.VIEW);
 
   return {
     mode,
     status,
     error,
     tasks,
-    onFormClose,
-    onFormCancel,
+    formClose,
+    formSubmit,
     newTask,
     editTask,
     deleteTask,
