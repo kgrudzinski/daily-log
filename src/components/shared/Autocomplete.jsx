@@ -54,7 +54,12 @@ export function Autocomplete({
 
   return (
     <div
-      onBlur={() => setExpanded(false)}
+      onBlur={(evt) => {
+        const focused = evt.relatedTarget;
+        if (!focused || !focused.classList.contains("dropdown-menu")) {
+          setExpanded(false);
+        }
+      }}
       className={
         expanded && filteredItems.length > 0 ? expanded_cls : hidden_cls
       }
@@ -81,7 +86,7 @@ export function Autocomplete({
           </div>
         </div>
       </div>
-      <div className="dropdown-menu" style={style}>
+      <div className="dropdown-menu" style={style} tabIndex={0}>
         <div className="dropdown-content">
           {filteredItems.map((item, index) => {
             return (
