@@ -105,7 +105,7 @@ impl ModelSchema {
         let res = db.get_last_rowid().map(|r| r as u64)?;        
         for i in 0..self.relations.len() {
             let rel = &self.relations[i];
-            let mut rel_data = data.relations.get_mut(i).unwrap();
+            let rel_data = data.relations.get_mut(i).unwrap();
             rel_data.owner_id = res;
             rel.insert(rel_data, db)?;
         }
