@@ -66,6 +66,7 @@ function AppMenuButton({ icon, text, onClick }) {
       color={ButtonColor.LINK}
       onClick={onClick}
       size={ButtonSize.SMALL}
+      style={{ minWidth: "90%", marginTop: "5px" }}
     >
       {text}
     </IconButton>
