@@ -4,6 +4,7 @@ import { ProjectForm } from "components/forms";
 import {
   useToast,
   Buttons,
+  FilterProvider,
   IconButton,
   ButtonColor,
   Table,
@@ -167,5 +168,9 @@ function ProjectList({ data, onEdit, onDelete }) {
     return <p>No data to show</p>;
   }
 
-  return <Table columns={columns} data={data} />;
+  return (
+    <FilterProvider caseSensitive={false}>
+      <Table columns={columns} data={data} />
+    </FilterProvider>
+  );
 }
