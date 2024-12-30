@@ -40,6 +40,11 @@ export function AppMenu({ menu, selected, dispatch }) {
           text="About"
           onClick={() => onButtonClick("about")}
         />
+        <AppMenuButton
+          icon={Icons.INFO}
+          text="Backup"
+          onClick={() => onButtonClick("backup")}
+        />
       </MenuFooter>
     </Menu>
   );

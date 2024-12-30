@@ -1,8 +1,8 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Pages, Page, useModal, Message } from "components/shared";
+import { Pages, Page, useModal, Message, useToast } from "components/shared";
 import { AppMenu, AppContent, About } from "components/layout";
 import { Start, Tasks, Entries } from "./pages";
 import { Settings } from "./pages/Settings";
@@ -55,9 +55,26 @@ const AppState = {
 };
 
 const useApp = () => {
+  console.log("reload");
+
   const [appPage, setAppPage] = useState(AppPage.HOME);
   const [appState, setAppState] = useState(AppState.LOADING);
   const [appError, setAppError] = useState("");
+
+  const { error, success } = useToast();
+
+  const on_backup = useCallback(
+    (event) => {
+      const payload = event.payload;
+      if (payload.success) {
+        success("Backup finished");
+      } else {
+        error(`Backup error: ${payload.err}`);
+      }
+    },
+    [error, success]
+  );
+  // eslint-disable-line react-hooks/exhaustive-deps
 
   const showModal = useModal();
 
@@ -89,6 +106,7 @@ const useApp = () => {
 
   useEffect(() => {
     return AppService.listen("db-initialized", (event) => {
+      console.log(event);
       setDbinfo(event.payload);
       setAppState(AppState.READY);
     });
@@ -103,6 +121,10 @@ const useApp = () => {
   }, []);
 
   useEffect(() => {
+    return AppService.listen("db-backup-finished", on_backup);
+  }, [on_backup]);
+
+  useEffect(() => {
     AppService.emit("frontend-ready");
   }, []);
 
@@ -114,6 +136,9 @@ const useApp = () => {
         case "about":
           AppService.getDbInfo();
           showModal("about");
+          break;
+        case "backup":
+          AppService.requestBackup("database");
           break;
         default:
       }

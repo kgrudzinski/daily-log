@@ -4,22 +4,22 @@
 )]
 
 use std::{
-  fs::{File, create_dir_all}, 
+  fs::File, 
   path::PathBuf,  
 };
 
 use simplelog::{WriteLogger, LevelFilter, Config};
 use tauri::{
   Manager,
-  RunEvent,
-  PathResolver,
+  RunEvent,  
   api::path::BaseDirectory,  
 };
 use app::{
   datastore::Datastore,
   models::{Project, Task, Entry, Category, TaskView, EntryView},
   commands,
-  config::AppConfig
+  config::AppConfig,
+  create_app_dir, get_app_path
 };
 
 #[cfg(debug_assertions)]
@@ -70,7 +70,8 @@ fn main() {
     commands::add_category,
     commands::update_category,
     commands::delete_category,
-    commands::get_db_version
+    commands::get_db_version,
+    commands::backup_db
   ])
   .manage(ds)
   .setup(|app| {
@@ -91,6 +92,22 @@ fn main() {
 
     let config_path = get_app_path(BaseDirectory::AppConfig, CONFIG_FILE_NAME, &path_resolver);    
     let config = AppConfig::new(&config_path);
+    log::debug!("Checking backup directory");
+    let mut config_data = config.data();
+    if let None = config_data.backup_dir {
+      log::debug!("No entry found in config. Creating default directory");
+      let backup_dir = create_app_dir(BaseDirectory::AppData, Some("backup"), &path_resolver);
+      config_data.set_backup_dir(backup_dir);
+      drop(config_data);
+      match config.save() {
+        Ok(_) => log::info!("New configuration saved."),
+        Err(e) => log::error!("Error saving configuration: {e}")
+      }
+    } else {
+      log::debug!("entry found");
+      drop(config_data);
+    }
+    
     app.manage::<AppConfig>(config);
 
     log::info!("Registering event handlers");
@@ -171,25 +188,4 @@ fn main() {
         _ => {}
       }
     })
-}
-
-fn get_app_path(dir: BaseDirectory, file_name: &str, resolver: &PathResolver) -> PathBuf {
-  let dir_path = match dir {
-    BaseDirectory::AppLog => resolver.app_log_dir(),
-    BaseDirectory::AppData => resolver.app_data_dir(),
-    BaseDirectory::AppConfig => resolver.app_config_dir(),
-    _ => None
-  };
-
-  let mut path_buf = if !DEBUG_MODE && dir_path != None {
-    let path = dir_path.unwrap();
-    if !path.exists() {
-      create_dir_all(&path).expect(&format!("Error creating directory {:?}", path));
-    }
-    path
-  } else {
-    PathBuf::new()   
-  };
-  path_buf.push(file_name);
-  path_buf
 }

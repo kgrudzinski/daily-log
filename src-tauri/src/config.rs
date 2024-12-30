@@ -43,7 +43,8 @@ impl AppConfig {
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ConfigData {
-    pub database: Option<String>
+    pub database: Option<String>,
+    pub backup_dir: Option<String>
 }
 
 impl ConfigData {
@@ -65,7 +66,8 @@ impl ConfigData {
     pub fn load<P: AsRef<Path>>(&mut self, path: P) -> Result<(), Box<dyn Error>> {
         let fin = File::open(path)?;            
         let reader = BufReader::new(fin);
-        serde_json::from_reader(reader)?;
+        let cfg: ConfigData = serde_json::from_reader(reader)?;
+        self.database = cfg.database;
         Ok(())
     }
 
@@ -80,6 +82,14 @@ impl ConfigData {
             self.database = Some(p.to_owned());
         } else {
             log::error!("Database path contains non utf-8 characters");
+        }        
+    }
+
+    pub fn set_backup_dir<P: AsRef<Path>>(&mut self, path: P) {
+        if let Some(p) = path.as_ref().to_str() {
+            self.backup_dir = Some(p.to_owned());
+        } else {
+            log::error!("backap dir path contains non utf-8 characters");
         }        
     }
 }
@@ -101,12 +111,14 @@ mod tests {
     #[test]
     fn config() {
         let config = ConfigData {
-            database: Some("database.db".to_string())
+            database: Some("database.db".to_string()),
+            backup_dir: Some("backup".to_string())
         };
 
         config.save(FILE_NAME).expect("failed to save config file");
         let conf = ConfigData::from_file(FILE_NAME).expect("failed to load config file");
         assert_eq!(config.database, conf.database);
+        assert_eq!(config.backup_dir, conf.backup_dir);
         cleanup(FILE_NAME);
     }
 }

@@ -13,11 +13,13 @@ use crate::models::{
 
 use crate::datastore::Datastore;
 use crate::database::DbError;
+use crate::config::AppConfig;
 
 fn stringify_err(err: DbError) -> String {
     match err {
         DbError::NoConnection => "Database is not opened".to_string(),
-        DbError::Sql(e) => e.to_string()
+        DbError::Sql(e) => e.to_string(),
+        DbError::NonUtf8Filename => "Filename contains non utf-8 characters".to_string()
     }
 }
 
@@ -119,4 +121,35 @@ pub fn delete_entry(id: u64, ds: State<Datastore>) -> Result<(), String> {
 #[tauri::command]
 pub fn get_db_version(window: tauri::Window, ds: State<Datastore>) {
     window.emit("db-initialized", ds.get_info().unwrap()).unwrap();
+}
+
+#[derive(Clone, serde::Serialize)]
+struct BackupPayload {
+    pub success: bool,
+    pub err: Option<String>
+}
+
+#[tauri::command]
+pub fn backup_db(filename: &str, window: tauri::Window, ds: State<Datastore>, config: State<AppConfig>) {
+    use std::path::Path;
+    let config_data = config.data();
+    let backuo_dir = config_data.backup_dir.as_ref().unwrap();
+    let backup_path = Path::new(&backuo_dir).join(filename);
+    log::debug!("backup_path: {:?}", backup_path);
+    let res = ds.backup(backup_path);
+    let payload = match res {
+        Ok(_) => BackupPayload {
+            success: true,
+            err: None
+        },
+        Err(e) => {
+            let e_str = stringify_err(e);
+            log::error!("{}", e_str);
+            BackupPayload {
+                success: false,
+                err: Some(e_str)
+            }
+        }
+    };
+    window.emit("db-backup-finished", payload).unwrap();
 }

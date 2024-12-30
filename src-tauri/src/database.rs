@@ -19,7 +19,9 @@ pub enum DbError {
     #[error("{0}")]
     Sql(#[from]SqlError),
     #[error("Database is not opened")]
-    NoConnection
+    NoConnection,
+    #[error("Non UTF-8 file name")]
+    NonUtf8Filename
 }
 
 pub type DbResult<T> = Result<T, DbError>;
@@ -107,5 +109,30 @@ impl Database {
         } else {
             Err(DbError::NoConnection)
         }
-    }    
+    }
+
+    pub fn backup<P>(&self, path: P) -> DbResult<()> where P: AsRef<Path> {
+        let filename = path.as_ref().to_str();
+        if let Some(fin) = filename {
+            let cmd = format!("VACUUM INTO '{}'", fin);
+            log::debug!("sql command {}", cmd);
+            let inner = self.0.lock().unwrap();
+            if let Some(conn) = &*inner {
+                conn.execute(&cmd, []).map_err(DbError::from).map(|_|  ())
+            } else {
+                Err(DbError::NoConnection)
+            }
+        } else {
+            Err(DbError::NonUtf8Filename)
+        }        
+    }
+
+    pub fn compact(&self) -> DbResult<()> {
+        let inner = self.0.lock().unwrap();
+        if let Some(conn) = &*inner {
+            conn.execute("VACUUM", []).map_err(DbError::from).map(|_|  ())
+        } else {
+            Err(DbError::NoConnection)
+        }
+    }
 }

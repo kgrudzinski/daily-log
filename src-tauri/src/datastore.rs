@@ -103,6 +103,10 @@ impl Datastore {
         let m = self.models.get(&id).unwrap();
         m.get(filter, &self.db)
     }
+
+    pub fn backup<P>(&self, path: P) -> DbResult<()> where P: AsRef<Path> {
+        self.db.backup(path)
+    }
 }
 
 #[cfg(test)]
