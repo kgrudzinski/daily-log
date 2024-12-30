@@ -90,7 +90,27 @@ export const DateService = {
     month_start.setDate(1);
     return month_start;
   },
+
+  formatDateTime: (date) => {
+    return formatDateTime(date);
+  },
 };
+
+function formatDateTime(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+
+  const pm = `${month}`.padStart(2, "0");
+  const pd = `${day}`.padStart(2, "0");
+  const ph = `${hour}`.padStart(2, "0");
+  const pmt = `${minutes}`.padStart(2, "0");
+
+  return `${year}${pm}${pd}_${ph}${pmt}`;
+}
 
 function formatDate(date) {
   const year = date.getFullYear();
