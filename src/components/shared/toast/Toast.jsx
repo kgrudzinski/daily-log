@@ -1,4 +1,11 @@
-import { useState, useEffect, useContext, useRef, createContext } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  createContext,
+  useCallback,
+} from "react";
 import { createPortal } from "react-dom";
 import "./toast.scss";
 
@@ -52,10 +59,11 @@ function useToastProvider() {
   const [items, setItems] = useState([]);
   const itemId = useRef(0);
 
-  const addToast = (type, message) => {
+  const addToast = useCallback((type, message) => {
     itemId.current += 1;
+    console.log(itemId.current, type, message);
     setItems((current) => [...current, { type, message, id: itemId.current }]);
-  };
+  }, []);
 
   const deleteToast = (id) => {
     setItems((current) => current.filter((it) => it.id !== id));
@@ -99,7 +107,13 @@ export function useToast() {
   const { addToast } = useContext(ToastContext);
 
   return {
-    error: (message) => addToast(ToastType.ERROR, message),
-    success: (message) => addToast(ToastType.SUCCESS, message),
+    error: useCallback(
+      (message) => addToast(ToastType.ERROR, message),
+      [addToast]
+    ),
+    success: useCallback(
+      (message) => addToast(ToastType.SUCCESS, message),
+      [addToast]
+    ),
   };
 }
