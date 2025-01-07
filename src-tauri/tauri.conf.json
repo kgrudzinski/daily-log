@@ -1,6 +1,6 @@
 {
   "package": {
-    "productName": "daily-log",
+    "productName": "Daily Log",
     "version": "0.3.1"
   },
   "build": {
