@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2025-01-07
+
+### Features
+
+- Entry form uses new  Autocomplete component for selecting tasks
+- Searching and filtering tasks 
+- Option to complete task from entry form
+- Database backups
+
+### Fixes
+
+- Corrected notifications in EntryModal component
+- Corrected icon alignment class names
+- Fixed Button layout in app menu
+- Fixed error showing Projects table
+
+### Other
+
+- Change application name from daily-log to Daily Log
+
 ## [0.3.1] 2023-03-20
 
 ### Fixes
