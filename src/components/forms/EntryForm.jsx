@@ -113,10 +113,6 @@ function useEntryForm(data, onClose) {
   const { add, update } = useEntryMutations();
   const { update: updateTask } = useTaskMutations();
 
-  if (data.taskId === 0) {
-    data.taskId = tasks && tasks.length > 0 ? tasks[0].id : 0;
-  }
-
   const doCompleteTask = (taskId) => {
     const task = tasks.find((t) => t.id === taskId);
     updateTask(
