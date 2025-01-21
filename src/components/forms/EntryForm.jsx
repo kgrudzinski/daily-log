@@ -104,7 +104,7 @@ function TaskListItem({ item }) {
 
 function useEntryForm(data, onClose) {
   const { data: tasks, isLoading, isError, error } = useTasks();
-  const [showCompleted, setShowCompleted] = useState(false);
+  const [showCompleted, setShowCompleted] = useState(isTaskCompleted(data.taskId, tasks));
   const [completeTask, setCompleteTask] = useState(false);
 
   const { success: successToast, error: errorToast } = useToast();
@@ -117,7 +117,6 @@ function useEntryForm(data, onClose) {
   }
 
   const doCompleteTask = (taskId) => {
-    console.log("completing task");
     const task = tasks.find((t) => t.id === taskId);
     updateTask(
       { ...task, status: Status.COMPLETED },
@@ -138,7 +137,6 @@ function useEntryForm(data, onClose) {
 
   const onSettled = () => {
     if (!completeTask) {
-      console.log("settled");
       onClose();
     }
   };
@@ -161,7 +159,6 @@ function useEntryForm(data, onClose) {
     if (toSave.id > 0) {
       update(toSave, {
         onSuccess: () => {
-          console.log("Updated", toSave.taskId);
           onSuccess("Entry updated", toSave.taskId);
         },
         onError: (err) => errorToast(err),
@@ -170,7 +167,6 @@ function useEntryForm(data, onClose) {
     } else {
       add(toSave, {
         onSuccess: () => {
-          console.log("Added", toSave.taskId);
           onSuccess("Entry added", toSave.taskId);
         },
         onError: (err) => errorToast(err),
@@ -190,4 +186,13 @@ function useEntryForm(data, onClose) {
     completeTask,
     saveEntry,
   };
+}
+
+function isTaskCompleted(taskId, tasks) {
+  if (!tasks) {
+    return false;
+  }
+
+  const task = tasks.find(t => t.id === taskId);
+  return task && task.status === Status.COMPLETED ? true : false;
 }
