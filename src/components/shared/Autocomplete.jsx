@@ -8,10 +8,11 @@ export function Autocomplete({
   items,
   onChange,
   filterFunc,
-  labelFunc = (item) => (item ? item.name : "-/-"),
+  labelFunc = (item) => (item ? item.name : ""),
   idFunc = (item) => item.id,
   width = "100%",
   renderListItem,
+  placeholder = "Select item"
 }) {
   const [input, setInput] = useState(labelFunc(value) || "");
   const [expanded, setExpanded] = useState(false);
@@ -74,6 +75,7 @@ export function Autocomplete({
               value={input}
               onChange={onInputChanged}
               onKeyDown={onKeyDown}
+              placeholder={placeholder}
             />
           </div>
           <div className="control">

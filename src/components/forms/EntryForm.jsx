@@ -45,6 +45,7 @@ export function EntryForm({ data, onClose }) {
           items={filteredItems}
           filterFunc={taskFilterFunc}
           renderListItem={(it) => <TaskListItem item={it} />}
+          placeholder="Select task"
         />
       </Form.Field>
       <Form.Field>
