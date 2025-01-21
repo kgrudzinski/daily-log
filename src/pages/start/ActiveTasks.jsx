@@ -7,7 +7,8 @@ import {
 } from "components/shared";
 import { useTasks } from "hooks";
 import { Icons } from "consts";
-import { TaskModal } from "./TaskModal";
+import { TaskModal, TASK_MODAL_ID } from "./TaskModal";
+import { ENTRY_MODAL_ID } from "./EntryModal";
 
 export function ActiveTasks() {
   const { showTaskForm, showEntryForm, tasks } = useActiveTasks();
@@ -80,14 +81,14 @@ function TaskTable({ data, showEntryForm }) {
 
 function useActiveTasks() {
   const { data: tasks } = useTasks();
-  const showModal = useModal();
+  const { openModal } = useModal();
 
   const showTaskForm = () => {
-    showModal("task_form");
+    openModal(TASK_MODAL_ID);
   };
 
   const showEntryForm = (taskId) => {
-    showModal("entry_form", taskId);
+    openModal(ENTRY_MODAL_ID, taskId);
   };
 
   return {

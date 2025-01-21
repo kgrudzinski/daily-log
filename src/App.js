@@ -2,8 +2,8 @@ import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Pages, Page, useModal, Message, useToast } from "components/shared";
-import { AppMenu, AppContent, About } from "components/layout";
+import { Pages, Page, Message, useToast } from "components/shared";
+import { AppMenu, AppContent, About, useAboutDialog } from "components/layout";
 import { Start, Tasks, Entries } from "./pages";
 import { Settings } from "./pages/Settings";
 import { Configuration } from "./pages/Configuration";
@@ -60,6 +60,7 @@ const useApp = () => {
   const [appPage, setAppPage] = useState(AppPage.HOME);
   const [appState, setAppState] = useState(AppState.LOADING);
   const [appError, setAppError] = useState("");
+  const showAboutDialog = useAboutDialog();
 
   const { error, success } = useToast();
 
@@ -75,8 +76,6 @@ const useApp = () => {
     [error, success]
   );
   // eslint-disable-line react-hooks/exhaustive-deps
-
-  const showModal = useModal();
 
   const [appInfo, setAppInfo] = useState({
     name: "",
@@ -135,7 +134,7 @@ const useApp = () => {
       switch (action.name) {
         case "about":
           AppService.getDbInfo();
-          showModal("about");
+          showAboutDialog();
           break;
         case "backup":
           AppService.requestBackup("database");

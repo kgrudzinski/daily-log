@@ -1,9 +1,14 @@
 import { Modal, useModal, useModalData } from "components/shared";
 import { EntryForm } from "components/forms";
-import { RandService, DateService } from "services";
+import { DateService } from "services";
+
+export const ENTRY_MODAL_ID = "entry-dialog";
 
 export function EntryModal() {
+
   const taskId = useModalData();
+  const { closeModal, isOpened } = useModal();
+  const opened = isOpened(ENTRY_MODAL_ID);
 
   const entry = {
     id: 0,
@@ -13,22 +18,11 @@ export function EntryModal() {
     date: DateService.format(new Date()),
   };
 
-  const { hide } = useEntryModal();
-
-  return (
-    <Modal id="entry_form">
+  return (<>{opened ?
+    <Modal opened={true}>
       <div className="box">
-        <EntryForm key={RandService.generateId()} data={entry} onClose={hide} />
+        <EntryForm data={entry} onClose={closeModal} />
       </div>
-    </Modal>
-  );
-}
-
-function useEntryModal() {
-  const showModal = useModal();
-  const hide = () => showModal("");
-
-  return {
-    hide,
-  };
+    </Modal> : null}
+  </>);
 }

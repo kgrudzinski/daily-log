@@ -5,13 +5,18 @@ const ModalContext = createContext();
 function useModalProvider() {
   const [modal, setModal] = useState({ id: "", data: null });
 
-  const showModal = (id, data) => {
+  const openModal = (id, data) => {
     setModal({ id: id, data: data });
   };
 
+  const closeModal = () => {
+    setModal({ id: "", data: null });
+  }
+
   return {
     modal,
-    showModal,
+    openModal,
+    closeModal
   };
 }
 
@@ -23,9 +28,9 @@ export function ModalProvider({ children }) {
 }
 
 export function useModal() {
-  const { showModal } = useContext(ModalContext);
+  const { openModal, closeModal, modal } = useContext(ModalContext);
 
-  return showModal;
+  return { openModal, closeModal, isOpened: (id) => modal.id === id, data: modal.data };
 }
 
 export function useModalData() {
@@ -34,17 +39,8 @@ export function useModalData() {
   return modal.data;
 }
 
-function useModalControl(id) {
-  const { modal, showModal } = useContext(ModalContext);
-
-  return {
-    showModal,
-    opened: modal.id === id,
-  };
-}
-
-export function Modal({ id, children }) {
-  const { opened } = useModalControl(id);
+export function Modal({ opened, children }) {
+  //const { opened } = useModalControl(id);
 
   const classes = "modal" + (opened ? " is-active" : "");
   return (
@@ -55,8 +51,8 @@ export function Modal({ id, children }) {
   );
 }
 
-export function ModalCard({ id, children }) {
-  const { opened } = useModalControl(id);
+export function ModalCard({ opened, children }) {
+  //const { opened } = useModalControl(id);
   const classes = "modal" + (opened ? " is-active" : "");
   return (
     <div className={classes}>
@@ -74,15 +70,16 @@ function Title({ children }) {
   return <p className="modal-card-title">{children}</p>;
 }
 
-function Close() {
-  const { showModal } = useModalControl("");
+function Close({ onClose }) {
+  //const { showModal } = useModalControl("");
   return (
     <button
       className="modal-close is-large"
       aria-label="close"
-      onClick={() => {
+      /*onClick={() => {
         showModal("");
-      }}
+      }}*/
+      onClick={onClose}
     ></button>
   );
 }

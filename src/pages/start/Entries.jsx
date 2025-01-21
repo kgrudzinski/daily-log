@@ -9,7 +9,7 @@ import {
 import { useEntries } from "hooks";
 import { DateService } from "services";
 import { Icons } from "consts";
-import { EntryModal } from "./EntryModal";
+import { ENTRY_MODAL_ID, EntryModal } from "./EntryModal";
 
 export function Entries() {
   const { entries, show } = useTodaysEntries();
@@ -82,10 +82,10 @@ function EntryTable({ data }) {
 
 function useTodaysEntries() {
   const { data: entries } = useEntries();
-  const showModal = useModal();
+  const { openModal } = useModal();
 
   const showForm = () => {
-    showModal("entry_form");
+    openModal(ENTRY_MODAL_ID);
   };
   const today = DateService.toTimestamp();
 

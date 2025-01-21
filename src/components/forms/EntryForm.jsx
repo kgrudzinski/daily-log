@@ -138,6 +138,7 @@ function useEntryForm(data, onClose) {
 
   const onSettled = () => {
     if (!completeTask) {
+      console.log("settled");
       onClose();
     }
   };
@@ -160,6 +161,7 @@ function useEntryForm(data, onClose) {
     if (toSave.id > 0) {
       update(toSave, {
         onSuccess: () => {
+          console.log("Updated", toSave.taskId);
           onSuccess("Entry updated", toSave.taskId);
         },
         onError: (err) => errorToast(err),
@@ -168,6 +170,7 @@ function useEntryForm(data, onClose) {
     } else {
       add(toSave, {
         onSuccess: () => {
+          console.log("Added", toSave.taskId);
           onSuccess("Entry added", toSave.taskId);
         },
         onError: (err) => errorToast(err),
