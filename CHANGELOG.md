@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2025-01-21
+
+### Features
+
+- Add placeholder text to autocomplete component
+- Remove setting default task in new entry form when task id was not supplied
+
+### Fixes
+
+- Fixed closing new entry modal dialog
+- Fixed displaying task name in new entry form when adding entry to completed task
+
 ## [0.4.0] - 2025-01-07
 
 ### Features
