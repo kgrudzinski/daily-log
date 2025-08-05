@@ -1,4 +1,4 @@
-@use "bulma/bulma.sass";
+@use "bulma/bulma.scss";
 @use "../../css/variables.scss";
 
 $boardHeaderHeight: 38px;
@@ -21,14 +21,12 @@ $boardHeaderHeight: 38px;
 }
 
 .tasks-list {
-  height: calc(
-    100% - variables.$tabs-height - variables.$toolbar-height - 16px
-  );
+  height: calc(100% - variables.$tabs-height - variables.$toolbar-height - 16px);
   overflow-y: auto;
 }
 
 .board-item {
-  border: 1px solid bulma.$blue;
+  border: 1px solid variables.$bulma-blue;
   border-radius: 10px;
   padding: 10px;
   margin: 5px;

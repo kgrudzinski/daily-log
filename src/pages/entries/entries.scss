@@ -1,4 +1,4 @@
-@use "bulma/bulma.sass";
+@use "bulma/bulma.scss";
 @use "../../css/variables.scss";
 
 $toolbar-height: variables.$toolbar-height;
@@ -18,7 +18,7 @@ $calendar-gap: 1px;
 }
 
 .entry-item {
-  border: 1px solid bulma.$blue;
+  border: 1px solid variables.$bulma-blue;
   border-radius: 10px;
   padding: 0.5rem;
   margin: 0.5rem;
@@ -55,10 +55,8 @@ $calendar-gap: 1px;
   height: calc(100% - variables.$tabs-height - $toolbar-height);
   display: grid;
   grid-template-columns: repeat(7, calc(100% / 7));
-  grid-template-rows: $month-label-height repeat(
-      6,
-      calc((100% - $month-label-height - (6 * $calendar-gap)) / 6)
-    );
+  grid-template-rows: $month-label-height repeat(6,
+      calc((100% - $month-label-height - (6 * $calendar-gap)) / 6));
   gap: $calendar-gap;
 }
 
@@ -81,14 +79,14 @@ $calendar-gap: 1px;
 }
 
 .calendar-item-header {
-  border: 1px solid bulma.$blue;
+  border: 1px solid variables.$bulma-blue;
   padding: 0px 5px 5px 10px;
   background-color: hsl(219, 70%, 96%);
-  color: bulma.$blue;
+  color: variables.$bulma-blue;
 }
 
 .calendar-entry {
-  border: 1px solid bulma.$blue;
+  border: 1px solid variables.$bulma-blue;
   border-radius: 10px;
   padding: 0 5px;
   margin: 2px 2px;
@@ -97,7 +95,7 @@ $calendar-gap: 1px;
   overflow: hidden;
   white-space: nowrap;
   font-size: 10pt;
-  color: bulma.$blue;
+  color: variables.$bulma-blue;
 }
 
 .week-item-header {
@@ -106,7 +104,7 @@ $calendar-gap: 1px;
 }
 
 .week-entry {
-  border: 1px solid bulma.$blue;
+  border: 1px solid variables.$bulma-blue;
   border-radius: 10px;
   padding: 5px;
   margin: 5px;
@@ -115,5 +113,5 @@ $calendar-gap: 1px;
   overflow: hidden;
   white-space: nowrap;
   height: 36px;
-  color: bulma.$blue;
+  color: variables.$bulma-blue;
 }

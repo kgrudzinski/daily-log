@@ -1,9 +1,10 @@
-@use "bulma/bulma.sass";
+@use "bulma/bulma.scss";
+@use "../../css/variables.scss";
 
 .fab-btn {
   width: 60px;
   height: 60px;
-  background: bulma.$blue;
+  background: variables.$bulma-blue;
   cursor: pointer;
 }
 
