@@ -9,6 +9,11 @@ import {
 } from "components/shared";
 import { Icons } from "consts";
 
+export const MenuActions = {
+  ABOUT: "about",
+  BACKUP: "backup"
+};
+
 export function AppMenu({ menu, selected, dispatch }) {
   const onChange = (value) => {
     dispatch({ type: "change", value: value });
@@ -38,12 +43,12 @@ export function AppMenu({ menu, selected, dispatch }) {
         <AppMenuButton
           icon={Icons.INFO}
           text="About"
-          onClick={() => onButtonClick("about")}
+          onClick={() => onButtonClick(MenuActions.ABOUT)}
         />
         <AppMenuButton
-          icon={Icons.INFO}
+          icon={Icons.BACKUP}
           text="Backup"
-          onClick={() => onButtonClick("backup")}
+          onClick={() => onButtonClick(MenuActions.BACKUP)}
         />
       </MenuFooter>
     </Menu>

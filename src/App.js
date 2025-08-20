@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Pages, Page, Message, useToast } from "components/shared";
-import { AppMenu, AppContent, About, useAboutDialog } from "components/layout";
+import { AppMenu, AppContent, About, MenuActions, useAboutDialog } from "components/layout";
 import { Start, Tasks, Entries } from "./pages";
 import { Settings } from "./pages/Settings";
 import { Configuration } from "./pages/Configuration";
@@ -132,11 +132,11 @@ const useApp = () => {
       setAppPage(action.value);
     } else if (action.type === "action") {
       switch (action.name) {
-        case "about":
+        case MenuActions.ABOUT:
           AppService.getDbInfo();
           showAboutDialog();
           break;
-        case "backup":
+        case MenuActions.BACKUP:
           AppService.requestBackup("database");
           break;
         default:

@@ -16,6 +16,7 @@ export const Icons = {
   CHEVRON_RIGHT: "mdi mdi-chevron-right",
   SEARCH: "mdi mdi-magnify",
   CLOSE: "mdi mdi-close",
+  BACKUP: "mdi mdi-database-arrow-down"
 };
 
 export const Status = {
