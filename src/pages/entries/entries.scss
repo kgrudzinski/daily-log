@@ -1,4 +1,5 @@
-@use "bulma/bulma.scss";
+//@use "bulma/bulma.scss";
+@use "../../css/main.scss";
 @use "../../css/variables.scss";
 
 $toolbar-height: variables.$toolbar-height;
@@ -18,7 +19,7 @@ $calendar-gap: 1px;
 }
 
 .entry-item {
-  border: 1px solid variables.$bulma-blue;
+  border: 1px solid main.$blue;
   border-radius: 10px;
   padding: 0.5rem;
   margin: 0.5rem;
@@ -79,14 +80,14 @@ $calendar-gap: 1px;
 }
 
 .calendar-item-header {
-  border: 1px solid variables.$bulma-blue;
+  border: 1px solid main.$blue;
   padding: 0px 5px 5px 10px;
   background-color: hsl(219, 70%, 96%);
-  color: variables.$bulma-blue;
+  color: main.$blue;
 }
 
 .calendar-entry {
-  border: 1px solid variables.$bulma-blue;
+  border: 1px solid main.$blue;
   border-radius: 10px;
   padding: 0 5px;
   margin: 2px 2px;
@@ -95,7 +96,7 @@ $calendar-gap: 1px;
   overflow: hidden;
   white-space: nowrap;
   font-size: 10pt;
-  color: variables.$bulma-blue;
+  color: main.$blue;
 }
 
 .week-item-header {
@@ -104,7 +105,7 @@ $calendar-gap: 1px;
 }
 
 .week-entry {
-  border: 1px solid variables.$bulma-blue;
+  border: 1px solid main.$blue;
   border-radius: 10px;
   padding: 5px;
   margin: 5px;
@@ -113,5 +114,5 @@ $calendar-gap: 1px;
   overflow: hidden;
   white-space: nowrap;
   height: 36px;
-  color: variables.$bulma-blue;
+  color: main.$blue;
 }

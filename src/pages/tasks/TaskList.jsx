@@ -66,8 +66,8 @@ function ListItem({ data, operations }) {
             style={{ display: "inline-flex", position: "relative", right: 0 }}
           >
             <span className="tag is-link">{data.projectName}</span>
-            <span className="tag is-primary">{data.categoryName}</span>
-            <span className="tag is-info">{data.status}</span>
+            <span className="tag is-primary has-text-white">{data.categoryName}</span>
+            <span className="tag is-info has-text-white">{data.status}</span>
           </span>
         </div>
         <div className="list-item-description">{data.description}</div>

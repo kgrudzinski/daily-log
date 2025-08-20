@@ -47,7 +47,7 @@ function TaskTable({ data, showEntryForm }) {
   }
 
   return (
-    <table className="table">
+    <table className="table is-fullwidth is-striped is-hoverable">
       <thead>
         <tr>
           <th>Name</th>

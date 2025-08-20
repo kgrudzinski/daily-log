@@ -6,7 +6,7 @@ export function Table({ columns, data, filterRow = true }) {
   const _data = filterRow ? applyFilter(data) : data;
 
   return (
-    <table className="table is-fullwidth is-striped">
+    <table className="table is-striped is-fullwidth">
       <thead>
         <tr>
           {columns.map((col) => {

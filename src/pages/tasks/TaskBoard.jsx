@@ -42,7 +42,7 @@ function BoardItem({ item, operations }) {
     <div className="board-item">
       <div className="title is-6">{item.name}</div>
       <div className="tags">
-        <span className="tag is-primary">{item.projectName}</span>
+        <span className="tag is-primary has-text-white">{item.projectName}</span>
         <span className="tag is-link">{item.categoryName}</span>
       </div>
       <div className="item-details">

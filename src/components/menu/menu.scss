@@ -1,13 +1,15 @@
-@import "bulma/bulma.scss";
+@use "../../css/main.scss";
 
 $menu-border: 1px black solid;
 $menu-border-radius: 10px;
+$menu-background-color: #EFF1FA;
 
 .app-menu {
   height: 100%;
   display: flex;
   flex-flow: column;
-  @extend .has-background-link-light;
+  //@extend .has-background-link-light;
+  background-color: $menu-background-color;
 }
 
 .app-menu-header {

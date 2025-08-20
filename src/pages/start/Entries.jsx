@@ -54,7 +54,7 @@ function EntryTable({ data }) {
   }
 
   return (
-    <table className="table">
+    <table className="table is-fullwidth">
       <thead>
         <tr>
           <th>Task</th>
